@@ -9,15 +9,58 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="gg_profile.png" />
+    <None Remove="group 2027.png" />
     <None Remove="Group 23.png" />
+    <None Remove="Group 24.png" />
     <None Remove="Group 25.png" />
     <None Remove="Group 26.png" />
+    <None Remove="Group 27.png" />
+    <None Remove="Group 28.png" />
+    <None Remove="Group 29.png" />
+    <None Remove="Group 30.png" />
+    <None Remove="Group23.png" />
+    <None Remove="ic_outline-search.png" />
+    <None Remove="meteor-icons_list.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Group 23.png" />
-    <Resource Include="Group 25.png" />
-    <Resource Include="Group 26.png" />
+    <Resource Include="gg_profile.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Group 23.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Group 24.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Group 25.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Group 26.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Group 27.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Group 28.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Group 29.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Group 30.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Group23.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="ic_outline-search.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="meteor-icons_list.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>
