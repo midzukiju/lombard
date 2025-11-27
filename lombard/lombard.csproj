@@ -9,19 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="gg_profile.png" />
     <None Remove="group 2027.png" />
-    <None Remove="Group 23.png" />
-    <None Remove="Group 24.png" />
-    <None Remove="Group 25.png" />
-    <None Remove="Group 26.png" />
-    <None Remove="Group 27.png" />
-    <None Remove="Group 28.png" />
-    <None Remove="Group 29.png" />
-    <None Remove="Group 30.png" />
-    <None Remove="Group23.png" />
-    <None Remove="ic_outline-search.png" />
-    <None Remove="meteor-icons_list.png" />
+    <None Remove="hugeicons_cancel-circle.png" />
+    <None Remove="image 27.png" />
+    <None Remove="image 28.png" />
+    <None Remove="ion_diamond-outline.png" />
+    <None Remove="ix_user-profile-filled.png" />
+    <None Remove="lets-icons_setting-fill.png" />
+    <None Remove="weui_arrow-filled.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,12 +50,25 @@
     <Resource Include="Group23.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="hugeicons_cancel-circle.png" />
     <Resource Include="ic_outline-search.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="image 17.png" />
+    <Resource Include="image 18.png" />
+    <Resource Include="image 19.png" />
+    <Resource Include="image 20.png" />
+    <Resource Include="image 21.png" />
+    <Resource Include="image 22.png" />
+    <Resource Include="image 27.png" />
+    <Resource Include="image 28.png" />
+    <Resource Include="ion_diamond-outline.png" />
+    <Resource Include="ix_user-profile-filled.png" />
+    <Resource Include="lets-icons_setting-fill.png" />
     <Resource Include="meteor-icons_list.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="weui_arrow-filled.png" />
   </ItemGroup>
 
 </Project>
