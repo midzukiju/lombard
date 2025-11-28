@@ -9,8 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="bx_map.png" />
+    <None Remove="famicons_trash-outline.png" />
+    <None Remove="Group 10 %281%29.png" />
+    <None Remove="Group 10.png" />
     <None Remove="group 2027.png" />
     <None Remove="hugeicons_cancel-circle.png" />
+    <None Remove="image 23.png" />
+    <None Remove="image 24.png" />
+    <None Remove="image 25.png" />
+    <None Remove="image 26.png" />
     <None Remove="image 27.png" />
     <None Remove="image 28.png" />
     <None Remove="ion_diamond-outline.png" />
@@ -20,9 +28,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="bx_map.png" />
+    <Resource Include="famicons_trash-outline.png" />
     <Resource Include="gg_profile.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Group 10 (1).png" />
+    <Resource Include="Group 10.png" />
     <Resource Include="Group 23.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
@@ -60,6 +72,10 @@
     <Resource Include="image 20.png" />
     <Resource Include="image 21.png" />
     <Resource Include="image 22.png" />
+    <Resource Include="image 23.png" />
+    <Resource Include="image 24.png" />
+    <Resource Include="image 25.png" />
+    <Resource Include="image 26.png" />
     <Resource Include="image 27.png" />
     <Resource Include="image 28.png" />
     <Resource Include="ion_diamond-outline.png" />

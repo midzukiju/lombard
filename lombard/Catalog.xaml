@@ -21,10 +21,10 @@
                 <ImageBrush ImageSource="/ic_outline-search.png"/>
             </Button.Background>
         </Button>
-        <Button Content="Кольца" HorizontalAlignment="Left" Margin="231,197,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.252,-0.699" FontFamily="Bahnschrift" BorderBrush="#FFF7F2F0" Foreground="#FF262D24" Background="#FFF7F2F0"/>
-        <Button Content="Серьги" HorizontalAlignment="Left" Margin="339,197,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.252,-0.699" FontFamily="Bahnschrift" Foreground="#FF262D24" Background="#FFF7F2F0" BorderBrush="#FFF7F2F0"/>
-        <Button Content="Браслеты" HorizontalAlignment="Left" Margin="442,197,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.252,-0.699" Click="Button_Click_1" FontFamily="Bahnschrift" Foreground="#FF262D24" Background="#FFF7F2F0" BorderBrush="#FFF7F2F0"/>
-        <Button Content="Колье" HorizontalAlignment="Left" Margin="547,197,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.252,-0.699" FontFamily="Bahnschrift" Foreground="#FF262D24" Background="#FFF7F2F0" BorderBrush="#FFF7F2F0"/>
+        <Button Content="Кольца" HorizontalAlignment="Left" Margin="231,194,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.252,-0.699" FontFamily="Bahnschrift" BorderBrush="#FFF7F2F0" Foreground="#FF262D24" Background="#FFF7F2F0"/>
+        <Button Content="Серьги" HorizontalAlignment="Left" Margin="339,194,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.252,-0.699" FontFamily="Bahnschrift" Foreground="#FF262D24" Background="#FFF7F2F0" BorderBrush="#FFF7F2F0"/>
+        <Button Content="Браслеты" HorizontalAlignment="Left" Margin="442,194,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.252,-0.699" Click="Button_Click_1" FontFamily="Bahnschrift" Foreground="#FF262D24" Background="#FFF7F2F0" BorderBrush="#FFF7F2F0"/>
+        <Button Content="Колье" HorizontalAlignment="Left" Margin="547,194,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.252,-0.699" FontFamily="Bahnschrift" Foreground="#FF262D24" Background="#FFF7F2F0" BorderBrush="#FFF7F2F0"/>
         <Label Content="____________________________" HorizontalAlignment="Left" Margin="551,150,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Height="30" Width="40" Foreground="#FF707B6D">
             <Label.RenderTransform>
                 <TransformGroup>
@@ -102,6 +102,11 @@
         <Button Content="" HorizontalAlignment="Left" Height="30" Margin="730,6,0,0" VerticalAlignment="Top" Width="29" BorderBrush="#FF707B6D" Foreground="#FF707B6D">
             <Button.Background>
                 <ImageBrush ImageSource="/gg_profile.png"/>
+            </Button.Background>
+        </Button>
+        <Button Content="" HorizontalAlignment="Left" Height="35" Margin="43,61,0,0" VerticalAlignment="Top" Width="20" BorderBrush="#FFF7F2F0">
+            <Button.Background>
+                <ImageBrush ImageSource="/weui_arrow-filled.png"/>
             </Button.Background>
         </Button>
 

@@ -15,23 +15,13 @@ using System.Windows.Shapes;
 namespace lombard
 {
     /// <summary>
-    /// Логика взаимодействия для Favourites.xaml
+    /// Логика взаимодействия для Basket.xaml
     /// </summary>
-    public partial class Favourites : Window
+    public partial class Basket : Window
     {
-        public Favourites()
+        public Basket()
         {
             InitializeComponent();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void CheckBox_Checked(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

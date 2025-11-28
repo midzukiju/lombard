@@ -1,0 +1,56 @@
+﻿<Window x:Class="lombard.Basket"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:lombard"
+        mc:Ignorable="d"
+        Title="Basket" Height="450" Width="800">
+    <Grid Background="#FFF7F2F0">
+        <Rectangle HorizontalAlignment="Center" Height="44                    " VerticalAlignment="Top" Width="800" Fill="#FF707B6D"/>
+        <Button Content="" HorizontalAlignment="Left" Height="28" Margin="34,8,0,0" VerticalAlignment="Top" Width="29" BorderBrush="#FF707B6D" Foreground="#FF707B6D">
+            <Button.Background>
+                <ImageBrush ImageSource="/meteor-icons_list.png"/>
+            </Button.Background>
+        </Button>
+        <Label Content="Бриллиантовый дом" HorizontalAlignment="Left" Margin="94,4,0,0" VerticalAlignment="Top" FontSize="26" FontFamily="Bahnschrift" Foreground="#FFF7F2F0"/>
+        <ComboBox HorizontalAlignment="Left" Margin="518,6,0,0" VerticalAlignment="Top" Width="181" Height="30" />
+        <Button Content="" HorizontalAlignment="Left" Height="30" Margin="730,6,0,0" VerticalAlignment="Top" Width="29" BorderBrush="#FF707B6D" Foreground="#FF707B6D">
+            <Button.Background>
+                <ImageBrush ImageSource="/gg_profile.png"/>
+            </Button.Background>
+        </Button>
+        <Button Content="" HorizontalAlignment="Left" Height="35" Margin="43,61,0,0" VerticalAlignment="Top" Width="20" BorderBrush="#FFF7F2F0">
+            <Button.Background>
+                <ImageBrush ImageSource="/weui_arrow-filled.png"/>
+            </Button.Background>
+        </Button>
+        <Label Content="Корзина" HorizontalAlignment="Left" Margin="68,62,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="20" Foreground="#FF262D24"/>
+        <CheckBox Content="" HorizontalAlignment="Left" Height="19" Margin="726,118,0,0" VerticalAlignment="Top" Width="18"  RenderTransformOrigin="0.514,0.449" Background="#FFD9D9D9"/>
+        <CheckBox Content="" HorizontalAlignment="Left" Height="19" Margin="726,252,0,0" VerticalAlignment="Top" Width="18"  RenderTransformOrigin="0.514,0.449" Background="#FFD9D9D9"/>
+        <Label Content="_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________" HorizontalAlignment="Center" VerticalAlignment="Top" Width="812" Foreground="#FF707B6D" Margin="0,208,0,0"/>
+        <Button Content="Перейти к оформлению" HorizontalAlignment="Left" Height="41" Margin="68,369,0,0" VerticalAlignment="Top" Width="165"  FontFamily="Bahnschrift" Foreground="#FFF7F2F0" Background="#FF707B6D" BorderBrush="{x:Null}" FontSize="13"/>
+        <Button Content="" HorizontalAlignment="Left" Height="41" Margin="272,369,0,0" VerticalAlignment="Top" Width="42" BorderBrush="{x:Null}">
+            <Button.Background>
+                <ImageBrush ImageSource="/Group 10 (1).png"/>
+            </Button.Background>
+        </Button>
+        <Label Content="Серебряное кольцо “Ромбики”" HorizontalAlignment="Left" Margin="186,118,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16"/>
+        <Label Content="Бренд: Sweetpeeps, размер: 17, &#xD;&#xA;тип металлов: серебро, &#xD;&#xA;тип камня: бриллиант" HorizontalAlignment="Left" Margin="186,143,0,0" VerticalAlignment="Top" Width="184" FontSize="11"/>
+        <Label Content="Серебряное кольцо “Триколор”" HorizontalAlignment="Left" Margin="186,252,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16"/>
+        <Label Content="Бренд: Sweetpeeps, размер: 17, &#xD;&#xA;тип металлов: серебро, &#xD;&#xA;тип камня: бриллиант, аквамарин, аметист" HorizontalAlignment="Left" Margin="186,282,0,0" VerticalAlignment="Top" FontSize="11"/>
+        <Label Content="16 000 руб." HorizontalAlignment="Left" Margin="586,113,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16"/>
+        <Label Content="18 000 руб." HorizontalAlignment="Left" Margin="587,247,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16"/>
+        <Button Content="" HorizontalAlignment="Left" Height="94" Margin="68,113,0,0" VerticalAlignment="Top" Width="94" BorderBrush="{x:Null}">
+            <Button.Background>
+                <ImageBrush ImageSource="/image 23.png"/>
+            </Button.Background>
+        </Button>
+        <Button Content="" HorizontalAlignment="Left" Height="94" Margin="68,252,0,0" VerticalAlignment="Top" Width="94" BorderBrush="{x:Null}">
+            <Button.Background>
+                <ImageBrush ImageSource="/image 24.png"/>
+            </Button.Background>
+        </Button>
+
+    </Grid>
+</Window>

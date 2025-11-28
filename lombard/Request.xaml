@@ -1,0 +1,91 @@
+﻿<Window x:Class="lombard.Request"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:lombard"
+        mc:Ignorable="d"
+        Title="Request" Height="450" Width="800">
+    <Grid Background="#FFF7F2F0">
+        <Image Margin="78,64,78,253" Source="/Group 24.png" Stretch="Fill"/>
+        <Rectangle HorizontalAlignment="Center" Height="44" VerticalAlignment="Top" Width="800" Fill="#FF707B6D"/>
+        <Label Content="Услуги" HorizontalAlignment="Left" Margin="83,190,0,0" VerticalAlignment="Top" FontSize="20" FontFamily="Bahnschrift" Foreground="#FF262D24"/>
+        <Button Content="&#xA;" HorizontalAlignment="Left" Margin="252,224,0,0" VerticalAlignment="Top" Height="116" Width="116" Click="Button_Click_1" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" RenderTransformOrigin="0.828,0.5">
+            <Button.Background>
+                <ImageBrush ImageSource="/Group 26.png"/>
+            </Button.Background>
+        </Button>
+        <Button Content="" HorizontalAlignment="Left" Height="116" Margin="435,224,0,0" VerticalAlignment="Top" Width="116" Click="Button_Click_2" BorderBrush="#FFF7F2F0" Foreground="#FFF7F2F0">
+            <Button.Background>
+                <ImageBrush ImageSource="/Group 23.png"/>
+            </Button.Background>
+        </Button>
+        <Button Content="" HorizontalAlignment="Left" Height="116" Margin="609,224,0,0" VerticalAlignment="Top" Width="116" BorderBrush="#FFF7F2F0" Foreground="#FFF7F2F0">
+            <Button.Background>
+                <ImageBrush ImageSource="/Group 27.png"/>
+            </Button.Background>
+        </Button>
+        <Label Content="Каталог" HorizontalAlignment="Left" Margin="75,341,0,0" VerticalAlignment="Top" FontSize="20" FontFamily="Bahnschrift" Foreground="#FF262D24"/>
+        <Button Content="" HorizontalAlignment="Left" Height="67" Margin="75,369,0,0" VerticalAlignment="Top" Width="188" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Click="Button_Click_3">
+            <Button.Background>
+                <ImageBrush ImageSource="/Group 28.png"/>
+            </Button.Background>
+        </Button>
+        <Button Content="&#xA;" HorizontalAlignment="Center" Height="67" Margin="0,369,0,0" VerticalAlignment="Top" Width="188" BorderBrush="#FFF7F2F0" Foreground="#FFF7F2F0">
+            <Button.Background>
+                <ImageBrush ImageSource="/Group 29.png"/>
+            </Button.Background>
+        </Button>
+        <Button Content="" HorizontalAlignment="Left" Height="67" Margin="537,369,0,0" VerticalAlignment="Top" Width="188" BorderBrush="#FFF7F2F0" Foreground="#FFF7F2F0">
+            <Button.Background>
+                <ImageBrush ImageSource="/Group 30.png"/>
+            </Button.Background>
+        </Button>
+        <Label Content="Бриллиантовый дом" HorizontalAlignment="Left" Margin="94,2,0,0" VerticalAlignment="Top" FontSize="26" FontFamily="Bahnschrift" Foreground="#FFF7F2F0"/>
+        <Button Content="" HorizontalAlignment="Left" Height="30" Margin="730,6,0,0" VerticalAlignment="Top" Width="29" BorderBrush="#FF707B6D" Foreground="#FF707B6D">
+            <Button.Background>
+                <ImageBrush ImageSource="/gg_profile.png"/>
+            </Button.Background>
+        </Button>
+        <ComboBox HorizontalAlignment="Left" Margin="518,6,0,0" VerticalAlignment="Top" Width="181" Height="30" SelectionChanged="ComboBox_SelectionChanged"/>
+        <Button Content="" HorizontalAlignment="Left" Height="116" Margin="78,224,0,0" VerticalAlignment="Top" Width="116" BorderBrush="#FFF7F2F0" Foreground="#FFF7F2F0">
+            <Button.Background>
+                <ImageBrush ImageSource="/Group 23.png"/>
+            </Button.Background>
+        </Button>
+        <Button Content="" HorizontalAlignment="Left" Height="28" Margin="34,8,0,0" VerticalAlignment="Top" Width="29" BorderBrush="#FF707B6D" Foreground="#FF707B6D">
+            <Button.Background>
+                <ImageBrush ImageSource="/meteor-icons_list.png"/>
+            </Button.Background>
+        </Button>
+        <Rectangle HorizontalAlignment="Center" Height="436" Stroke="Black" VerticalAlignment="Center" Width="800">
+            <Rectangle.Fill>
+                <SolidColorBrush Color="#FFD9D9D9" Opacity="0.68"/>
+            </Rectangle.Fill>
+        </Rectangle>
+        <Rectangle HorizontalAlignment="Center" Height="298" Stroke="#FF707B6D" VerticalAlignment="Top" Width="412" Fill="#FFD9D9D9" Margin="0,77,0,0"/>
+        <Label Content="Заявка" HorizontalAlignment="Center" Margin="0,107,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="18" Foreground="#FF262D24"/>
+        <Button Content="" HorizontalAlignment="Left" Height="31" Margin="564,87,0,0" VerticalAlignment="Top" Width="30" BorderBrush="#FFD9D9D9" RenderTransformOrigin="0.535,1.24">
+            <Button.Background>
+                <ImageBrush ImageSource="/hugeicons_cancel-circle.png"/>
+            </Button.Background>
+        </Button>
+        <TextBox HorizontalAlignment="Center" Height="42" Margin="0,144,0,0" TextWrapping="Wrap" Text="Введите  ФИО" VerticalAlignment="Top" Width="357" FontFamily="Bahnschrift">
+            <TextBox.Foreground>
+                <SolidColorBrush Color="#FF707B6D" Opacity="0.68"/>
+            </TextBox.Foreground>
+        </TextBox>
+        <TextBox HorizontalAlignment="Center" Height="42" Margin="0,203,0,0" TextWrapping="Wrap" Text="Введите  номер телефона" VerticalAlignment="Top" Width="357" TextChanged="TextBox_TextChanged" FontFamily="Bahnschrift">
+            <TextBox.Foreground>
+                <SolidColorBrush Color="#FF707B6D" Opacity="0.68"/>
+            </TextBox.Foreground>
+        </TextBox>
+        <TextBox HorizontalAlignment="Center" Height="42" Margin="0,260,0,0" TextWrapping="Wrap" Text="Введите  город" VerticalAlignment="Top" Width="357" FontFamily="Bahnschrift">
+            <TextBox.Foreground>
+                <SolidColorBrush Color="#FF707B6D" Opacity="0.68"/>
+            </TextBox.Foreground>
+        </TextBox>
+        <Button Content="Оставить заявку" HorizontalAlignment="Center" Height="35" Margin="0,323,0,0" VerticalAlignment="Top" Width="158" Click="Button_Click" Background="#FF707B6D" BorderBrush="#FF707B6D" FontFamily="Bahnschrift" FontSize="14" Foreground="#FFF7F2F0"/>
+
+    </Grid>
+</Window>

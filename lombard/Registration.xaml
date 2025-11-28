@@ -13,16 +13,24 @@
                 <ImageBrush ImageSource="/ion_diamond-outline.png"/>
             </Rectangle.Fill>
         </Rectangle>
-        <Label Content="Войдите или зарегестрируйтесь" HorizontalAlignment="Center" Margin="0,149,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="22"/>
+        <Label Content="Войдите или зарегестрируйтесь" HorizontalAlignment="Center" Margin="0,149,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="22" Foreground="#FF262D24"/>
         <Button Content="" HorizontalAlignment="Left" Height="31" Margin="588,136,0,0" VerticalAlignment="Top" Width="31" BorderBrush="#FFF7F2F0" RenderTransformOrigin="0.535,1.24">
             <Button.Background>
                 <ImageBrush ImageSource="/hugeicons_cancel-circle.png"/>
             </Button.Background>
         </Button>
-        <Button Content="Почта/Логин" HorizontalAlignment="Left" Margin="234,193,0,0" VerticalAlignment="Top" Height="38" Width="166" BorderBrush="#FFD9D9D9"/>
-        <Button Content="Телефон" HorizontalAlignment="Left" Margin="400,193,0,0" VerticalAlignment="Top" Height="38" Width="166" BorderBrush="#FFDDDDDD"/>
-        <TextBox HorizontalAlignment="Left" Margin="223,246,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="362" Height="36" BorderBrush="#FF707B6D"/>
-        <TextBox HorizontalAlignment="Left" Margin="223,296,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="362" Height="36" BorderBrush="#FF707B6D"/>
-        <Button Content="Продолжить" HorizontalAlignment="Center" Height="32" Margin="0,347,0,0" VerticalAlignment="Top" Width="166" Background="#FF707B6D" Foreground="#FFF7F2F0" BorderBrush="#FF707B6D"/>
+        <Button Content="Почта/Логин" HorizontalAlignment="Left" Margin="234,193,0,0" VerticalAlignment="Top" Height="38" Width="166" BorderBrush="#FFD9D9D9" Foreground="#FF262D24" FontFamily="Bahnschrift"/>
+        <Button Content="Телефон" HorizontalAlignment="Left" Margin="400,193,0,0" VerticalAlignment="Top" Height="38" Width="166" BorderBrush="#FFDDDDDD" Foreground="#FF262D24" FontFamily="Bahnschrift"/>
+        <TextBox HorizontalAlignment="Left" Margin="223,246,0,0" TextWrapping="Wrap" Text="Введите почту или логин" VerticalAlignment="Top" Width="362" Height="36" BorderBrush="#FF707B6D" FontFamily="Bahnschrift">
+            <TextBox.Foreground>
+                <SolidColorBrush Color="#FF707B6D" Opacity="0.68"/>
+            </TextBox.Foreground>
+        </TextBox>
+        <TextBox HorizontalAlignment="Left" Margin="223,296,0,0" TextWrapping="Wrap" Text="Введите пароль" VerticalAlignment="Top" Width="362" Height="36" BorderBrush="#FF707B6D" FontFamily="Bahnschrift">
+            <TextBox.Foreground>
+                <SolidColorBrush Color="#FF707B6D" Opacity="0.68"/>
+            </TextBox.Foreground>
+        </TextBox>
+        <Button Content="Продолжить" HorizontalAlignment="Center" Height="32" Margin="0,347,0,0" VerticalAlignment="Top" Width="166" Background="#FF707B6D" Foreground="#FFF7F2F0" BorderBrush="#FF707B6D" FontFamily="Bahnschrift"/>
     </Grid>
 </Window>

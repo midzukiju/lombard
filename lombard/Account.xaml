@@ -17,7 +17,7 @@
                 <ImageBrush ImageSource="/meteor-icons_list.png"/>
             </Button.Background>
         </Button>
-        <ComboBox HorizontalAlignment="Left" Margin="518,6,0,0" VerticalAlignment="Top" Width="181" Height="30" SelectionChanged="ComboBox_SelectionChanged"/>
+        <ComboBox HorizontalAlignment="Left" Margin="518,6,0,0" VerticalAlignment="Top" Width="181" Height="30" />
         <Label Content="Аккаунт" HorizontalAlignment="Left" Margin="68,62,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="20" Foreground="#FF262D24"/>
         <Button Content="" HorizontalAlignment="Left" Height="35" Margin="43,61,0,0" VerticalAlignment="Top" Width="20" BorderBrush="White">
             <Button.Background>

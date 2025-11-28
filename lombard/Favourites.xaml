@@ -6,7 +6,18 @@
         xmlns:local="clr-namespace:lombard"
         mc:Ignorable="d"
         Title="Favourites" Height="450" Width="800">
-    <Grid Background="#FFF7F2F0">
+    <Grid RenderTransformOrigin="0.5,0.5" Margin="3,0,-3,0">
+        <Grid.Background>
+            <ImageBrush/>
+        </Grid.Background>
+        <Grid.RenderTransform>
+            <TransformGroup>
+                <ScaleTransform/>
+                <SkewTransform/>
+                <RotateTransform/>
+                <TranslateTransform X="-3"/>
+            </TransformGroup>
+        </Grid.RenderTransform>
         <Rectangle HorizontalAlignment="Center" Height="44                    " VerticalAlignment="Top" Width="800" Fill="#FF707B6D"/>
         <Label Content="Бриллиантовый дом" HorizontalAlignment="Left" Margin="94,4,0,0" VerticalAlignment="Top" FontSize="26" FontFamily="Bahnschrift" Foreground="#FFF7F2F0"/>
         <Button Content="" HorizontalAlignment="Left" Height="28" Margin="34,8,0,0" VerticalAlignment="Top" Width="29" BorderBrush="#FF707B6D" Foreground="#FF707B6D">
@@ -14,10 +25,41 @@
                 <ImageBrush ImageSource="/meteor-icons_list.png"/>
             </Button.Background>
         </Button>
-        <ComboBox HorizontalAlignment="Left" Margin="518,6,0,0" VerticalAlignment="Top" Width="181" Height="30" SelectionChanged="ComboBox_SelectionChanged"/>
         <Button Content="" HorizontalAlignment="Left" Height="30" Margin="730,6,0,0" VerticalAlignment="Top" Width="29" BorderBrush="#FF707B6D" Foreground="#FF707B6D">
             <Button.Background>
                 <ImageBrush ImageSource="/gg_profile.png"/>
+            </Button.Background>
+        </Button>
+        <Button Content="" HorizontalAlignment="Left" Height="35" Margin="43,61,0,0" VerticalAlignment="Top" Width="20" BorderBrush="#FFF7F2F0">
+            <Button.Background>
+                <ImageBrush ImageSource="/weui_arrow-filled.png"/>
+            </Button.Background>
+        </Button>
+        <Label Content="Избранное" HorizontalAlignment="Left" Margin="68,62,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="20" Foreground="#FF262D24"/>
+        <Label Content="_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________" HorizontalAlignment="Center" VerticalAlignment="Top" Width="812" Foreground="#FF707B6D" Margin="0,208,0,0"/>
+        <Button Content="Добавить в корзину" HorizontalAlignment="Left" Height="41" Margin="68,369,0,0" VerticalAlignment="Top" Width="165" Click="Button_Click" FontFamily="Bahnschrift" Foreground="#FFF7F2F0" Background="#FF707B6D" BorderBrush="{x:Null}" FontSize="13"/>
+        <Button Content="" HorizontalAlignment="Left" Height="41" Margin="272,369,0,0" VerticalAlignment="Top" Width="42" BorderBrush="{x:Null}">
+            <Button.Background>
+                <ImageBrush ImageSource="/Group 10 (1).png"/>
+            </Button.Background>
+        </Button>
+        <Label Content="Золотой браслет с камнями" HorizontalAlignment="Left" Margin="186,118,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16"/>
+        <Label Content="Бренд: Asiye, размер: 20, &#xD;&#xA;тип металлов: золото, &#xD;&#xA;тип камня:гранат, изумруд" HorizontalAlignment="Left" Margin="186,143,0,0" VerticalAlignment="Top" Width="174" FontSize="11"/>
+        <Label Content="Антикварные часы золотые с камнями" HorizontalAlignment="Left" Margin="186,252,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16"/>
+        <Label Content="Бренд: Khubaib, размер: 19, &#xD;&#xA;тип металлов: золото, титан,&#xD;&#xA;тип камня: изумруд, цитрин" HorizontalAlignment="Left" Margin="186,282,0,0" VerticalAlignment="Top" FontSize="11"/>
+        <Label Content="20 000 руб." HorizontalAlignment="Left" Margin="586,113,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16"/>
+        <Label Content="27 000 руб." HorizontalAlignment="Left" Margin="587,247,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16"/>
+        <CheckBox Content="" HorizontalAlignment="Left" Height="19" Margin="726,118,0,0" VerticalAlignment="Top" Width="18" Checked="CheckBox_Checked" RenderTransformOrigin="0.514,0.449" Background="#FFD9D9D9"/>
+        <CheckBox Content="" HorizontalAlignment="Left" Height="19" Margin="726,252,0,0" VerticalAlignment="Top" Width="18" Checked="CheckBox_Checked" RenderTransformOrigin="0.514,0.449" Background="#FFD9D9D9"/>
+        <ComboBox HorizontalAlignment="Left" Margin="518,6,0,0" VerticalAlignment="Top" Width="181" Height="30" />
+        <Button Content="" HorizontalAlignment="Left" Height="94" Margin="68,113,0,0" VerticalAlignment="Top" Width="94" BorderBrush="{x:Null}">
+            <Button.Background>
+                <ImageBrush ImageSource="/image 25.png"/>
+            </Button.Background>
+        </Button>
+        <Button Content="" HorizontalAlignment="Left" Height="94" Margin="68,252,0,0" VerticalAlignment="Top" Width="94" BorderBrush="{x:Null}">
+            <Button.Background>
+                <ImageBrush ImageSource="/image 26.png"/>
             </Button.Background>
         </Button>
 

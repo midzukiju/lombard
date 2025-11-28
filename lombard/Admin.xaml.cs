@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace lombard
 {
     /// <summary>
-    /// Логика взаимодействия для Favourites.xaml
+    /// Логика взаимодействия для Admin.xaml
     /// </summary>
-    public partial class Favourites : Window
+    public partial class Admin : Window
     {
-        public Favourites()
+        public Admin()
         {
             InitializeComponent();
         }
@@ -29,7 +29,27 @@ namespace lombard
 
         }
 
-        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click_4(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
         }

@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace lombard
 {
     /// <summary>
-    /// Логика взаимодействия для Favourites.xaml
+    /// Логика взаимодействия для Request.xaml
     /// </summary>
-    public partial class Favourites : Window
+    public partial class Request : Window
     {
-        public Favourites()
+        public Request()
         {
             InitializeComponent();
         }
@@ -29,7 +29,7 @@ namespace lombard
 
         }
 
-        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
 
         }
