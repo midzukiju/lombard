@@ -25,7 +25,7 @@
                 <ImageBrush ImageSource="/meteor-icons_list.png"/>
             </Button.Background>
         </Button>
-        <Button Content="" HorizontalAlignment="Left" Height="30" Margin="730,6,0,0" VerticalAlignment="Top" Width="29" BorderBrush="#FF707B6D" Foreground="#FF707B6D">
+        <Button Content="" HorizontalAlignment="Left" Height="30" Margin="730,6,0,0" VerticalAlignment="Top" Width="29" BorderBrush="#FF707B6D" Foreground="#FF707B6D" Click="Button_Click_1">
             <Button.Background>
                 <ImageBrush ImageSource="/gg_profile.png"/>
             </Button.Background>
@@ -38,20 +38,25 @@
         <Label Content="Избранное" HorizontalAlignment="Left" Margin="68,62,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="20" Foreground="#FF262D24"/>
         <Label Content="_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________" HorizontalAlignment="Center" VerticalAlignment="Top" Width="812" Foreground="#FF707B6D" Margin="0,208,0,0"/>
         <Button Content="Добавить в корзину" HorizontalAlignment="Left" Height="41" Margin="68,369,0,0" VerticalAlignment="Top" Width="165" Click="Button_Click" FontFamily="Bahnschrift" Foreground="#FFF7F2F0" Background="#FF707B6D" BorderBrush="{x:Null}" FontSize="13"/>
-        <Button Content="" HorizontalAlignment="Left" Height="41" Margin="272,369,0,0" VerticalAlignment="Top" Width="42" BorderBrush="{x:Null}">
+        <Button Content="" HorizontalAlignment="Left" Height="41" Margin="272,369,0,0" VerticalAlignment="Top" Width="42" BorderBrush="{x:Null}" Click="Button_Click_2">
             <Button.Background>
                 <ImageBrush ImageSource="/Group 10 (1).png"/>
             </Button.Background>
         </Button>
-        <Label Content="Золотой браслет с камнями" HorizontalAlignment="Left" Margin="186,118,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16"/>
-        <Label Content="Бренд: Asiye, размер: 20, &#xD;&#xA;тип металлов: золото, &#xD;&#xA;тип камня:гранат, изумруд" HorizontalAlignment="Left" Margin="186,143,0,0" VerticalAlignment="Top" Width="174" FontSize="11"/>
-        <Label Content="Антикварные часы золотые с камнями" HorizontalAlignment="Left" Margin="186,252,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16"/>
-        <Label Content="Бренд: Khubaib, размер: 19, &#xD;&#xA;тип металлов: золото, титан,&#xD;&#xA;тип камня: изумруд, цитрин" HorizontalAlignment="Left" Margin="186,282,0,0" VerticalAlignment="Top" FontSize="11"/>
-        <Label Content="20 000 руб." HorizontalAlignment="Left" Margin="586,113,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16"/>
-        <Label Content="27 000 руб." HorizontalAlignment="Left" Margin="587,247,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16"/>
+        <Label Content="Золотой браслет с камнями" HorizontalAlignment="Left" Margin="186,118,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16" Foreground="#FF262D24"/>
+        <Label Content="Бренд: Asiye, размер: 20, &#xD;&#xA;тип металлов: золото, &#xD;&#xA;тип камня:гранат, изумруд" HorizontalAlignment="Left" Margin="186,143,0,0" VerticalAlignment="Top" Width="174" FontSize="11" Foreground="#FF262D24"/>
+        <Label Content="Антикварные часы золотые с камнями" HorizontalAlignment="Left" Margin="186,252,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16" Foreground="#FF262D24"/>
+        <Label Content="Бренд: Khubaib, размер: 19, &#xD;&#xA;тип металлов: золото, титан,&#xD;&#xA;тип камня: изумруд, цитрин" HorizontalAlignment="Left" Margin="186,282,0,0" VerticalAlignment="Top" FontSize="11" Foreground="#FF262D24"/>
+        <Label Content="20 000 руб." HorizontalAlignment="Left" Margin="586,113,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16" Foreground="#FF262D24"/>
+        <Label Content="27 000 руб." HorizontalAlignment="Left" Margin="587,247,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16" Foreground="#FF262D24"/>
         <CheckBox Content="" HorizontalAlignment="Left" Height="19" Margin="726,118,0,0" VerticalAlignment="Top" Width="18" Checked="CheckBox_Checked" RenderTransformOrigin="0.514,0.449" Background="#FFD9D9D9"/>
         <CheckBox Content="" HorizontalAlignment="Left" Height="19" Margin="726,252,0,0" VerticalAlignment="Top" Width="18" Checked="CheckBox_Checked" RenderTransformOrigin="0.514,0.449" Background="#FFD9D9D9"/>
-        <ComboBox HorizontalAlignment="Left" Margin="518,6,0,0" VerticalAlignment="Top" Width="181" Height="30" />
+        <ComboBox Name="CityComboBox" VerticalAlignment="Top" HorizontalAlignment="Left" Width="200" Margin="493,11,0,0" >
+            <ComboBoxItem>Москва</ComboBoxItem>
+            <ComboBoxItem>Санкт-Петербург</ComboBoxItem>
+            <ComboBoxItem>Екатеринбург</ComboBoxItem>
+            <ComboBoxItem>Новосибирск</ComboBoxItem>
+        </ComboBox>
         <Button Content="" HorizontalAlignment="Left" Height="94" Margin="68,113,0,0" VerticalAlignment="Top" Width="94" BorderBrush="{x:Null}">
             <Button.Background>
                 <ImageBrush ImageSource="/image 25.png"/>

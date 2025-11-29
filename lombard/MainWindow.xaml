@@ -8,26 +8,26 @@
         Title="MainWindow" Height="450
         " Width="800">
     <Grid Background="#FFF7F2F0" Margin="0,0,0,-6">
-        <Image Margin="78,64,78,259" Source="/Group 24.png" Stretch="Fill"/>
+        <Image Margin="78,64,75,259" Source="/Group 24.png" Stretch="Fill"/>
         <Rectangle HorizontalAlignment="Center" Height="44" VerticalAlignment="Top" Width="800" Fill="#FF707B6D"/>
         <Label Content="Услуги" HorizontalAlignment="Left" Margin="83,190,0,0" VerticalAlignment="Top" FontSize="20" FontFamily="Bahnschrift" Foreground="#FF262D24"/>
-        <Button Content="&#xD;&#xA;" HorizontalAlignment="Left" Margin="252,224,0,0" VerticalAlignment="Top" Height="116" Width="116" Click="Button_Click_1" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" RenderTransformOrigin="0.828,0.5">
+        <Button Content="&#xD;&#xA;" HorizontalAlignment="Left" Margin="252,224,0,0" VerticalAlignment="Top" Height="116" Width="116"  Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" RenderTransformOrigin="0.828,0.5" Click="Button_Click_7">
             <Button.Background>
                 <ImageBrush ImageSource="/Group 26.png"/>
             </Button.Background>
         </Button>
-        <Button Content="" HorizontalAlignment="Left" Height="116" Margin="435,224,0,0" VerticalAlignment="Top" Width="116" Click="Button_Click_2" BorderBrush="#FFF7F2F0" Foreground="#FFF7F2F0">
+        <Button Content="" HorizontalAlignment="Left" Height="116" Margin="435,224,0,0" VerticalAlignment="Top" Width="116"  BorderBrush="#FFF7F2F0" Foreground="#FFF7F2F0" Click="Button_Click_8">
             <Button.Background>
                 <ImageBrush ImageSource="/Group 23.png"/>
             </Button.Background>
         </Button>
-        <Button Content="" HorizontalAlignment="Left" Height="116" Margin="609,224,0,0" VerticalAlignment="Top" Width="116" BorderBrush="#FFF7F2F0" Foreground="#FFF7F2F0">
+        <Button Content="" HorizontalAlignment="Left" Height="116" Margin="609,224,0,0" VerticalAlignment="Top" Width="116" BorderBrush="#FFF7F2F0" Foreground="#FFF7F2F0" Click="Button_Click_9">
             <Button.Background>
                 <ImageBrush ImageSource="/Group 27.png"/>
             </Button.Background>
         </Button>
         <Label Content="Каталог" HorizontalAlignment="Left" Margin="75,341,0,0" VerticalAlignment="Top" FontSize="20" FontFamily="Bahnschrift" Foreground="#FF262D24"/>
-        <Button Content="" HorizontalAlignment="Left" Height="67" Margin="75,369,0,0" VerticalAlignment="Top" Width="188" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Click="Button_Click_3">
+        <Button Content="" HorizontalAlignment="Left" Height="67" Margin="75,369,0,0" VerticalAlignment="Top" Width="188" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Click="Button_Click_3" >
             <Button.Background>
                 <ImageBrush ImageSource="/Group 28.png"/>
             </Button.Background>
@@ -43,18 +43,23 @@
             </Button.Background>
         </Button>
         <Label Content="Бриллиантовый дом" HorizontalAlignment="Left" Margin="94,2,0,0" VerticalAlignment="Top" FontSize="26" FontFamily="Bahnschrift" Foreground="#FFF7F2F0"/>
-        <Button Content="" HorizontalAlignment="Left" Height="30" Margin="730,6,0,0" VerticalAlignment="Top" Width="29" BorderBrush="#FF707B6D" Foreground="#FF707B6D">
+        <Button Content="" HorizontalAlignment="Left" Height="30" Margin="730,6,0,0" VerticalAlignment="Top" Width="29" BorderBrush="#FF707B6D" Foreground="#FF707B6D" Click="Button_Click_10">
             <Button.Background>
                 <ImageBrush ImageSource="/gg_profile.png"/>
             </Button.Background>
         </Button>
-        <ComboBox HorizontalAlignment="Left" Margin="518,6,0,0" VerticalAlignment="Top" Width="181" Height="30" SelectionChanged="ComboBox_SelectionChanged"/>
-        <Button Content="" HorizontalAlignment="Left" Height="116" Margin="78,224,0,0" VerticalAlignment="Top" Width="116" BorderBrush="#FFF7F2F0" Foreground="#FFF7F2F0">
+        <ComboBox Name="CityComboBox" VerticalAlignment="Top" HorizontalAlignment="Left" Width="200" Margin="493,11,0,0" SelectionChanged="ComboBox_SelectionChanged">
+            <ComboBoxItem>Москва</ComboBoxItem>
+            <ComboBoxItem>Санкт-Петербург</ComboBoxItem>
+            <ComboBoxItem>Екатеринбург</ComboBoxItem>
+            <ComboBoxItem>Новосибирск</ComboBoxItem>
+        </ComboBox>
+        <Button Content="" HorizontalAlignment="Left" Height="116" Margin="78,224,0,0" VerticalAlignment="Top" Width="116" BorderBrush="#FFF7F2F0" Foreground="#FFF7F2F0" Click="Button_Click_6" >
             <Button.Background>
-                <ImageBrush ImageSource="/Group 23.png"/>
+                <ImageBrush ImageSource="/Group 25.png"/>
             </Button.Background>
         </Button>
-        <Button Content="" HorizontalAlignment="Left" Height="28" Margin="34,8,0,0" VerticalAlignment="Top" Width="29" BorderBrush="#FF707B6D" Foreground="#FF707B6D">
+        <Button Content="" HorizontalAlignment="Left" Height="28" Margin="34,8,0,0" VerticalAlignment="Top" Width="29" BorderBrush="#FF707B6D" Foreground="#FF707B6D" Click="Button_Click_5">
             <Button.Background>
                 <ImageBrush ImageSource="/meteor-icons_list.png"/>
             </Button.Background>

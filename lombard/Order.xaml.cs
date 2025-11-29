@@ -28,5 +28,19 @@ namespace lombard
         {
 
         }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Basket basket = new Basket();
+            basket.Show();
+            this.Close();
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            Empty_basket empty_Basket = new Empty_basket();
+            empty_Basket.Show();
+            this.Close();
+        }
     }
 }

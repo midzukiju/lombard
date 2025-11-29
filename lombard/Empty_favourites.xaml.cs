@@ -15,31 +15,31 @@ using System.Windows.Shapes;
 namespace lombard
 {
     /// <summary>
-    /// Логика взаимодействия для Request.xaml
+    /// Логика взаимодействия для Empty_favourites.xaml
     /// </summary>
-    public partial class Request : Window
+    public partial class Empty_favourites : Window
     {
-        public Request()
+        public Empty_favourites()
         {
             InitializeComponent();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
-            this.Close();
-        }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
 
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
+            Account account = new Account();
+            account.Show();
+            this.Close();
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            Catalog catalog = new Catalog();   
+            catalog.Show();
             this.Close();
         }
     }

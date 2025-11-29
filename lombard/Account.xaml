@@ -17,9 +17,14 @@
                 <ImageBrush ImageSource="/meteor-icons_list.png"/>
             </Button.Background>
         </Button>
-        <ComboBox HorizontalAlignment="Left" Margin="518,6,0,0" VerticalAlignment="Top" Width="181" Height="30" />
+        <ComboBox Name="CityComboBox" VerticalAlignment="Top" HorizontalAlignment="Left" Width="200" Margin="493,11,0,0" >
+            <ComboBoxItem>Москва</ComboBoxItem>
+            <ComboBoxItem>Санкт-Петербург</ComboBoxItem>
+            <ComboBoxItem>Екатеринбург</ComboBoxItem>
+            <ComboBoxItem>Новосибирск</ComboBoxItem>
+        </ComboBox>
         <Label Content="Аккаунт" HorizontalAlignment="Left" Margin="68,62,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="20" Foreground="#FF262D24"/>
-        <Button Content="" HorizontalAlignment="Left" Height="35" Margin="43,61,0,0" VerticalAlignment="Top" Width="20" BorderBrush="White">
+        <Button Content="" HorizontalAlignment="Left" Height="35" Margin="43,61,0,0" VerticalAlignment="Top" Width="20" BorderBrush="White" Click="Button_Click">
             <Button.Background>
                 <ImageBrush ImageSource="/weui_arrow-filled.png"/>
             </Button.Background>
@@ -46,7 +51,7 @@
             </Label.Foreground>
         </Label>
         <Label Content="_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________" HorizontalAlignment="Center" Margin="0,222,0,0" VerticalAlignment="Top" Width="812" Foreground="#FF707B6D"/>
-        <Label Content="История залогов" HorizontalAlignment="Left" Margin="36,248,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16"/>
+        <Label Content="История залогов" HorizontalAlignment="Left" Margin="36,248,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16" Foreground="#FF262D24"/>
         <Button Content="" HorizontalAlignment="Left" Height="95" Margin="44,285,0,0" VerticalAlignment="Top" Width="95" BorderBrush="White">
             <Button.Background>
                 <ImageBrush ImageSource="/image 27.png"/>
@@ -74,7 +79,7 @@
                 <ImageBrush ImageSource="/gg_profile.png"/>
             </Button.Background>
         </Button>
-        <Button Content="" HorizontalAlignment="Left" Height="29" Margin="730,134,0,0" VerticalAlignment="Top" Width="28" BorderBrush="White" RenderTransformOrigin="1.381,0.597">
+        <Button Content="" HorizontalAlignment="Left" Height="29" Margin="730,134,0,0" VerticalAlignment="Top" Width="28" BorderBrush="White" RenderTransformOrigin="1.381,0.597" Foreground="#FF262D24">
             <Button.Background>
                 <ImageBrush ImageSource="/lets-icons_setting-fill.png"/>
             </Button.Background>

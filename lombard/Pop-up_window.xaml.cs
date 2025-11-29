@@ -23,5 +23,49 @@ namespace lombard
         {
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.Show();
+            this.Close();
+        }
+
+        private void OpenNewWindowLabel_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Request request = new Request();
+            request.Show();
+            this.Close();
+        }
+        private void OpenNewWindowLabel1_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Request request = new Request();
+            request.Show();
+            this.Close();
+        }
+        private void OpenNewWindowLabel2_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Request request = new Request();
+            request.Show();
+            this.Close();
+        }
+        private void OpenNewWindowLabel3_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Request request = new Request();
+            request.Show();
+            this.Close();
+        }
+        private void OpenNewWindowLabel4_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Catalog catalog = new Catalog();
+            catalog.Show();
+            this.Close();
+        }
+        private void Account_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Account account = new Account();
+            account.Show();
+            this.Close();
+        }
     }
 }

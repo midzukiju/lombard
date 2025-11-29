@@ -15,31 +15,26 @@ using System.Windows.Shapes;
 namespace lombard
 {
     /// <summary>
-    /// Логика взаимодействия для Request.xaml
+    /// Логика взаимодействия для Empty_basket.xaml
     /// </summary>
-    public partial class Request : Window
+    public partial class Empty_basket : Window
     {
-        public Request()
+        public Empty_basket()
         {
             InitializeComponent();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
+            Catalog catalog = new Catalog();
+            catalog.Show();
             this.Close();
-        }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
+            Account account = new Account();
+            account.Show();
             this.Close();
         }
     }

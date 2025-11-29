@@ -10,12 +10,12 @@
         <Image Margin="78,64,78,253" Source="/Group 24.png" Stretch="Fill"/>
         <Rectangle HorizontalAlignment="Center" Height="44" VerticalAlignment="Top" Width="800" Fill="#FF707B6D"/>
         <Label Content="Услуги" HorizontalAlignment="Left" Margin="83,190,0,0" VerticalAlignment="Top" FontSize="20" FontFamily="Bahnschrift" Foreground="#FF262D24"/>
-        <Button Content="&#xA;" HorizontalAlignment="Left" Margin="252,224,0,0" VerticalAlignment="Top" Height="116" Width="116" Click="Button_Click_1" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" RenderTransformOrigin="0.828,0.5">
+        <Button Content="&#xA;" HorizontalAlignment="Left" Margin="252,224,0,0" VerticalAlignment="Top" Height="116" Width="116"  Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" RenderTransformOrigin="0.828,0.5">
             <Button.Background>
                 <ImageBrush ImageSource="/Group 26.png"/>
             </Button.Background>
         </Button>
-        <Button Content="" HorizontalAlignment="Left" Height="116" Margin="435,224,0,0" VerticalAlignment="Top" Width="116" Click="Button_Click_2" BorderBrush="#FFF7F2F0" Foreground="#FFF7F2F0">
+        <Button Content="" HorizontalAlignment="Left" Height="116" Margin="435,224,0,0" VerticalAlignment="Top" Width="116"  BorderBrush="#FFF7F2F0" Foreground="#FFF7F2F0">
             <Button.Background>
                 <ImageBrush ImageSource="/Group 23.png"/>
             </Button.Background>
@@ -26,7 +26,7 @@
             </Button.Background>
         </Button>
         <Label Content="Каталог" HorizontalAlignment="Left" Margin="75,341,0,0" VerticalAlignment="Top" FontSize="20" FontFamily="Bahnschrift" Foreground="#FF262D24"/>
-        <Button Content="" HorizontalAlignment="Left" Height="67" Margin="75,369,0,0" VerticalAlignment="Top" Width="188" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Click="Button_Click_3">
+        <Button Content="" HorizontalAlignment="Left" Height="67" Margin="75,369,0,0" VerticalAlignment="Top" Width="188" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" >
             <Button.Background>
                 <ImageBrush ImageSource="/Group 28.png"/>
             </Button.Background>
@@ -47,7 +47,7 @@
                 <ImageBrush ImageSource="/gg_profile.png"/>
             </Button.Background>
         </Button>
-        <ComboBox HorizontalAlignment="Left" Margin="518,6,0,0" VerticalAlignment="Top" Width="181" Height="30" SelectionChanged="ComboBox_SelectionChanged"/>
+        <ComboBox HorizontalAlignment="Left" Margin="518,6,0,0" VerticalAlignment="Top" Width="181" Height="30" />
         <Button Content="" HorizontalAlignment="Left" Height="116" Margin="78,224,0,0" VerticalAlignment="Top" Width="116" BorderBrush="#FFF7F2F0" Foreground="#FFF7F2F0">
             <Button.Background>
                 <ImageBrush ImageSource="/Group 23.png"/>
@@ -65,7 +65,7 @@
         </Rectangle>
         <Rectangle HorizontalAlignment="Center" Height="298" Stroke="#FF707B6D" VerticalAlignment="Top" Width="412" Fill="#FFD9D9D9" Margin="0,77,0,0"/>
         <Label Content="Заявка" HorizontalAlignment="Center" Margin="0,107,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="18" Foreground="#FF262D24"/>
-        <Button Content="" HorizontalAlignment="Left" Height="31" Margin="564,87,0,0" VerticalAlignment="Top" Width="30" BorderBrush="#FFD9D9D9" RenderTransformOrigin="0.535,1.24">
+        <Button Content="" HorizontalAlignment="Left" Height="31" Margin="564,87,0,0" VerticalAlignment="Top" Width="30" BorderBrush="#FFD9D9D9" RenderTransformOrigin="0.535,1.24" Click="Button_Click_1">
             <Button.Background>
                 <ImageBrush ImageSource="/hugeicons_cancel-circle.png"/>
             </Button.Background>

@@ -8,7 +8,12 @@
         Title="Order" Height="450" Width="800">
     <Grid Background="#FFF7F2F0">
         <Rectangle HorizontalAlignment="Center" Height="44                    " VerticalAlignment="Top" Width="800" Fill="#FF707B6D"/>
-        <ComboBox HorizontalAlignment="Left" Margin="518,6,0,0" VerticalAlignment="Top" Width="181" Height="30" />
+        <ComboBox Name="CityComboBox" VerticalAlignment="Top" HorizontalAlignment="Left" Width="200" Margin="493,11,0,0" >
+            <ComboBoxItem>Москва</ComboBoxItem>
+            <ComboBoxItem>Санкт-Петербург</ComboBoxItem>
+            <ComboBoxItem>Екатеринбург</ComboBoxItem>
+            <ComboBoxItem>Новосибирск</ComboBoxItem>
+        </ComboBox>
         <Button Content="" HorizontalAlignment="Left" Height="30" Margin="730,6,0,0" VerticalAlignment="Top" Width="29" BorderBrush="#FF707B6D" Foreground="#FF707B6D">
             <Button.Background>
                 <ImageBrush ImageSource="/gg_profile.png"/>
@@ -20,7 +25,7 @@
                 <ImageBrush ImageSource="/meteor-icons_list.png"/>
             </Button.Background>
         </Button>
-        <Button Content="" HorizontalAlignment="Left" Height="35" Margin="43,61,0,0" VerticalAlignment="Top" Width="20" BorderBrush="#FFF7F2F0">
+        <Button Content="" HorizontalAlignment="Left" Height="35" Margin="43,61,0,0" VerticalAlignment="Top" Width="20" BorderBrush="#FFF7F2F0" Click="Button_Click_1">
             <Button.Background>
                 <ImageBrush ImageSource="/weui_arrow-filled.png"/>
             </Button.Background>
@@ -28,27 +33,31 @@
         <Label Content="Способ получения" HorizontalAlignment="Left" Margin="68,62,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="18" Foreground="#FF262D24"/>
         <Label Content="_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________" HorizontalAlignment="Center" VerticalAlignment="Top" Width="812" Foreground="#FF707B6D" Margin="0,152,0,0"/>
         <Label Content="_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________" HorizontalAlignment="Center" VerticalAlignment="Top" Width="812" Foreground="#FF707B6D" Margin="0,321,0,0"/>
-        <Button Content="Самовывоз" HorizontalAlignment="Left" Height="35" Margin="76,101,0,0" VerticalAlignment="Top" Width="122" BorderBrush="{x:Null}" Click="Button_Click" FontFamily="Bahnschrift"/>
-        <Button Content="Доставка" HorizontalAlignment="Left" Height="35" Margin="198,101,0,0" VerticalAlignment="Top" Width="122" BorderBrush="{x:Null}" FontFamily="Bahnschrift"/>
+        <Button Content="Самовывоз" HorizontalAlignment="Left" Height="35" Margin="76,101,0,0" VerticalAlignment="Top" Width="122" BorderBrush="{x:Null}" Click="Button_Click" FontFamily="Bahnschrift" Foreground="#FF262D24">
+            <Button.Background>
+                <SolidColorBrush Color="#FF707B6D" Opacity="0.35"/>
+            </Button.Background>
+        </Button>
+        <Button Content="Доставка" HorizontalAlignment="Left" Height="35" Margin="198,101,0,0" VerticalAlignment="Top" Width="122" BorderBrush="{x:Null}" FontFamily="Bahnschrift" Foreground="#FF262D24"/>
         <Rectangle HorizontalAlignment="Left" Height="19" Margin="76,142,0,0" VerticalAlignment="Top" Width="19">
             <Rectangle.Fill>
                 <ImageBrush ImageSource="/bx_map.png"/>
             </Rectangle.Fill>
         </Rectangle>
-        <Label Content="Лиговский проспект, 98" HorizontalAlignment="Left" Margin="94,139,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift"/>
+        <Label Content="Лиговский проспект, 98" HorizontalAlignment="Left" Margin="94,139,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" Foreground="#FF262D24"/>
         <Rectangle HorizontalAlignment="Left" Height="94" Margin="68,227,0,0" VerticalAlignment="Top" Width="94">
             <Rectangle.Fill>
                 <ImageBrush ImageSource="/image 23.png"/>
             </Rectangle.Fill>
         </Rectangle>
-        <Label Content="Серебряное кольцо “Ромбики”" HorizontalAlignment="Left" Margin="181,230,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16"/>
-        <Label Content="Бренд: Sweetpeeps, размер: 17, &#xA;тип металлов: серебро, &#xA;тип камня: бриллиант" HorizontalAlignment="Left" Margin="181,256,0,0" VerticalAlignment="Top" Width="184" FontSize="11"/>
-        <Label Content="16 000 руб." HorizontalAlignment="Left" Margin="628,232,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16"/>
-        <Label Content="Ваша покупка" HorizontalAlignment="Left" Margin="68,178,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="18"/>
-        <Label Content="Товары (2)" HorizontalAlignment="Left" Margin="68,199,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift"/>
-        <Label Content="Итого: " HorizontalAlignment="Left" Margin="68,345,0,0" VerticalAlignment="Top" FontSize="16" FontFamily="Bahnschrift"/>
-        <Label Content="34 000 руб." HorizontalAlignment="Left" Margin="628,345,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16"/>
-        <Button Content="Оплатить" HorizontalAlignment="Left" Height="41" Margin="68,376,0,0" VerticalAlignment="Top" Width="165"  FontFamily="Bahnschrift" Foreground="#FFF7F2F0" Background="#FF707B6D" BorderBrush="{x:Null}" FontSize="13"/>
+        <Label Content="Серебряное кольцо “Ромбики”" HorizontalAlignment="Left" Margin="181,230,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16" Foreground="#FF262D24"/>
+        <Label Content="Бренд: Sweetpeeps, размер: 17, &#xA;тип металлов: серебро, &#xA;тип камня: бриллиант" HorizontalAlignment="Left" Margin="181,256,0,0" VerticalAlignment="Top" Width="184" FontSize="11" Foreground="#FF262D24"/>
+        <Label Content="16 000 руб." HorizontalAlignment="Left" Margin="628,232,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16" Foreground="#FF262D24"/>
+        <Label Content="Ваша покупка" HorizontalAlignment="Left" Margin="68,178,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="18" Foreground="#FF262D24"/>
+        <Label Content="Товары (2)" HorizontalAlignment="Left" Margin="68,199,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" Foreground="#FF262D24"/>
+        <Label Content="Итого: " HorizontalAlignment="Left" Margin="68,345,0,0" VerticalAlignment="Top" FontSize="16" FontFamily="Bahnschrift" Foreground="#FF262D24"/>
+        <Label Content="34 000 руб." HorizontalAlignment="Left" Margin="628,345,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16" Foreground="#FF262D24"/>
+        <Button Content="Оплатить" HorizontalAlignment="Left" Height="41" Margin="68,376,0,0" VerticalAlignment="Top" Width="165"  FontFamily="Bahnschrift" Foreground="#FFF7F2F0" Background="#FF707B6D" BorderBrush="{x:Null}" FontSize="13" Click="Button_Click_2"/>
 
     </Grid>
 </Window>

@@ -10,12 +10,12 @@
         <Image Margin="78,64,78,253" Source="/Group 24.png" Stretch="Fill"/>
         <Rectangle HorizontalAlignment="Center" Height="44" VerticalAlignment="Top" Width="800" Fill="#FF707B6D"/>
         <Label Content="Услуги" HorizontalAlignment="Left" Margin="83,190,0,0" VerticalAlignment="Top" FontSize="20" FontFamily="Bahnschrift" Foreground="#FF262D24"/>
-        <Button Content="&#xA;" HorizontalAlignment="Left" Margin="252,224,0,0" VerticalAlignment="Top" Height="116" Width="116" Click="Button_Click_1" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" RenderTransformOrigin="0.828,0.5">
+        <Button Content="&#xA;" HorizontalAlignment="Left" Margin="252,224,0,0" VerticalAlignment="Top" Height="116" Width="116"  Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" RenderTransformOrigin="0.828,0.5">
             <Button.Background>
                 <ImageBrush ImageSource="/Group 26.png"/>
             </Button.Background>
         </Button>
-        <Button Content="" HorizontalAlignment="Left" Height="116" Margin="435,224,0,0" VerticalAlignment="Top" Width="116" Click="Button_Click_2" BorderBrush="#FFF7F2F0" Foreground="#FFF7F2F0">
+        <Button Content="" HorizontalAlignment="Left" Height="116" Margin="435,224,0,0" VerticalAlignment="Top" Width="116"  BorderBrush="#FFF7F2F0" Foreground="#FFF7F2F0">
             <Button.Background>
                 <ImageBrush ImageSource="/Group 23.png"/>
             </Button.Background>
@@ -26,7 +26,7 @@
             </Button.Background>
         </Button>
         <Label Content="Каталог" HorizontalAlignment="Left" Margin="75,341,0,0" VerticalAlignment="Top" FontSize="20" FontFamily="Bahnschrift" Foreground="#FF262D24"/>
-        <Button Content="" HorizontalAlignment="Left" Height="67" Margin="75,369,0,0" VerticalAlignment="Top" Width="188" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Click="Button_Click_3">
+        <Button Content="" HorizontalAlignment="Left" Height="67" Margin="75,369,0,0" VerticalAlignment="Top" Width="188" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" >
             <Button.Background>
                 <ImageBrush ImageSource="/Group 28.png"/>
             </Button.Background>
@@ -47,7 +47,7 @@
                 <ImageBrush ImageSource="/gg_profile.png"/>
             </Button.Background>
         </Button>
-        <ComboBox HorizontalAlignment="Left" Margin="518,6,0,0" VerticalAlignment="Top" Width="181" Height="30" SelectionChanged="ComboBox_SelectionChanged"/>
+        <ComboBox HorizontalAlignment="Left" Margin="518,6,0,0" VerticalAlignment="Top" Width="181" Height="30" />
         <Button Content="" HorizontalAlignment="Left" Height="116" Margin="78,224,0,0" VerticalAlignment="Top" Width="116" BorderBrush="#FFF7F2F0" Foreground="#FFF7F2F0">
             <Button.Background>
                 <ImageBrush ImageSource="/Group 23.png"/>
@@ -64,15 +64,15 @@
             </Rectangle.Fill>
         </Rectangle>
         <Rectangle HorizontalAlignment="Left" Height="435" Stroke="#FF707B6D" VerticalAlignment="Center" Width="263" Fill="#FFD9D9D9" Grid.RowSpan="1" Grid.ColumnSpan="1"/>
-        <Button Content="" HorizontalAlignment="Left" Height="31" Margin="221,12,0,0" VerticalAlignment="Top" Width="30" BorderBrush="#FFD9D9D9" RenderTransformOrigin="0.535,1.24">
+        <Button Content="" HorizontalAlignment="Left" Height="31" Margin="221,12,0,0" VerticalAlignment="Top" Width="30" BorderBrush="#FFD9D9D9" RenderTransformOrigin="0.535,1.24" Click="Button_Click">
             <Button.Background>
                 <ImageBrush ImageSource="/hugeicons_cancel-circle.png"/>
             </Button.Background>
         </Button>
-        <Label Content="_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________" HorizontalAlignment="Left" VerticalAlignment="Top" Width="271" Foreground="#FF707B6D" Margin="-4,89,0,0"/>
-        <Label Content="_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________" HorizontalAlignment="Left" VerticalAlignment="Top" Width="271" Foreground="#FF707B6D" Margin="-4,150,0,0"/>
-        <Label Content="_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________" HorizontalAlignment="Left" VerticalAlignment="Top" Width="271" Foreground="#FF707B6D" Margin="-4,310,0,0"/>
-        <Label Content="_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________" HorizontalAlignment="Left" VerticalAlignment="Top" Width="271" Foreground="#FF707B6D" Margin="-4,42,0,0" RenderTransformOrigin="0.5,0.5">
+        <Label Content="_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________" HorizontalAlignment="Left" VerticalAlignment="Top" Width="271" Foreground="#FF707B6D" Margin="-4,86,0,0"/>
+        <Label Content="_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________" HorizontalAlignment="Left" VerticalAlignment="Top" Width="271" Foreground="#FF707B6D" Margin="-4,147,0,0"/>
+        <Label Content="_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________" HorizontalAlignment="Left" VerticalAlignment="Top" Width="271" Foreground="#FF707B6D" Margin="-4,363,0,0"/>
+        <Label Content="_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________" HorizontalAlignment="Left" VerticalAlignment="Top" Width="271" Foreground="#FF707B6D" Margin="-4,39,0,0" RenderTransformOrigin="0.5,0.5">
             <Label.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -83,16 +83,24 @@
             </Label.RenderTransform>
         </Label>
         <Label Content="Бриллиантовый дом" HorizontalAlignment="Left" Margin="13,15,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" Foreground="#FF262D24" FontSize="19"/>
-        <Label Content="Аккаунт" HorizontalAlignment="Left" Margin="17,71,0,0" VerticalAlignment="Top" Foreground="#FF262D24" FontFamily="Bahnschrift" FontSize="16"/>
-        <ComboBox HorizontalAlignment="Left" Height="28" Margin="23,126,0,0" VerticalAlignment="Top" Width="187" BorderBrush="#FFD9D9D9">
-            <ComboBox.Background>
-                <LinearGradientBrush EndPoint="0,1">
-                    <GradientStop Color="#FFF0F0F0"/>
-                    <GradientStop Color="#FFD9D9D9" Offset="1"/>
-                </LinearGradientBrush>
-            </ComboBox.Background>
+        <Label Name="Account" Content="Аккаунт" HorizontalAlignment="Left" Margin="17,68,0,0" VerticalAlignment="Top" Foreground="#FF262D24" FontFamily="Bahnschrift" FontSize="16"/>
+        <ComboBox Name="CityComboBox" VerticalAlignment="Top" HorizontalAlignment="Left" Width="200" Margin="21,127,0,0" >
+            <ComboBoxItem>Москва</ComboBoxItem>
+            <ComboBoxItem>Санкт-Петербург</ComboBoxItem>
+            <ComboBoxItem>Екатеринбург</ComboBoxItem>
+            <ComboBoxItem>Новосибирск</ComboBoxItem>
         </ComboBox>
-        <Label Content="Услуги" HorizontalAlignment="Left" Margin="17,178,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16"/>
+        <Label Content="Услуги" HorizontalAlignment="Left" Margin="17,177,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16" Foreground="#FF262D24"/>
+        <Label Name="OpenNewWindowLabel" Content="Купить" HorizontalAlignment="Left" Margin="18,202,0,0" VerticalAlignment="Top" Foreground="#FF262D24" FontFamily="Bahnschrift"/>
+        <Label Name="OpenNewWindowLabel1" Content="Заложить " HorizontalAlignment="Left" Margin="18,221,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" Foreground="#FF262D24"/>
+        <Label Name="OpenNewWindowLabel2" Content="Продать" HorizontalAlignment="Left" Margin="18,239,0,0" VerticalAlignment="Top" Foreground="#FF262D24" FontFamily="Bahnschrift"/>
+        <Label Name="OpenNewWindowLabel3" Content="Оценить" HorizontalAlignment="Left" Margin="19,257,0,0" VerticalAlignment="Top" Foreground="#FF262D24" FontFamily="Bahnschrift"/>
+        <Label Name="OpenNewWindowLabel4" Content="Каталог" HorizontalAlignment="Left" Margin="20,286,0,0" VerticalAlignment="Top" FontSize="16" Foreground="#FF262D24" FontFamily="Bahnschrift"/>
+        <Label Name="OpenNewWindowLabel5" Content="Украшения" HorizontalAlignment="Left" Margin="20,311,0,0" VerticalAlignment="Top" Foreground="#FF262D24" FontFamily="Bahnschrift"/>
+        <Label Name="OpenNewWindowLabel6" Content="Электроника" HorizontalAlignment="Left" Margin="19,331,0,0" VerticalAlignment="Top" Foreground="#FF262D24" FontFamily="Bahnschrift"/>
+        <Label Name="OpenNewWindowLabel7" Content="Антиквариат" HorizontalAlignment="Left" Margin="19,350,0,0" VerticalAlignment="Top" Foreground="#FF262D24" FontFamily="Bahnschrift"/>
+        <Label Content="Лиговский проспект, 98" HorizontalAlignment="Left" Margin="19,384,0,0" VerticalAlignment="Top" Foreground="#FF262D24"/>
+        <Label Content="+7 (899) 677-45-45" HorizontalAlignment="Left" Margin="18,399,0,0" VerticalAlignment="Top" Foreground="#FF262D24"/>
 
     </Grid>
 </Window>
