@@ -26,9 +26,9 @@ namespace lombard
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
+            Application.Current.MainWindow.Show();
             this.Close();
+
         }
     }
 }

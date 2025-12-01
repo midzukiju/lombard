@@ -43,7 +43,7 @@ namespace lombard
         {
             Catalog catalog = new Catalog();
             catalog.Show();
-            this.Close();
+            this.Hide();
         }
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
@@ -55,42 +55,42 @@ namespace lombard
         {
             Pop_up_window pop_Up_Window = new Pop_up_window();
             pop_Up_Window.Show();
-            this.Close();
+            this.Hide();
         }
 
         private void Button_Click_6(object sender, RoutedEventArgs e)
         {
             Request request = new Request();
             request.Show();
-            this.Close();
+            this.Hide();
         }
 
         private void Button_Click_7(object sender, RoutedEventArgs e)
         {
             Request request = new Request();
             request.Show();
-            this.Close();
+            this.Hide();
         }
 
         private void Button_Click_8(object sender, RoutedEventArgs e)
         {
             Request request = new Request();
             request.Show();
-            this.Close();
+            this.Hide();
         }
 
         private void Button_Click_9(object sender, RoutedEventArgs e)
         {
             Request request = new Request();
             request.Show();
-            this.Close();
+            this.Hide();
         }
 
         private void Button_Click_10(object sender, RoutedEventArgs e)
         {
             Registration registration = new Registration();
             registration.Show();
-            this.Close();
+            this.Hide();
         }
     }
 }

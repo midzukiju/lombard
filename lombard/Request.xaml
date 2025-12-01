@@ -63,29 +63,44 @@
                 <SolidColorBrush Color="#FFD9D9D9" Opacity="0.68"/>
             </Rectangle.Fill>
         </Rectangle>
-        <Rectangle HorizontalAlignment="Center" Height="298" Stroke="#FF707B6D" VerticalAlignment="Top" Width="412" Fill="#FFD9D9D9" Margin="0,77,0,0"/>
-        <Label Content="Заявка" HorizontalAlignment="Center" Margin="0,107,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="18" Foreground="#FF262D24"/>
+        <Rectangle HorizontalAlignment="Center" Height="325" Stroke="#FF707B6D" VerticalAlignment="Top" Width="412" Fill="#FFD9D9D9" Margin="0,77,0,0"/>
+        <Label Content="Заявка" HorizontalAlignment="Center" Margin="0,87,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="18" Foreground="#FF262D24"/>
         <Button Content="" HorizontalAlignment="Left" Height="31" Margin="564,87,0,0" VerticalAlignment="Top" Width="30" BorderBrush="#FFD9D9D9" RenderTransformOrigin="0.535,1.24" Click="Button_Click_1">
             <Button.Background>
                 <ImageBrush ImageSource="/hugeicons_cancel-circle.png"/>
             </Button.Background>
         </Button>
-        <TextBox HorizontalAlignment="Center" Height="42" Margin="0,144,0,0" TextWrapping="Wrap" Text="Введите  ФИО" VerticalAlignment="Top" Width="357" FontFamily="Bahnschrift">
+        <TextBox HorizontalAlignment="Center" Height="42" Margin="0,144,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="357" FontFamily="Bahnschrift">
             <TextBox.Foreground>
-                <SolidColorBrush Color="#FF707B6D" Opacity="0.68"/>
+                <SolidColorBrush Color="#FF262D24" Opacity="1"/>
             </TextBox.Foreground>
         </TextBox>
-        <TextBox HorizontalAlignment="Center" Height="42" Margin="0,203,0,0" TextWrapping="Wrap" Text="Введите  номер телефона" VerticalAlignment="Top" Width="357" TextChanged="TextBox_TextChanged" FontFamily="Bahnschrift">
+        <TextBox HorizontalAlignment="Center" Height="42" Margin="0,214,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="356" TextChanged="TextBox_TextChanged" FontFamily="Bahnschrift">
             <TextBox.Foreground>
-                <SolidColorBrush Color="#FF707B6D" Opacity="0.68"/>
+                <SolidColorBrush Color="#FF262D24" Opacity="1"/>
             </TextBox.Foreground>
         </TextBox>
-        <TextBox HorizontalAlignment="Center" Height="42" Margin="0,260,0,0" TextWrapping="Wrap" Text="Введите  город" VerticalAlignment="Top" Width="357" FontFamily="Bahnschrift">
+        <TextBox HorizontalAlignment="Center" Height="42" Margin="0,282,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="357" FontFamily="Bahnschrift">
             <TextBox.Foreground>
-                <SolidColorBrush Color="#FF707B6D" Opacity="0.68"/>
+                <SolidColorBrush Color="#FF262D24" Opacity="1"/>
             </TextBox.Foreground>
         </TextBox>
-        <Button Content="Оставить заявку" HorizontalAlignment="Center" Height="35" Margin="0,323,0,0" VerticalAlignment="Top" Width="158" Click="Button_Click" Background="#FF707B6D" BorderBrush="#FF707B6D" FontFamily="Bahnschrift" FontSize="14" Foreground="#FFF7F2F0"/>
+        <Button Content="Оставить заявку" HorizontalAlignment="Center" Height="35" Margin="0,338,0,0" VerticalAlignment="Top" Width="158" Click="Button_Click" Background="#FF707B6D" BorderBrush="#FF707B6D" FontFamily="Bahnschrift" FontSize="14" Foreground="#FFF7F2F0"/>
+        <Label Content="Введите ФИО" HorizontalAlignment="Left" Margin="218,122,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift">
+            <Label.Foreground>
+                <SolidColorBrush Color="#FF262D24" Opacity="0.5"/>
+            </Label.Foreground>
+        </Label>
+        <Label Content="Введите номер телефона" HorizontalAlignment="Left" Margin="217,194,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift">
+            <Label.Foreground>
+                <SolidColorBrush Color="#FF262D24" Opacity="0.5"/>
+            </Label.Foreground>
+        </Label>
+        <Label Content="Введите город" HorizontalAlignment="Left" Margin="217,261,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift">
+            <Label.Foreground>
+                <SolidColorBrush Color="#FF262D24" Opacity="0.5"/>
+            </Label.Foreground>
+        </Label>
 
     </Grid>
 </Window>

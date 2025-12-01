@@ -6,9 +6,10 @@
         xmlns:local="clr-namespace:lombard"
         mc:Ignorable="d"
         Title="MainWindow" Height="450
-        " Width="800">
+        " Width="800" MaxHeight="500" MaxWidth="1000">
+
     <Grid Background="#FFF7F2F0" Margin="0,0,0,-6">
-        <Image Margin="78,64,75,259" Source="/Group 24.png" Stretch="Fill"/>
+        <Image HorizontalAlignment="Left" Height="100" Margin="78,64,75,259" Source="/Group 24.png" Stretch="Fill"/>
         <Rectangle HorizontalAlignment="Center" Height="44" VerticalAlignment="Top" Width="800" Fill="#FF707B6D"/>
         <Label Content="Услуги" HorizontalAlignment="Left" Margin="83,190,0,0" VerticalAlignment="Top" FontSize="20" FontFamily="Bahnschrift" Foreground="#FF262D24"/>
         <Button Content="&#xD;&#xA;" HorizontalAlignment="Left" Margin="252,224,0,0" VerticalAlignment="Top" Height="116" Width="116"  Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" RenderTransformOrigin="0.828,0.5" Click="Button_Click_7">

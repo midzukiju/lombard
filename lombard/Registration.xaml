@@ -7,34 +7,45 @@
         mc:Ignorable="d"
         Title="Registration" Height="450" Width="800">
     <Grid Background="#FFF7F2F0">
-        <Label Content="Бриллиантовый дом" HorizontalAlignment="Center" Margin="0,80,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" Foreground="#FF262D24" FontSize="19"/>
-        <Rectangle HorizontalAlignment="Left" Height="21" Margin="497,86,0,0" VerticalAlignment="Top" Width="21" RenderTransformOrigin="0.276,0.518">
-            <Rectangle.Fill>
-                <ImageBrush ImageSource="/ion_diamond-outline.png"/>
-            </Rectangle.Fill>
-        </Rectangle>
-        <Label Content="Войдите или зарегестрируйтесь" HorizontalAlignment="Center" Margin="0,149,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="22" Foreground="#FF262D24"/>
-        <Button Content="" HorizontalAlignment="Left" Height="31" Margin="588,136,0,0" VerticalAlignment="Top" Width="31" BorderBrush="#FFF7F2F0" RenderTransformOrigin="0.535,1.24" Click="Button_Click">
+        <Label Content="Вход в аккаунт" HorizontalAlignment="Center" Margin="0,90,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="22" Foreground="#FF262D24"/>
+        <Button Content="" HorizontalAlignment="Left" Height="31" Margin="588,77,0,0" VerticalAlignment="Top" Width="31" BorderBrush="#FFF7F2F0" RenderTransformOrigin="0.535,1.24" Click="Button_Click">
             <Button.Background>
                 <ImageBrush ImageSource="/hugeicons_cancel-circle.png"/>
             </Button.Background>
         </Button>
-        <Button Content="Почта/Логин" HorizontalAlignment="Left" Margin="234,193,0,0" VerticalAlignment="Top" Height="38" Width="166" BorderBrush="#FFD9D9D9" Foreground="#FF262D24" FontFamily="Bahnschrift">
+        <Button Click="MailLoginButton_Click" x:Name="MailLoginButton" Content="Почта/Логин" HorizontalAlignment="Left" Margin="234,134,0,0" VerticalAlignment="Top" Height="38" Width="166" BorderBrush="#FFD9D9D9" Foreground="#FF262D24" FontFamily="Bahnschrift">
             <Button.Background>
                 <SolidColorBrush Color="#FF707B6D" Opacity="0.35"/>
             </Button.Background>
         </Button>
-        <Button Content="Телефон" HorizontalAlignment="Left" Margin="400,193,0,0" VerticalAlignment="Top" Height="38" Width="166" BorderBrush="#FFDDDDDD" Foreground="#FF262D24" FontFamily="Bahnschrift"/>
-        <TextBox HorizontalAlignment="Left" Margin="223,246,0,0" TextWrapping="Wrap" Text="Введите почту или логин" VerticalAlignment="Top" Width="362" Height="36" BorderBrush="#FF707B6D" FontFamily="Bahnschrift">
+        <Button x:Name="PhoneButton" Content="Телефон" HorizontalAlignment="Left" Margin="400,134,0,0" VerticalAlignment="Top" Height="38" Width="166" BorderBrush="#FFDDDDDD" Foreground="#FF262D24" FontFamily="Bahnschrift" Click="PhoneButton_Click"/>
+        <TextBox HorizontalAlignment="Left" Margin="223,194,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="362" Height="36" BorderBrush="#FF707B6D" FontFamily="Bahnschrift">
             <TextBox.Foreground>
-                <SolidColorBrush Color="#FF707B6D" Opacity="0.68"/>
+                <SolidColorBrush Color="#FF262D24" Opacity="1"/>
             </TextBox.Foreground>
         </TextBox>
-        <TextBox HorizontalAlignment="Left" Margin="223,296,0,0" TextWrapping="Wrap" Text="Введите пароль" VerticalAlignment="Top" Width="362" Height="36" BorderBrush="#FF707B6D" FontFamily="Bahnschrift">
-            <TextBox.Foreground>
-                <SolidColorBrush Color="#FF707B6D" Opacity="0.68"/>
-            </TextBox.Foreground>
-        </TextBox>
-        <Button Content="Продолжить" HorizontalAlignment="Center" Height="32" Margin="0,347,0,0" VerticalAlignment="Top" Width="166" Background="#FF707B6D" Foreground="#FFF7F2F0" BorderBrush="#FF707B6D" FontFamily="Bahnschrift" Click="Button_Click_1"/>
+        <Button Content="Продолжить" HorizontalAlignment="Center" Height="32" Margin="0,296,0,0" VerticalAlignment="Top" Width="166" Background="#FF707B6D" Foreground="#FFF7F2F0" BorderBrush="#FF707B6D" FontFamily="Bahnschrift" Click="Button_Click_1"/>
+        <PasswordBox HorizontalAlignment="Left" Margin="223,253,0,0" VerticalAlignment="Top" Width="362" BorderBrush="#FF707B6D" Height="36"/>
+        <Label x:Name="InputLabel" Content="Введите почту или логин" HorizontalAlignment="Left" Margin="219,175,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift">
+            <Label.Foreground>
+                <SolidColorBrush Color="#FF262D24" Opacity="0.5"/>
+            </Label.Foreground>
+        </Label>
+        <Label Content="Введите пароль" HorizontalAlignment="Left" Margin="218,233,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift">
+            <Label.Foreground>
+                <SolidColorBrush Color="#FF262D24" Opacity="0.5"/>
+            </Label.Foreground>
+        </Label>
+        <Button Content="Еще нет аккаунта?" HorizontalAlignment="Center" Height="22" Margin="0,328,0,0" VerticalAlignment="Top" Width="110" Background="#FFF7F2F0" BorderBrush="#FFF7F2F0" Click="Button_Click_2">
+            <Button.Foreground>
+                <SolidColorBrush Color="#FF262D24" Opacity="0.7"/>
+            </Button.Foreground>
+        </Button>
+        <Label Content="Бриллиантовый дом" HorizontalAlignment="Center" Margin="0,17,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" Foreground="#FF262D24" FontSize="16"/>
+        <Rectangle HorizontalAlignment="Left" Height="18" Margin="482,24,0,0" VerticalAlignment="Top" Width="18" RenderTransformOrigin="0.276,0.518">
+            <Rectangle.Fill>
+                <ImageBrush ImageSource="/ion_diamond-outline.png"/>
+            </Rectangle.Fill>
+        </Rectangle>
     </Grid>
 </Window>

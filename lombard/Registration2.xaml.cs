@@ -15,15 +15,16 @@ using System.Windows.Shapes;
 namespace lombard
 {
     /// <summary>
-    /// Логика взаимодействия для Registration.xaml
+    /// Логика взаимодействия для Registration2.xaml
     /// </summary>
-    public partial class Registration : Window
+    public partial class Registration2 : Window
     {
         private readonly SolidColorBrush ActiveBrush;
         private readonly SolidColorBrush PhoneActiveBrush;
         private readonly SolidColorBrush InactiveBrush;
-        public Registration()
+        public Registration2()
         {
+            InitializeComponent();
             InitializeComponent();
 
             ActiveBrush = new SolidColorBrush(Color.FromArgb(0xFF, 0x70, 0x7B, 0x6D));
@@ -34,28 +35,9 @@ namespace lombard
 
             InactiveBrush = new SolidColorBrush(Color.FromArgb(0xFF, 0xDD, 0xDD, 0xDD));
 
-           
             SetLoginMode();
         }
-        
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Application.Current.MainWindow.Show();
-            this.Close();
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            Account account = new Account();    
-            account.Show();
-            this.Close();
-        }
 
         private void SetLoginMode()
         {
@@ -86,12 +68,22 @@ namespace lombard
             SetPhoneMode();
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Account account = new Account();
+            account.Show();
+            this.Close();
+        }
+
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            Registration2 registration2 = new Registration2();
-            registration2.Show();
+            Application.Current.MainWindow.Show();
             this.Close();
         }
     }
-
 }
