@@ -43,7 +43,7 @@
         <Label Content="Серебряное кольцо “Ромбики”" HorizontalAlignment="Left" Margin="186,118,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16" Foreground="#FF262D24"/>
         <Label Content="Бренд: Sweetpeeps, размер: 17, &#xD;&#xA;тип металлов: серебро, &#xD;&#xA;тип камня: бриллиант" HorizontalAlignment="Left" Margin="186,143,0,0" VerticalAlignment="Top" Width="184" FontSize="11" Foreground="#FF262D24"/>
         <Label Content="Серебряное кольцо “Триколор”" HorizontalAlignment="Left" Margin="186,252,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16" Foreground="#FF262D24"/>
-        <Label Content="Бренд: Sweetpeeps, размер: 17, &#xD;&#xA;тип металлов: серебро, &#xD;&#xA;тип камня: бриллиант, аквамарин, аметист" HorizontalAlignment="Left" Margin="186,282,0,0" VerticalAlignment="Top" FontSize="11" Foreground="#FF262D24"/>
+        <Label Content="Бренд: Sweetpeeps, размер: 17, &#xA;тип металлов: серебро, &#xA;тип камня: бриллиант, аметист" HorizontalAlignment="Left" Margin="186,282,0,0" VerticalAlignment="Top" FontSize="11" Foreground="#FF262D24"/>
         <Label Content="16 000 руб." HorizontalAlignment="Left" Margin="586,113,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16" Foreground="#FF262D24"/>
         <Label Content="18 000 руб." HorizontalAlignment="Left" Margin="587,247,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16" Foreground="#FF262D24"/>
         <Button Content="" HorizontalAlignment="Left" Height="94" Margin="68,113,0,0" VerticalAlignment="Top" Width="94" BorderBrush="{x:Null}">
