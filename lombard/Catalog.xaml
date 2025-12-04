@@ -6,9 +6,11 @@
         xmlns:local="clr-namespace:lombard"
         mc:Ignorable="d"
         Title="Catalog" Height="450" Width="800">
-    <Grid Background="#FFF7F2F0">
-        <Rectangle HorizontalAlignment="Center" Height="44
-                   " VerticalAlignment="Top" Width="800" Fill="#FF707B6D"/>
+    <Grid Margin="0,-1,0,1">
+        <Grid.Background>
+            <ImageBrush/>
+        </Grid.Background>
+        <Rectangle HorizontalAlignment="Center" Height="44" VerticalAlignment="Top" Width="800" Fill="#FF707B6D"/>
         <Label Content="Бриллиантовый дом" HorizontalAlignment="Left" Margin="94,4,0,0" VerticalAlignment="Top" FontSize="26" FontFamily="Bahnschrift" Foreground="#FFF7F2F0"/>
         <Button Content="Украшения" HorizontalAlignment="Left" Height="46" Margin="89,78,0,0" VerticalAlignment="Top" Width="212" FontFamily="Bahnschrift" FontSize="16" Foreground="#FF262D24" BorderBrush="#FFDDDDDD">
             <Button.Background>
@@ -33,8 +35,7 @@
         <Label Content="Размер" HorizontalAlignment="Left" Margin="12,298,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="10" Foreground="#FF262D24"/>
         <Label Content="Тип металлов" HorizontalAlignment="Left" Margin="11,335,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="10" Foreground="#FF262D24"/>
         <Label Content="Тип камня" HorizontalAlignment="Left" Margin="11,371,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="10" Foreground="#FF262D24"/>
-        <TextBox HorizontalAlignment="Left" Margin="15,249,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="53" Height="13"/>
-        <TextBox HorizontalAlignment="Left" Margin="92,249,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="52" Height="13"/>
+        <TextBox HorizontalAlignment="Left" Margin="29,246,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="62" Height="19"/>
         <ComboBox Name="CityComboBox" VerticalAlignment="Top" HorizontalAlignment="Left" Width="200" Margin="493,11,0,0" SelectionChanged="ComboBox_SelectionChanged">
             <ComboBoxItem>Москва</ComboBoxItem>
             <ComboBoxItem>Санкт-Петербург</ComboBoxItem>
@@ -92,8 +93,8 @@
                 <ImageBrush ImageSource="/image 22.png"/>
             </Button.Background>
         </Button>
-        <Button Content="Корзина" HorizontalAlignment="Left" Height="40" Margin="340,375,0,0" VerticalAlignment="Top" Width="134" Background="#FF707B6D" BorderBrush="#FF707B6D" Foreground="#FFF7F2F0" FontFamily="Bahnschrift" Click="Button_Click_4"/>
-        <Button Content="Избранное" HorizontalAlignment="Left" Height="40" Margin="522,375,0,0" VerticalAlignment="Top" Width="134" Background="#FF707B6D" Foreground="#FFF7F2F0" BorderBrush="#FF707B6D" FontFamily="Bahnschrift" Click="Button_Click_5"/>
+        <Button Content="Корзина" HorizontalAlignment="Center" Height="40" Margin="0,385,0,0" VerticalAlignment="Top" Width="134" Background="#FF707B6D" BorderBrush="#FF707B6D" Foreground="#FFF7F2F0" FontFamily="Bahnschrift" Click="Button_Click_4"/>
+        <Button Content="Избранное" HorizontalAlignment="Left" Height="40" Margin="516,385,0,0" VerticalAlignment="Top" Width="134" Background="#FF707B6D" Foreground="#FFF7F2F0" BorderBrush="#FF707B6D" FontFamily="Bahnschrift" Click="Button_Click_5"/>
         <Button Content="" HorizontalAlignment="Left" Height="28" Margin="34,8,0,0" VerticalAlignment="Top" Width="29" BorderBrush="#FF707B6D" Foreground="#FF707B6D">
             <Button.Background>
                 <ImageBrush ImageSource="/meteor-icons_list.png"/>
@@ -109,32 +110,54 @@
                 <ImageBrush ImageSource="/weui_arrow-filled.png"/>
             </Button.Background>
         </Button>
-        <TextBox HorizontalAlignment="Center" Height="30" Margin="0,141,0,0" TextWrapping="Wrap" Text="Изделие, бренд..." VerticalAlignment="Top" Width="438" BorderBrush="#FF707B6D" FontFamily="Bahnschrift">
+        <!-- Обновленный TextBox для поиска -->
+        <TextBox Name="SearchTextBox" HorizontalAlignment="Left" Height="30" Margin="190,143,0,0" TextWrapping="Wrap" Text="Изделие, бренд..." VerticalAlignment="Top" Width="370" BorderBrush="#FF707B6D" FontFamily="Bahnschrift"
+                 GotFocus="SearchTextBox_GotFocus" LostFocus="SearchTextBox_LostFocus">
             <TextBox.Foreground>
                 <SolidColorBrush Color="#FF707B6D" Opacity="0.68"/>
             </TextBox.Foreground>
         </TextBox>
-        <Label Content="____________________________" HorizontalAlignment="Left" Margin="539,141,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Height="30" Width="40" Foreground="#FF707B6D">
-            <Label.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="89.35"/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </Label.RenderTransform>
-        </Label>
-        <Button Content="" HorizontalAlignment="Left" Height="22" Margin="578,145,0,0" VerticalAlignment="Top" Width="22" Click="Button_Click" Foreground="White" BorderBrush="White">
-            <Button.Background>
-                <ImageBrush ImageSource="/ic_outline-search.png"/>
-            </Button.Background>
-        </Button>
+
         <Button Content="Готово" HorizontalAlignment="Left" Height="23" Margin="137,404,0,0" VerticalAlignment="Top" Width="45" BorderBrush="#FFD9D9D9" FontFamily="Bahnschrift" FontSize="10" Background="#FFEBEBEB" RenderTransformOrigin="0.56,0.615"/>
         <ComboBox x:Name="JewelComboBox" VerticalAlignment="Top" HorizontalAlignment="Left" Width="110" Margin="15,389,0,0" SelectionChanged="ComboBox_SelectionChanged" Height="20">
             <ComboBoxItem Content="Бриллиант"/>
             <ComboBoxItem Content="Изумруд"/>
             <ComboBoxItem Content="Аметист"/>
         </ComboBox>
+        <Button Content="" HorizontalAlignment="Left" Height="30" Margin="560,143,0,0" VerticalAlignment="Top" Width="59" BorderBrush="#FF707B6D">
+            <Button.Background>
+                <ImageBrush ImageSource="/Group 31.png"/>
+            </Button.Background>
+        </Button>
+        <TextBox HorizontalAlignment="Left" Margin="114,246,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="62" Height="19"/>
+        <Label Content="от" HorizontalAlignment="Left" Margin="10,249,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="9">
+            <Label.Foreground>
+                <SolidColorBrush Color="#FF262D24" Opacity="0.7"/>
+            </Label.Foreground>
+            <Label.Background>
+                <SolidColorBrush Opacity="0.685"/>
+            </Label.Background>
+        </Label>
+        <Label Content="до" HorizontalAlignment="Left" Margin="94,249,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="9">
+            <Label.Foreground>
+                <SolidColorBrush Color="#FF262D24" Opacity="0.7"/>
+            </Label.Foreground>
+        </Label>
+        <Button Content="" HorizontalAlignment="Left" Height="17" Margin="352,347,0,0" VerticalAlignment="Top" Width="17" BorderBrush="White">
+            <Button.Background>
+                <ImageBrush ImageSource="/line-md_heart-filled.png"/>
+            </Button.Background>
+        </Button>
+        <Button Content="" HorizontalAlignment="Left" Height="17" Margin="524,347,0,0" VerticalAlignment="Top" Width="17" BorderBrush="White">
+            <Button.Background>
+                <ImageBrush ImageSource="/line-md_heart-filled.png"/>
+            </Button.Background>
+        </Button>
+        <Button Content="" HorizontalAlignment="Left" Height="17" Margin="693,347,0,0" VerticalAlignment="Top" Width="17" BorderBrush="White">
+            <Button.Background>
+                <ImageBrush ImageSource="/line-md_heart-filled.png"/>
+            </Button.Background>
+        </Button>
 
     </Grid>
 </Window>

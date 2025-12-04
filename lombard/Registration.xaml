@@ -13,20 +13,20 @@
                 <ImageBrush ImageSource="/hugeicons_cancel-circle.png"/>
             </Button.Background>
         </Button>
-        <Button Click="MailLoginButton_Click" x:Name="MailLoginButton" Content="Почта/Логин" HorizontalAlignment="Left" Margin="234,134,0,0" VerticalAlignment="Top" Height="38" Width="166" BorderBrush="#FFD9D9D9" Foreground="#FF262D24" FontFamily="Bahnschrift">
+        <Button Click="MailLoginButton_Click" x:Name="MailLoginButton" Content="Логин" HorizontalAlignment="Left" Margin="234,134,0,0" VerticalAlignment="Top" Height="38" Width="166" BorderBrush="#FFD9D9D9" Foreground="#FF262D24" FontFamily="Bahnschrift">
             <Button.Background>
                 <SolidColorBrush Color="#FF707B6D" Opacity="0.35"/>
             </Button.Background>
         </Button>
         <Button x:Name="PhoneButton" Content="Телефон" HorizontalAlignment="Left" Margin="400,134,0,0" VerticalAlignment="Top" Height="38" Width="166" BorderBrush="#FFDDDDDD" Foreground="#FF262D24" FontFamily="Bahnschrift" Click="PhoneButton_Click"/>
-        <TextBox HorizontalAlignment="Left" Margin="223,194,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="362" Height="36" BorderBrush="#FF707B6D" FontFamily="Bahnschrift">
+        <TextBox x:Name="InputTextBox" HorizontalAlignment="Left" Margin="223,194,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="362" Height="36" BorderBrush="#FF707B6D" FontFamily="Bahnschrift">
             <TextBox.Foreground>
                 <SolidColorBrush Color="#FF262D24" Opacity="1"/>
             </TextBox.Foreground>
         </TextBox>
         <Button Content="Продолжить" HorizontalAlignment="Center" Height="32" Margin="0,296,0,0" VerticalAlignment="Top" Width="166" Background="#FF707B6D" Foreground="#FFF7F2F0" BorderBrush="#FF707B6D" FontFamily="Bahnschrift" Click="Button_Click_1"/>
-        <PasswordBox HorizontalAlignment="Left" Margin="223,253,0,0" VerticalAlignment="Top" Width="362" BorderBrush="#FF707B6D" Height="36"/>
-        <Label x:Name="InputLabel" Content="Введите почту или логин" HorizontalAlignment="Left" Margin="219,175,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift">
+        <PasswordBox x:Name="PasswordInput" HorizontalAlignment="Left" Margin="223,253,0,0" VerticalAlignment="Top" Width="362" BorderBrush="#FF707B6D" Height="36"/>
+        <Label x:Name="InputLabel" Content="Введите логин" HorizontalAlignment="Left" Margin="219,175,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift">
             <Label.Foreground>
                 <SolidColorBrush Color="#FF262D24" Opacity="0.5"/>
             </Label.Foreground>

@@ -26,8 +26,39 @@ namespace lombard
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.MainWindow.Show();
-            this.Close();
+           
+            string surn = FTextBox.Text.Trim();   
+            string name = ITextBox.Text.Trim();  
+            string patr = PTextBox.Text.Trim();   
+            string phone = PhoneTextBox.Text.Trim();
+            string city = CityTextBox.Text.Trim();
+
+            string fText = FTextBox.Text.Trim();
+            string iText = ITextBox.Text.Trim();
+            string pText = PTextBox.Text.Trim();
+
+            if (string.IsNullOrEmpty(fText) ||
+                string.IsNullOrEmpty(iText) ||
+                string.IsNullOrEmpty(pText) ||
+                string.IsNullOrEmpty(phone) ||
+                string.IsNullOrEmpty(city))
+            {
+                
+                MessageBox.Show("Пожалуйста, заполните все поля заявки (ФИО, Телефон, Город).",
+                                "Предупреждение",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Warning);
+                return; 
+            }
+
+            MessageBox.Show("Заявка успешно отправлена!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            FTextBox.Text = string.Empty;
+            ITextBox.Text = string.Empty;
+            PTextBox.Text = string.Empty;
+            PhoneTextBox.Text = string.Empty;
+            CityTextBox.Text = string.Empty;
+
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -41,9 +72,5 @@ namespace lombard
             this.Close();
         }
 
-        private void FIOTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
     }
 }

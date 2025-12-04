@@ -14,6 +14,7 @@
     <None Remove="Group 10 %281%29.png" />
     <None Remove="Group 10.png" />
     <None Remove="group 2027.png" />
+    <None Remove="Group 31.png" />
     <None Remove="hugeicons_cancel-circle.png" />
     <None Remove="image 23.png" />
     <None Remove="image 24.png" />
@@ -24,6 +25,7 @@
     <None Remove="ion_diamond-outline.png" />
     <None Remove="ix_user-profile-filled.png" />
     <None Remove="lets-icons_setting-fill.png" />
+    <None Remove="line-md_heart-filled.png" />
     <None Remove="weui_arrow-filled.png" />
   </ItemGroup>
 
@@ -59,6 +61,7 @@
     <Resource Include="Group 30.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Group 31.png" />
     <Resource Include="Group23.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
@@ -81,6 +84,7 @@
     <Resource Include="ion_diamond-outline.png" />
     <Resource Include="ix_user-profile-filled.png" />
     <Resource Include="lets-icons_setting-fill.png" />
+    <Resource Include="line-md_heart-filled.png" />
     <Resource Include="meteor-icons_list.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

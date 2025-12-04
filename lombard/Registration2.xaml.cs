@@ -25,7 +25,6 @@ namespace lombard
         public Registration2()
         {
             InitializeComponent();
-            InitializeComponent();
 
             ActiveBrush = new SolidColorBrush(Color.FromArgb(0xFF, 0x70, 0x7B, 0x6D));
             ActiveBrush.Opacity = 0.50;
@@ -45,7 +44,7 @@ namespace lombard
 
             PhoneButton.Background = InactiveBrush;
 
-            InputLabel.Content = "Введите почту или логин";
+            InputLabel.Content = "Введите логин";
         }
 
         private void SetPhoneMode()
@@ -55,7 +54,7 @@ namespace lombard
 
             MailLoginButton.Background = InactiveBrush;
 
-            InputLabel.Content = "Введите номер телефона";
+            InputLabel.Content = "Введите номер";
         }
 
         private void MailLoginButton_Click(object sender, RoutedEventArgs e)
@@ -70,11 +69,48 @@ namespace lombard
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
+            Registration registration = new Registration();
+            registration.Show();
+            this.Close();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+            string name = NameTextBox.Text.Trim();
+            string surname = SurnameTextBox.Text.Trim();
+            string patronymic = PatronymicTextBox.Text.Trim();
+            DateTime? dateOfBirth = DateOfBirthPicker.SelectedDate;
+            string input = InputTextBox.Text.Trim(); 
+            string password = PasswordInput.Password;
+
+
+            if (string.IsNullOrEmpty(name) ||
+                string.IsNullOrEmpty(surname) ||
+                string.IsNullOrEmpty(patronymic) ||
+                dateOfBirth == null)
+            {
+                MessageBox.Show("Пожалуйста, заполните полностью ФИО и укажите дату рождения.",
+                                "Не все поля заполнены",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Warning);
+                return;
+            }
+
+       
+            if (string.IsNullOrEmpty(input) || string.IsNullOrEmpty(password))
+            {
+             
+                string inputType = InputLabel.Content.ToString();
+
+                MessageBox.Show($"Пожалуйста, {inputType} и пароль.",
+                                "Не все поля заполнены",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Warning);
+                return;
+            }
+
+            MessageBox.Show("Регистрация успешно завершена!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+
             Account account = new Account();
             account.Show();
             this.Close();

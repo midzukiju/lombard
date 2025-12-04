@@ -7,35 +7,30 @@
         mc:Ignorable="d"
         Title="Admin" Height="450" Width="800">
     <Grid Background="#FFF7F2F0">
-        <Rectangle HorizontalAlignment="Center" Height="44                    " VerticalAlignment="Top" Width="800" Fill="#FF707B6D" Stroke="#FFF7F2F0"/>
-        <Button Content="Клиенты" HorizontalAlignment="Left" Height="37" Margin="0,44,0,0" VerticalAlignment="Top" Width="169" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FFAEB7AB"/>
-        <Button Content="Сотрудники" HorizontalAlignment="Left" Height="37" Margin="0,81,0,0" VerticalAlignment="Top" Width="169" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D"/>
-        <Button Content="Товары" HorizontalAlignment="Left" Height="37" Margin="0,118,0,0" VerticalAlignment="Top" Width="169" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D"/>
-        <Button Content="Проценты" HorizontalAlignment="Left" Height="37" Margin="0,155,0,0" VerticalAlignment="Top" Width="169" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D"/>
-        <Button Content="Контракты" HorizontalAlignment="Left" Height="37" Margin="0,192,0,0" VerticalAlignment="Top" Width="169" Click="Button_Click" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D"/>
-        <Button Content="Продление" HorizontalAlignment="Left" Height="37" Margin="0,229,0,0" VerticalAlignment="Top" Width="169" Click="Button_Click_1" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D"/>
-        <Button Content="Выкупы" HorizontalAlignment="Left" Height="37" Margin="0,266,0,0" VerticalAlignment="Top" Width="169" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D"/>
-        <Button Content="Покупки" HorizontalAlignment="Left" Height="37" Margin="0,303,0,0" VerticalAlignment="Top" Width="169" Click="Button_Click_2" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D"/>
-        <Button Content="Продажи" HorizontalAlignment="Left" Height="37" Margin="0,340,0,0" VerticalAlignment="Top" Width="169" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D"/>
-        <Button Content="Заявки" HorizontalAlignment="Left" Height="37" Margin="0,377,0,0" VerticalAlignment="Top" Width="169" Click="Button_Click_3" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D"/>
+        <Rectangle HorizontalAlignment="Center" Height="44" VerticalAlignment="Top" Width="800" Fill="#FF707B6D" Stroke="#FFF7F2F0"/>
+
+        <Button x:Name="clientsButton" Content="Клиенты" HorizontalAlignment="Left" Height="37" Margin="0,44,0,0" VerticalAlignment="Top" Width="169" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FFAEB7AB" Click="MenuButton_Click"/>
+        <Button Content="Сотрудники" HorizontalAlignment="Left" Height="37" Margin="0,81,0,0" VerticalAlignment="Top" Width="169" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
+        <Button Content="Товары" HorizontalAlignment="Left" Height="37" Margin="0,118,0,0" VerticalAlignment="Top" Width="169" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
+        <Button Content="Проценты" HorizontalAlignment="Left" Height="37" Margin="0,155,0,0" VerticalAlignment="Top" Width="169" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
+        <Button Content="Контракты" HorizontalAlignment="Left" Height="37" Margin="0,192,0,0" VerticalAlignment="Top" Width="169" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
+        <Button Content="Продление" HorizontalAlignment="Left" Height="37" Margin="0,229,0,0" VerticalAlignment="Top" Width="169" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
+        <Button Content="Выкупы" HorizontalAlignment="Left" Height="37" Margin="0,266,0,0" VerticalAlignment="Top" Width="169" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
+        <Button Content="Покупки" HorizontalAlignment="Left" Height="37" Margin="0,303,0,0" VerticalAlignment="Top" Width="169" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
+        <Button Content="Продажи" HorizontalAlignment="Left" Height="37" Margin="0,340,0,0" VerticalAlignment="Top" Width="169" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
+        <Button Content="Заявки" HorizontalAlignment="Left" Height="37" Margin="0,377,0,0" VerticalAlignment="Top" Width="169" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
+
         <Label Content="ID сотрудника:" HorizontalAlignment="Left" Margin="19,6,0,0" VerticalAlignment="Top" Foreground="#FFF7F2F0" FontFamily="Bahnschrift" FontSize="18"/>
+
         <Button Content="Выход" HorizontalAlignment="Left" Height="24" Margin="680,10,0,0" VerticalAlignment="Top" Width="79" Click="Button_Click_4" Background="#FFF7F2F0" BorderBrush="#FF707B6D"/>
         <Button Content="Сохранить" HorizontalAlignment="Left" Height="24" Margin="585,10,0,0" VerticalAlignment="Top" Width="79" Click="Button_Click_4" Background="#FFF7F2F0" BorderBrush="#FF707B6D"/>
         <Button Content="Удалить" HorizontalAlignment="Left" Height="24" Margin="490,10,0,0" VerticalAlignment="Top" Width="79" Click="Button_Click_4" Background="#FFF7F2F0" BorderBrush="#FF707B6D"/>
         <Button Content="Добавить" HorizontalAlignment="Left" Height="24" Margin="392,10,0,0" VerticalAlignment="Top" Width="79" Click="Button_Click_4" Background="#FFF7F2F0" BorderBrush="#FF707B6D"/>
-        <Label Content="Клиенты" HorizontalAlignment="Left" Margin="191,49,0,0" VerticalAlignment="Top" FontSize="18"/>
-        <DataGrid HorizontalAlignment="Left" Height="148" Margin="174,192,0,0" VerticalAlignment="Top" Width="616" d:ItemsSource="{d:SampleData ItemCount=5}" SelectionChanged="DataGrid_SelectionChanged">
-            <DataGrid.Columns>
-                <DataGridTextColumn/>
-                <DataGridTextColumn/>
-                <DataGridTextColumn/>
-                <DataGridTextColumn/>
-                <DataGridTextColumn/>
-                <DataGridTextColumn/>
-                <DataGridTextColumn/>
-                <DataGridTextColumn/>
-            </DataGrid.Columns>
-        </DataGrid>
+
+        <Label x:Name="TitleLabel" Content="Клиенты" HorizontalAlignment="Left" Margin="191,49,0,0" VerticalAlignment="Top" FontSize="18"/>
+
+            <DataGrid HorizontalAlignment="Left" Height="148" Margin="174,192,0,0" VerticalAlignment="Top" Width="616" d:ItemsSource="{d:SampleData ItemCount=5}" SelectionChanged="DataGrid_SelectionChanged">
+            </DataGrid>
 
     </Grid>
 </Window>

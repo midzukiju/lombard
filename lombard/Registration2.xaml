@@ -13,7 +13,7 @@
                 <ImageBrush ImageSource="/hugeicons_cancel-circle.png"/>
             </Button.Background>
         </Button>
-        <Button Click="MailLoginButton_Click" x:Name="MailLoginButton" Content="Почта/Логин" HorizontalAlignment="Left" Margin="234,97,0,0" VerticalAlignment="Top" Height="38" Width="166" BorderBrush="#FFD9D9D9" Foreground="#FF262D24" FontFamily="Bahnschrift">
+        <Button Click="MailLoginButton_Click" x:Name="MailLoginButton" Content="Логин" HorizontalAlignment="Left" Margin="234,97,0,0" VerticalAlignment="Top" Height="38" Width="166" BorderBrush="#FFD9D9D9" Foreground="#FF262D24" FontFamily="Bahnschrift">
             <Button.Background>
                 <SolidColorBrush Color="#FF707B6D" Opacity="0.35"/>
             </Button.Background>
@@ -24,33 +24,33 @@
                 <SolidColorBrush Color="#FF262D24" Opacity="1"/>
             </TextBox.Foreground>
         </TextBox>
-        <PasswordBox HorizontalAlignment="Left" Margin="223,322,0,0" VerticalAlignment="Top" Width="362" BorderBrush="#FF707B6D" Height="26"/>
-        <Label x:Name="InputLabel" Content="Введите почту или логин" HorizontalAlignment="Left" Margin="68,288,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" Width="150">
+        <PasswordBox x:Name="PasswordInput" HorizontalAlignment="Left" Margin="223,322,0,0" VerticalAlignment="Top" Width="362" BorderBrush="#FF707B6D" Height="26"/>
+        <Label x:Name="InputLabel" Content="Введите логин" HorizontalAlignment="Left" Margin="125,288,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" Width="93">
             <Label.Foreground>
                 <SolidColorBrush Color="#FF262D24" Opacity="0.5"/>
             </Label.Foreground>
         </Label>
-        <Label Content="Введите пароль" HorizontalAlignment="Left" Margin="124,322,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift">
+        <Label Content="Введите пароль" HorizontalAlignment="Left" Margin="122,322,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift">
             <Label.Foreground>
                 <SolidColorBrush Color="#FF262D24" Opacity="0.5"/>
             </Label.Foreground>
         </Label>
-        <TextBox HorizontalAlignment="Left" Margin="223,150,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="362" Height="26" BorderBrush="#FF707B6D" FontFamily="Bahnschrift">
+        <TextBox x:Name="NameTextBox" HorizontalAlignment="Left" Margin="223,150,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="362" Height="26" BorderBrush="#FF707B6D" FontFamily="Bahnschrift">
             <TextBox.Foreground>
                 <SolidColorBrush Color="#FF262D24" Opacity="1"/>
             </TextBox.Foreground>
         </TextBox>
-        <TextBox HorizontalAlignment="Left" Margin="223,218,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="362" Height="26" BorderBrush="#FF707B6D" FontFamily="Bahnschrift">
+        <TextBox x:Name="PatronymicTextBox" HorizontalAlignment="Left" Margin="223,218,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="362" Height="26" BorderBrush="#FF707B6D" FontFamily="Bahnschrift">
             <TextBox.Foreground>
                 <SolidColorBrush Color="#FF262D24" Opacity="1"/>
             </TextBox.Foreground>
         </TextBox>
-        <TextBox HorizontalAlignment="Left" Margin="223,286,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="362" Height="26" BorderBrush="#FF707B6D" FontFamily="Bahnschrift">
+        <TextBox x:Name="InputTextBox" HorizontalAlignment="Left" Margin="223,286,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="362" Height="26" BorderBrush="#FF707B6D" FontFamily="Bahnschrift">
             <TextBox.Foreground>
                 <SolidColorBrush Color="#FF262D24" Opacity="1"/>
             </TextBox.Foreground>
         </TextBox>
-        <TextBox HorizontalAlignment="Left" Margin="223,185,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="362" Height="26" BorderBrush="#FF707B6D" FontFamily="Bahnschrift">
+        <TextBox x:Name="SurnameTextBox" HorizontalAlignment="Left" Margin="223,185,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="362" Height="26" BorderBrush="#FF707B6D" FontFamily="Bahnschrift">
             <TextBox.Foreground>
                 <SolidColorBrush Color="#FF262D24" Opacity="1"/>
             </TextBox.Foreground>
@@ -70,7 +70,7 @@
                 <SolidColorBrush Color="#FF262D24" Opacity="0.5"/>
             </Label.Foreground>
         </Label>
-        <DatePicker HorizontalAlignment="Left" Height="26" Margin="223,252,0,0" VerticalAlignment="Top" Width="177"/>
+        <DatePicker x:Name="DateOfBirthPicker" HorizontalAlignment="Left" Height="26" Margin="223,252,0,0" VerticalAlignment="Top" Width="177"/>
         <Label x:Name="InputLabel_Копировать3" Content="Укажите дату рождения" HorizontalAlignment="Left" Margin="73,253,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" Width="145">
             <Label.Foreground>
                 <SolidColorBrush Color="#FF262D24" Opacity="0.5"/>

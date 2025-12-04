@@ -30,7 +30,7 @@
                 <ImageBrush ImageSource="/gg_profile.png"/>
             </Button.Background>
         </Button>
-        <Button Content="" HorizontalAlignment="Left" Height="35" Margin="43,61,0,0" VerticalAlignment="Top" Width="20" BorderBrush="#FFF7F2F0">
+        <Button Content="" HorizontalAlignment="Left" Height="35" Margin="43,61,0,0" VerticalAlignment="Top" Width="20" BorderBrush="#FFF7F2F0" Click="Button_Click_3">
             <Button.Background>
                 <ImageBrush ImageSource="/weui_arrow-filled.png"/>
             </Button.Background>

@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace lombard
 {
@@ -19,24 +10,53 @@ namespace lombard
     /// </summary>
     public partial class Catalog : Window
     {
+      
+        private const string PlaceholderText = "Изделие, бренд...";
+
+
+        private readonly SolidColorBrush PlaceholderBrush = new SolidColorBrush(Color.FromArgb(0xAD, 0x70, 0x7B, 0x6D));
+        
+        private readonly SolidColorBrush TextBrush = new SolidColorBrush(Color.FromRgb(0x26, 0x2D, 0x24));
+
         public Catalog()
         {
             InitializeComponent();
+
+            SearchTextBox.Text = PlaceholderText;
+            SearchTextBox.Foreground = PlaceholderBrush;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
+            
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-
+            
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            
+        }
 
+        private void SearchTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (SearchTextBox.Text == PlaceholderText)
+            {
+                SearchTextBox.Text = string.Empty;
+                SearchTextBox.Foreground = TextBrush;
+            }
+        }
+
+        private void SearchTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(SearchTextBox.Text))
+            {
+                SearchTextBox.Text = PlaceholderText;
+                SearchTextBox.Foreground = PlaceholderBrush;
+            }
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
@@ -64,6 +84,11 @@ namespace lombard
             Favourites favourites = new Favourites();
             favourites.Show();
             this.Close();
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            
         }
     }
 }

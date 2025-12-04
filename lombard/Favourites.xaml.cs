@@ -26,8 +26,8 @@ namespace lombard
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Catalog catalog = new Catalog();
-            catalog.Show();
+            Basket basket = new Basket();  
+            basket.Show();
             this.Close();
         }
 
@@ -47,6 +47,13 @@ namespace lombard
         {
             Empty_favourites empty_Favourites = new Empty_favourites();
             empty_Favourites.Show();
+            this.Close();
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            Catalog catalog = new Catalog();
+            catalog.Show();
             this.Close();
         }
     }

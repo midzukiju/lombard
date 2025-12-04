@@ -52,9 +52,47 @@ namespace lombard
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            Account account = new Account();    
-            account.Show();
-            this.Close();
+            // Получаем введенные данные
+            string input = InputTextBox.Text.Trim(); // .Trim() убирает лишние пробелы
+            string password = PasswordInput.Password;
+
+            // 1. Проверка на пустоту
+            if (string.IsNullOrEmpty(input) || string.IsNullOrEmpty(password))
+            {
+                string missingField = "";
+
+                if (string.IsNullOrEmpty(input))
+                {
+                    missingField = InputLabel.Content.ToString();
+                }
+                else if (string.IsNullOrEmpty(password))
+                {
+                    missingField = "пароль";
+                }
+
+                // Показываем предупреждение
+                MessageBox.Show($"Пожалуйста, {missingField} и пароль.",
+                                "Не все поля заполнены",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Warning);
+                return; // Прекращаем выполнение метода, если поля пусты
+            }
+
+
+            if (input == "admin" && password == "123")
+            {
+                // Если логин и пароль совпадают с данными администратора, открываем окно Admin
+                Admin adminWindow = new Admin();
+                adminWindow.Show();
+                this.Close();
+            }
+            else
+            {
+                // Если это не администратор, то пытаемся открыть обычный аккаунт
+                Account account = new Account();
+                account.Show();
+                this.Close();
+            }
         }
 
         private void SetLoginMode()
@@ -63,7 +101,7 @@ namespace lombard
 
             PhoneButton.Background = InactiveBrush;
 
-            InputLabel.Content = "Введите почту или логин";
+            InputLabel.Content = "Введите логин";
         }
 
         private void SetPhoneMode()
@@ -73,7 +111,7 @@ namespace lombard
 
             MailLoginButton.Background = InactiveBrush;
 
-            InputLabel.Content = "Введите номер телефона";
+            InputLabel.Content = "Введите номер";
         }
 
         private void MailLoginButton_Click(object sender, RoutedEventArgs e)
@@ -92,6 +130,8 @@ namespace lombard
             registration2.Show();
             this.Close();
         }
+
+
     }
 
 }

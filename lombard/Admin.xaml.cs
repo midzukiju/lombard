@@ -1,16 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace lombard
 {
@@ -19,37 +9,60 @@ namespace lombard
     /// </summary>
     public partial class Admin : Window
     {
+        private Button _activeButton;
+
+        // Определяем цвета (Кисти)
+        private readonly SolidColorBrush ActiveBrush = new SolidColorBrush(Color.FromArgb(0xFF, 0xAE, 0xB7, 0xAB)); // #FFAEB7AB (Клиенты)
+        private readonly SolidColorBrush InactiveBrush = new SolidColorBrush(Color.FromArgb(0xFF, 0x70, 0x7B, 0x6D));
         public Admin()
         {
             InitializeComponent();
+            Button clientsButton = FindName("clientsButton") as Button; 
+            if (clientsButton != null)
+            {
+                _activeButton = clientsButton;
+            }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        
+        private void MenuButton_Click(object sender, RoutedEventArgs e)
         {
+            
+            Button clickedButton = sender as Button;
 
-        }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
+            if (clickedButton != null && clickedButton.Content != null)
+            {
+                // 1. Сброс цвета предыдущей активной кнопки
+                if (_activeButton != null)
+                {
+                    _activeButton.Background = InactiveBrush;
+                }
 
-        }
+                // 2. Установка активного цвета для новой кнопки
+                clickedButton.Background = ActiveBrush;
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
-        {
+                // 3. Сохранение новой активной кнопки
+                _activeButton = clickedButton;
 
-        }
-
-        private void Button_Click_3(object sender, RoutedEventArgs e)
-        {
-
+                // Изменение заголовка
+                string newTitle = clickedButton.Content.ToString();
+                TitleLabel.Content = newTitle;
+            }
         }
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
-
+            Application.Current.MainWindow.Show();
+            this.Close();
         }
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click_5(object sender, RoutedEventArgs e)
         {
 
         }
