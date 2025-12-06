@@ -290,13 +290,12 @@ namespace lombard
         private int _clientId;        // Внешний ключ: Client
         private int _employeeId;      // Внешний ключ: Employee (тот, кто оформил)
         private int _itemId;          // Внешний ключ: Item
-        private int _rateId;          // Внешний ключ: Rate
+        private int _contractNumber;          // Внешний ключ: Rate
         private DateTime _issueDate;    // Дата выдачи/заключения
         private DateTime _maturityDate; // Дата погашения/возврата (срок)
         private decimal _loanAmount;    // Сумма займа (выданная клиенту)
         private decimal _pawnValue;     // Сумма оценки залога (для расчета)
         private string _status;         // Текущий статус: 'Активен', 'Просрочен', 'Выкуплен', 'Продан'
-        private string _type;           // Тип контракта: 'Залог', 'Скупка'
         private DateTime? _createdOn;
 
         // Публичные свойства (snake_case - как в XAML)
@@ -308,7 +307,7 @@ namespace lombard
         public int client_id { get => _clientId; set { _clientId = value; OnPropertyChanged(nameof(client_id)); } }
         public int employee_id { get => _employeeId; set { _employeeId = value; OnPropertyChanged(nameof(employee_id)); } }
         public int item_id { get => _itemId; set { _itemId = value; OnPropertyChanged(nameof(item_id)); } }
-        public int rate_id { get => _rateId; set { _rateId = value; OnPropertyChanged(nameof(rate_id)); } }
+        public int contract_number { get => _contractNumber; set { _contractNumber = value; OnPropertyChanged(nameof(contract_number)); } }
 
         // 3. Основные даты и суммы
         public DateTime issue_date { get => _issueDate; set { _issueDate = value; OnPropertyChanged(nameof(issue_date)); } }
@@ -318,7 +317,7 @@ namespace lombard
 
         // 4. Статус и тип
         public string status { get => _status; set { _status = value; OnPropertyChanged(nameof(status)); } }
-        public string type { get => _type; set { _type = value; OnPropertyChanged(nameof(type)); } }
+
 
         // 5. Дата создания записи
         public DateTime? created_on { get => _createdOn; set { _createdOn = value; OnPropertyChanged(nameof(created_on)); } }
@@ -348,6 +347,7 @@ namespace lombard
         private DateTime _newMaturityDate; // Новая дата погашения
         private decimal _interestPaid;      // Сумма уплаченных процентов за предыдущий период
         private DateTime? _createdOn;
+        private int _employeeId;
 
         // Публичные свойства (snake_case - как в XAML)
 
@@ -374,6 +374,7 @@ namespace lombard
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        public int employee_id { get => _employeeId; set { _employeeId = value; OnPropertyChanged(nameof(employee_id)); } }
     }
 
     #endregion
@@ -389,9 +390,6 @@ namespace lombard
         private int _redemptionId;
         private int _contractId;        // Внешний ключ: Contract
         private DateTime _redemptionDate; // Дата фактического выкупа
-        private decimal _principalPaid;   // Сумма, уплаченная за тело займа
-        private decimal _interestPaid;    // Сумма, уплаченная в виде процентов
-        private decimal _penaltyPaid;     // Сумма, уплаченная в виде штрафов (если были просрочки)
         private decimal _totalPaid;       // Общая сумма оплаты
         private int _employeeId;        // Внешний ключ: Employee (тот, кто принял платеж)
         private DateTime? _createdOn;
@@ -543,7 +541,6 @@ namespace lombard
         private string _requesterPatronymic;
         private string _requesterNumber;
         private string _requesterCity;
-        private string _status;              // Статус заявки: "Новая", "Обработана", "Отклонена"
         private DateTime? _createdOn;
 
         // Публичные свойства (snake_case - как в XAML)
@@ -562,9 +559,6 @@ namespace lombard
         // 4. Телефон и Город
         public string requester_number { get => _requesterNumber; set { _requesterNumber = value; OnPropertyChanged(nameof(requester_number)); } }
         public string requester_city { get => _requesterCity; set { _requesterCity = value; OnPropertyChanged(nameof(requester_city)); } }
-
-        // 5. Статус
-        public string status { get => _status; set { _status = value; OnPropertyChanged(nameof(status)); } }
 
         // 6. Дата создания
         public DateTime? created_on { get => _createdOn; set { _createdOn = value; OnPropertyChanged(nameof(created_on)); } }
@@ -1120,7 +1114,7 @@ public class Category : INotifyPropertyChanged
 
         public RequestViewModel()
         {
-            Requests.Add(new Request { request_id = 1, service_id = 1, requester_last_name = "Смирнов", requester_number = "89001234567", status = "Новая" });
+            Requests.Add(new Request { request_id = 1, service_id = 1, requester_last_name = "Смирнов", requester_number = "89001234567"});
 
             AddCommand = new RelayCommand(AddRequest);
             DeleteCommand = new RelayCommand(DeleteRequest, CanDeleteRequest);
@@ -1130,7 +1124,7 @@ public class Category : INotifyPropertyChanged
         private void AddRequest(object parameter)
         {
             int newId = Requests.Any() ? Requests.Max(c => c.request_id) + 1 : 1;
-            Requests.Add(new Request { request_id = newId, service_id = 1, requester_last_name = "Новая", status = "Новая" });
+            Requests.Add(new Request { request_id = newId, service_id = 1, requester_last_name = "Новая"});
         }
 
         private void DeleteRequest(object parameter)

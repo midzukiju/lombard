@@ -9,7 +9,7 @@
 
     <Window.Resources>
 
-        <DataTemplate DataType="{x:Type local:ClientsViewModel}">
+        <DataTemplate x:Key="f">
             <DataGrid ItemsSource="{Binding Clients}" SelectedItem="{Binding SelectedClient, Mode=TwoWay}" Margin="-5,90,0,0" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID Клиента" Binding="{Binding Id}" IsReadOnly="True" Width="80"/>
@@ -30,7 +30,7 @@
             </DataGrid>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type local:EmployeesViewModel}">
+        <DataTemplate x:Key="s">
             <DataGrid ItemsSource="{Binding Employees}" SelectedItem="{Binding SelectedEmployee, Mode=TwoWay}" Margin="-5,90,0,0" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID Сотрудника" Binding="{Binding Id}" IsReadOnly="True" Width="80"/>
@@ -46,7 +46,7 @@
             </DataGrid>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type local:ItemsViewModel}">
+        <DataTemplate x:Key="sd">
             <DataGrid ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" Margin="-5,90,0,0" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID Товара" Binding="{Binding item_id}" IsReadOnly="True" Width="80"/>
@@ -67,7 +67,7 @@
             </DataGrid>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type local:RatesViewModel}">
+        <DataTemplate x:Key="h">
             <DataGrid ItemsSource="{Binding Rates}" SelectedItem="{Binding SelectedRate, Mode=TwoWay}" Margin="-5,90,0,0" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID Процента" Binding="{Binding rate_id}" IsReadOnly="True" Width="80"/>
@@ -80,7 +80,7 @@
             </DataGrid>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type local:ContractsViewModel}">
+        <DataTemplate x:Key="hhh">
             <DataGrid ItemsSource="{Binding Contracts}" SelectedItem="{Binding SelectedContract, Mode=TwoWay}" Margin="-5,90,0,0" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID Контракта" Binding="{Binding contract_id}" IsReadOnly="True" Width="80"/>
@@ -98,7 +98,7 @@
             </DataGrid>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type local:ExtensionsViewModel}">
+        <DataTemplate x:Key="qqqq">
             <DataGrid ItemsSource="{Binding Extensions}" SelectedItem="{Binding SelectedExtension, Mode=TwoWay}" Margin="-5,90,0,0" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID Продления" Binding="{Binding extension_id}" IsReadOnly="True" Width="100"/>
@@ -112,7 +112,7 @@
             </DataGrid>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type local:RedemptionViewModel}">
+        <DataTemplate x:Key="zzzz">
             <DataGrid ItemsSource="{Binding Redemptions}" SelectedItem="{Binding SelectedRedemption, Mode=TwoWay}" Margin="-5,90,0,0" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID Выкупа" Binding="{Binding redemption_id}" IsReadOnly="True" Width="80"/>
@@ -125,7 +125,7 @@
             </DataGrid>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type local:BuyViewModel}">
+        <DataTemplate x:Key="asd">
             <DataGrid ItemsSource="{Binding Buys}" SelectedItem="{Binding SelectedBuy, Mode=TwoWay}" Margin="-5,90,0,0" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID Покупки" Binding="{Binding buy_id}" IsReadOnly="True" Width="80"/>
@@ -139,7 +139,7 @@
             </DataGrid>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type local:SaleViewModel}">
+        <DataTemplate x:Key="xzczc">
             <DataGrid ItemsSource="{Binding Sales}" SelectedItem="{Binding SelectedSale, Mode=TwoWay}" Margin="-5,90,0,0" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID Продажи" Binding="{Binding sale_id}" IsReadOnly="True" Width="80"/>
@@ -153,7 +153,7 @@
             </DataGrid>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type local:RequestViewModel}">
+        <DataTemplate x:Key="liiii">
             <DataGrid ItemsSource="{Binding Requests}" SelectedItem="{Binding SelectedRequest, Mode=TwoWay}" Margin="-5,90,0,0" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID Заявки" Binding="{Binding request_id}" IsReadOnly="True" Width="80"/>
@@ -168,7 +168,7 @@
             </DataGrid>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type local:CategoriesViewModel}">
+        <DataTemplate x:Key="asdzXC">
             <DataGrid ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" Margin="-5,90,0,0" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID Категории" Binding="{Binding category_id}" IsReadOnly="True" Width="80"/>
