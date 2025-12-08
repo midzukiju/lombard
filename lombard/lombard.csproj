@@ -30,6 +30,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="bx_map.png" />
     <Resource Include="famicons_trash-outline.png" />
     <Resource Include="gg_profile.png">
