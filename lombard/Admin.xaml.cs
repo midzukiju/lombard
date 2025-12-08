@@ -1,24 +1,20 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Collections.Generic;
+// Убедитесь, что это пространство имен указывает на папку, где находятся ваши классы Models
+using lombard.Models;
 
 namespace lombard
 {
-    // ====================================================================
-    // 0. ВСПОМОГАТЕЛЬНЫЕ КЛАССЫ
-    // ====================================================================
-
-    #region 0.1 RelayCommand - Реализация ICommand
-
-    /// <summary>
-    /// Вспомогательный класс для реализации ICommand, позволяющий привязывать методы из ViewModel к элементам управления View.
-    /// </summary>
+    // =======================================================
+    // 1. Базовые классы (RelayCommand, BaseViewModel)
+    // =======================================================
     public class RelayCommand : ICommand
     {
         private readonly Action<object> _execute;
@@ -36,1302 +32,815 @@ namespace lombard
             _canExecute = canExecute;
         }
 
-        public bool CanExecute(object parameter)
-        {
-            return _canExecute == null || _canExecute(parameter);
-        }
-
-        public void Execute(object parameter)
-        {
-            _execute(parameter);
-        }
-
-        public void RaiseCanExecuteChanged()
-        {
-            CommandManager.InvalidateRequerySuggested();
-        }
+        public bool CanExecute(object parameter) => _canExecute == null || _canExecute(parameter);
+        public void Execute(object parameter) => _execute(parameter);
     }
 
-    #endregion
-
-    #region 0.2 BaseViewModel - База для всех ViewModels
-
-    /// <summary>
-    /// Базовый класс для всех ViewModels, реализующий интерфейс INotifyPropertyChanged.
-    /// </summary>
     public abstract class BaseViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(string propertyName)
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        protected bool Set<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+            field = value;
+            OnPropertyChanged(propertyName);
+            return true;
+        }
+
+        public ICommand SaveCommand { get; protected set; }
+        public ICommand DeleteCommand { get; protected set; }
+        public ICommand AddCommand { get; protected set; }
+
+        public abstract void LoadData();
     }
 
-    #endregion
-
-    // ====================================================================
-    // 1. МОДЕЛИ ДАННЫХ (Models)
-    // ====================================================================
-
-    #region 1.1 Модель Клиент (Client Model)
-
-    /// <summary>
-    /// Представляет клиента ломбарда.
-    /// </summary>
-    public class Client : INotifyPropertyChanged
-    {
-        // Приватные поля (snake_case)
-        private int _clientId;
-        private string _lastName;
-        private string _firstName;
-        private string _patronymic;
-        private DateTime? _dateOfBirth;
-        private string _passportSeries;
-        private string _passportNumber;
-        private string _passportIssuedBy;
-        private DateTime? _passportIssueDate;
-        private string _registrationAddress;
-        private string _phone;
-        private string _email;
-        private int _userId;
-        private string _city;
-        private string _street;
-        private int? _houseNumber;
-        private DateTime? _createdOn;
-
-        // Публичные свойства (PascalCase, как в XAML)
-        public int Id { get => _clientId; set { _clientId = value; OnPropertyChanged(nameof(Id)); } }
-        public string LastName { get => _lastName; set { _lastName = value; OnPropertyChanged(nameof(LastName)); } }
-        public string FirstName { get => _firstName; set { _firstName = value; OnPropertyChanged(nameof(FirstName)); } }
-        public string Patronymic { get => _patronymic; set { _patronymic = value; OnPropertyChanged(nameof(Patronymic)); } }
-        public DateTime? DateOfBirth { get => _dateOfBirth; set { _dateOfBirth = value; OnPropertyChanged(nameof(DateOfBirth)); } }
-        public string PassportSeries { get => _passportSeries; set { _passportSeries = value; OnPropertyChanged(nameof(PassportSeries)); } }
-        public string PassportNumber { get => _passportNumber; set { _passportNumber = value; OnPropertyChanged(nameof(PassportNumber)); } }
-        public string PassportIssuedBy { get => _passportIssuedBy; set { _passportIssuedBy = value; OnPropertyChanged(nameof(PassportIssuedBy)); } }
-        public DateTime? PassportIssueDate { get => _passportIssueDate; set { _passportIssueDate = value; OnPropertyChanged(nameof(PassportIssueDate)); } }
-        public string RegistrationAddress { get => _registrationAddress; set { _registrationAddress = value; OnPropertyChanged(nameof(RegistrationAddress)); } }
-        public string Phone { get => _phone; set { _phone = value; OnPropertyChanged(nameof(Phone)); } }
-        public string Email { get => _email; set { _email = value; OnPropertyChanged(nameof(Email)); } }
-        public int UserId { get => _userId; set { _userId = value; OnPropertyChanged(nameof(UserId)); } }
-        public string City { get => _city; set { _city = value; OnPropertyChanged(nameof(City)); } }
-        public string Street { get => _street; set { _street = value; OnPropertyChanged(nameof(Street)); } }
-        public int? HouseNumber { get => _houseNumber; set { _houseNumber = value; OnPropertyChanged(nameof(HouseNumber)); } }
-        public DateTime? created_on { get => _createdOn; set { _createdOn = value; OnPropertyChanged(nameof(created_on)); } }
-
-        // Вычисляемые свойства для XAML
-        public string FullName => $"{LastName} {FirstName} {Patronymic}";
-        public string PassportData => $"{PassportSeries} {PassportNumber}";
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
-    #endregion
-
-    #region 1.2 Модель Сотрудник (Employee Model)
-
-    /// <summary>
-    /// Представляет сотрудника ломбарда.
-    /// </summary>
-    public class Employee : INotifyPropertyChanged
-    {
-        private int _employeeId;
-        private string _lastName;
-        private string _firstName;
-        private string _patronymic;
-        private string _position;
-        private string _number;
-        private string _email;
-        private int _userId; // Для привязки к User (если есть отдельная таблица пользователей)
-        private DateTime? _createdOn;
-        // 1. Для колонки "ID Сотрудника" (Id)
-        public int Id { get => _employeeId; set { _employeeId = value; OnPropertyChanged(nameof(Id)); } }
-
-        // 2. Части Ф.И.О.
-        public string LastName { get => _lastName; set { _lastName = value; OnPropertyChanged(nameof(LastName)); } }
-        public string FirstName { get => _firstName; set { _firstName = value; OnPropertyChanged(nameof(FirstName)); } }
-        public string Patronymic { get => _patronymic; set { _patronymic = value; OnPropertyChanged(nameof(Patronymic)); } }
-
-        // 3. Вычисляемое свойство для колонки "Ф.И.О."
-        public string FullName => $"{LastName} {FirstName} {Patronymic}";
-
-        // 4. Для колонки "Должность" (Position)
-        public string Position { get => _position; set { _position = value; OnPropertyChanged(nameof(Position)); } }
-
-        // 5. Для колонки "Телефон" (Number)
-        public string Number { get => _number; set { _number = value; OnPropertyChanged(nameof(Number)); } }
-
-        // 6. Для колонки "Почта" (Email)
-        public string Email { get => _email; set { _email = value; OnPropertyChanged(nameof(Email)); } }
-
-        // 7. Для колонки "User id" (UserId)
-        public int UserId { get => _userId; set { _userId = value; OnPropertyChanged(nameof(UserId)); } }
-
-        // 8. Для колонки "Создано" (created_on)
-        public DateTime? created_on { get => _createdOn; set { _createdOn = value; OnPropertyChanged(nameof(created_on)); } }
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
-
-    #endregion
-
-    #region 1.3 Модель Товар (Item Model)
-
-    /// <summary>
-    /// Представляет товар, принятый ломбардом (залог или скупка).
-    /// </summary>
-    public class Item : INotifyPropertyChanged
-    {
-        // Приватные поля (для хранения данных)
-        private int _itemId;
-        private int _itemCategoryId;
-        private string _itemName;
-        private string _itemDescription;
-        private decimal _itemEstimatedPrice;
-        private decimal _itemMarketPrice;
-        private byte[] _itemImage;
-        private DateTime? _createdOn;
-
-        // Публичные свойства (snake_case - как в XAML)
-
-        public int item_id { get => _itemId; set { _itemId = value; OnPropertyChanged(nameof(item_id)); } }
-
-        public int item_category_id { get => _itemCategoryId; set { _itemCategoryId = value; OnPropertyChanged(nameof(item_category_id)); } }
-
-        public string item_name { get => _itemName; set { _itemName = value; OnPropertyChanged(nameof(item_name)); } }
-
-        public string item_description { get => _itemDescription; set { _itemDescription = value; OnPropertyChanged(nameof(item_description)); } }
-
-        public decimal item_estimated_price { get => _itemEstimatedPrice; set { _itemEstimatedPrice = value; OnPropertyChanged(nameof(item_estimated_price)); } }
-
-        public decimal item_market_price { get => _itemMarketPrice; set { _itemMarketPrice = value; OnPropertyChanged(nameof(item_market_price)); } }
-
-        public byte[] item_image { get => _itemImage; set { _itemImage = value; OnPropertyChanged(nameof(item_image)); } }
-
-        public DateTime? created_on { get => _createdOn; set { _createdOn = value; OnPropertyChanged(nameof(created_on)); } }
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
-
-    #endregion
-
-    #region 1.4 Модель Процентная Ставка (Rate Model)
-
-    /// <summary>
-    /// Представляет процентную ставку, зависящую от категории товара и срока.
-    /// </summary>
-    public class Rate : INotifyPropertyChanged
-    {
-        // Приватные поля (для хранения данных)
-        private int _rateId;
-        private int _categoryId;
-        private int _minDays;
-        private int _maxDays;
-        private decimal _interestRate;
-        private DateTime? _createdOn;
-
-        // Публичные свойства (snake_case - как в XAML)
-
-        // 1. ID Процента
-        public int rate_id { get => _rateId; set { _rateId = value; OnPropertyChanged(nameof(rate_id)); } }
-
-        // 2. ID Категории
-        public int category_id { get => _categoryId; set { _categoryId = value; OnPropertyChanged(nameof(category_id)); } }
-
-        // 3. Минимальное количество дней
-        public int min_days { get => _minDays; set { _minDays = value; OnPropertyChanged(nameof(min_days)); } }
-
-        // 4. Максимальное количество дней
-        public int max_days { get => _maxDays; set { _maxDays = value; OnPropertyChanged(nameof(max_days)); } }
-
-        // 5. Ставка (%)
-        public decimal interest_rate { get => _interestRate; set { _interestRate = value; OnPropertyChanged(nameof(interest_rate)); } }
-
-        // 6. Создано
-        public DateTime? created_on { get => _createdOn; set { _createdOn = value; OnPropertyChanged(nameof(created_on)); } }
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
-
-    #endregion
-
-    #region 1.5 Модель Контракт (Contract Model)
-
-    /// <summary>
-    /// Представляет договор залога или скупки, заключенный с клиентом.
-    /// </summary>
-    public class Contract : INotifyPropertyChanged
-    {
-        // Приватные поля (для хранения данных)
-        private int _contractId;
-        private int _clientId;        // Внешний ключ: Client
-        private int _employeeId;      // Внешний ключ: Employee (тот, кто оформил)
-        private int _itemId;          // Внешний ключ: Item
-        private int _contractNumber;          // Внешний ключ: Rate
-        private DateTime _issueDate;    // Дата выдачи/заключения
-        private DateTime _maturityDate; // Дата погашения/возврата (срок)
-        private decimal _loanAmount;    // Сумма займа (выданная клиенту)
-        private decimal _pawnValue;     // Сумма оценки залога (для расчета)
-        private string _status;         // Текущий статус: 'Активен', 'Просрочен', 'Выкуплен', 'Продан'
-        private DateTime? _createdOn;
-
-        // Публичные свойства (snake_case - как в XAML)
-
-        // 1. ID Контракта
-        public int contract_id { get => _contractId; set { _contractId = value; OnPropertyChanged(nameof(contract_id)); } }
-
-        // 2. Внешние ключи
-        public int client_id { get => _clientId; set { _clientId = value; OnPropertyChanged(nameof(client_id)); } }
-        public int employee_id { get => _employeeId; set { _employeeId = value; OnPropertyChanged(nameof(employee_id)); } }
-        public int item_id { get => _itemId; set { _itemId = value; OnPropertyChanged(nameof(item_id)); } }
-        public int contract_number { get => _contractNumber; set { _contractNumber = value; OnPropertyChanged(nameof(contract_number)); } }
-
-        // 3. Основные даты и суммы
-        public DateTime issue_date { get => _issueDate; set { _issueDate = value; OnPropertyChanged(nameof(issue_date)); } }
-        public DateTime maturity_date { get => _maturityDate; set { _maturityDate = value; OnPropertyChanged(nameof(maturity_date)); } }
-        public decimal loan_amount { get => _loanAmount; set { _loanAmount = value; OnPropertyChanged(nameof(loan_amount)); } }
-        public decimal pawn_value { get => _pawnValue; set { _pawnValue = value; OnPropertyChanged(nameof(pawn_value)); } }
-
-        // 4. Статус и тип
-        public string status { get => _status; set { _status = value; OnPropertyChanged(nameof(status)); } }
-
-
-        // 5. Дата создания записи
-        public DateTime? created_on { get => _createdOn; set { _createdOn = value; OnPropertyChanged(nameof(created_on)); } }
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
-
-    #endregion
-
-    #region 1.6 Модель Продление (Extension Model)
-
-    /// <summary>
-    /// Представляет операцию продления срока действия контракта.
-    /// </summary>
-    public class Extension : INotifyPropertyChanged
-    {
-        // Приватные поля (для хранения данных)
-        private int _extensionId;
-        private int _contractId;        // Внешний ключ: Contract, который продлевается
-        private DateTime _oldMaturityDate; // Старая дата погашения
-        private DateTime _newMaturityDate; // Новая дата погашения
-        private decimal _interestPaid;      // Сумма уплаченных процентов за предыдущий период
-        private DateTime? _createdOn;
-        private int _employeeId;
-
-        // Публичные свойства (snake_case - как в XAML)
-
-        // 1. ID Продления
-        public int extension_id { get => _extensionId; set { _extensionId = value; OnPropertyChanged(nameof(extension_id)); } }
-
-        // 2. ID Контракта
-        public int contract_id { get => _contractId; set { _contractId = value; OnPropertyChanged(nameof(contract_id)); } }
-
-        // 3. Даты
-        public DateTime old_maturity_date { get => _oldMaturityDate; set { _oldMaturityDate = value; OnPropertyChanged(nameof(old_maturity_date)); } }
-        public DateTime new_maturity_date { get => _newMaturityDate; set { _newMaturityDate = value; OnPropertyChanged(nameof(new_maturity_date)); } }
-
-        // 4. Оплаченные проценты
-        public decimal interest_paid { get => _interestPaid; set { _interestPaid = value; OnPropertyChanged(nameof(interest_paid)); } }
-
-        // 5. Дата создания записи
-        public DateTime? created_on { get => _createdOn; set { _createdOn = value; OnPropertyChanged(nameof(created_on)); } }
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        public int employee_id { get => _employeeId; set { _employeeId = value; OnPropertyChanged(nameof(employee_id)); } }
-    }
-
-    #endregion
-
-    #region 1.7 Модель Выкуп (Redemption Model)
-
-    /// <summary>
-    /// Представляет операцию выкупа товара по контракту (погашение займа).
-    /// </summary>
-    public class Redemption : INotifyPropertyChanged
-    {
-        // Приватные поля (для хранения данных)
-        private int _redemptionId;
-        private int _contractId;        // Внешний ключ: Contract
-        private DateTime _redemptionDate; // Дата фактического выкупа
-        private decimal _totalPaid;       // Общая сумма оплаты
-        private int _employeeId;        // Внешний ключ: Employee (тот, кто принял платеж)
-        private DateTime? _createdOn;
-
-        // Публичные свойства (snake_case - как в XAML)
-
-        // 1. ID Выкупа
-        public int redemption_id { get => _redemptionId; set { _redemptionId = value; OnPropertyChanged(nameof(redemption_id)); } }
-
-        // 2. ID Контракта
-        public int contract_id { get => _contractId; set { _contractId = value; OnPropertyChanged(nameof(contract_id)); } }
-
-        // 3. Дата выкупа
-        public DateTime redemption_date { get => _redemptionDate; set { _redemptionDate = value; OnPropertyChanged(nameof(redemption_date)); } }
-
-        // 4. Суммы оплаты (Общая сумма, скорее всего, привязана в XAML)
-        // В вашем XAML есть "Сумма оплаты" — я привяжу ее к TotalPaid
-        public decimal total_paid { get => _totalPaid; set { _totalPaid = value; OnPropertyChanged(nameof(total_paid)); } }
-
-        // 5. ID Сотрудника
-        public int redeemed_by_employee_id { get => _employeeId; set { _employeeId = value; OnPropertyChanged(nameof(redeemed_by_employee_id)); } }
-
-        // 6. Дата создания записи
-        public DateTime? created_on { get => _createdOn; set { _createdOn = value; OnPropertyChanged(nameof(created_on)); } }
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
-
-    #endregion
-
-    #region 1.8 Модель Покупка (Buy Model)
-
-    /// <summary>
-    /// Представляет операцию скупки товара ломбардом у клиента.
-    /// </summary>
-    public class Buy : INotifyPropertyChanged
-    {
-        // Приватные поля (для хранения данных)
-        private int _buyId;
-        private int _itemId;           // Внешний ключ: Item (купленный товар)
-        private decimal _buyPrice;     // Цена, за которую ломбард купил товар
-        private DateTime _buyDate;      // Дата покупки
-        private int _clientId;         // Внешний ключ: Client (тот, кто продал товар ломбарду)
-        private int _employeeId;       // Внешний ключ: Employee (тот, кто оформил покупку)
-        private DateTime? _createdOn;
-
-        // Публичные свойства (snake_case - как в XAML)
-
-        // 1. ID Покупки
-        public int buy_id { get => _buyId; set { _buyId = value; OnPropertyChanged(nameof(buy_id)); } }
-
-        // 2. ID Товара
-        public int item_id { get => _itemId; set { _itemId = value; OnPropertyChanged(nameof(item_id)); } }
-
-        // 3. Цена покупки
-        public decimal buy_price { get => _buyPrice; set { _buyPrice = value; OnPropertyChanged(nameof(buy_price)); } }
-
-        // 4. Дата покупки
-        public DateTime buy_date { get => _buyDate; set { _buyDate = value; OnPropertyChanged(nameof(buy_date)); } }
-
-        // 5. ID Клиента
-        public int client_id { get => _clientId; set { _clientId = value; OnPropertyChanged(nameof(client_id)); } }
-
-        // 6. ID Сотрудника
-        public int buy_by_employee_id { get => _employeeId; set { _employeeId = value; OnPropertyChanged(nameof(buy_by_employee_id)); } }
-
-        // 7. Дата создания записи
-        public DateTime? created_on { get => _createdOn; set { _createdOn = value; OnPropertyChanged(nameof(created_on)); } }
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
-
-    #endregion
-
-    #region 1.9 Модель Продажа (Sale Model)
-
-    /// <summary>
-    /// Представляет операцию продажи товара ломбардом.
-    /// </summary>
-    public class Sale : INotifyPropertyChanged
-    {
-        // Приватные поля (для хранения данных)
-        private int _saleId;
-        private int _itemId;           // Внешний ключ: Item (проданный товар)
-        private DateTime _saleDate;     // Дата продажи
-        private decimal _salePrice;    // Цена, за которую товар был продан
-        private int? _clientId;         // Внешний ключ: Client (покупатель, может быть null)
-        private int _employeeId;       // Внешний ключ: Employee (тот, кто оформил продажу)
-        private DateTime? _createdOn;
-
-        // Публичные свойства (snake_case - как в XAML)
-
-        // 1. ID Продажи
-        public int sale_id { get => _saleId; set { _saleId = value; OnPropertyChanged(nameof(sale_id)); } }
-
-        // 2. ID Товара
-        public int item_id { get => _itemId; set { _itemId = value; OnPropertyChanged(nameof(item_id)); } }
-
-        // 3. Дата продажи
-        public DateTime sale_date { get => _saleDate; set { _saleDate = value; OnPropertyChanged(nameof(sale_date)); } }
-
-        // 4. Цена продажи
-        public decimal sale_price { get => _salePrice; set { _salePrice = value; OnPropertyChanged(nameof(sale_price)); } }
-
-        // 5. ID Клиента (покупателя)
-        public int? client_id { get => _clientId; set { _clientId = value; OnPropertyChanged(nameof(client_id)); } }
-
-        // 6. ID Сотрудника
-        public int sold_by_employee_id { get => _employeeId; set { _employeeId = value; OnPropertyChanged(nameof(sold_by_employee_id)); } }
-
-        // 7. Дата создания записи
-        public DateTime? created_on { get => _createdOn; set { _createdOn = value; OnPropertyChanged(nameof(created_on)); } }
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
-
-    #endregion
-
-    #region 1.10 Модель Заявка (Request Model)
-
-    /// <summary>
-    /// Представляет заявку клиента на услугу ломбарда (оценка, консультация и т.д.).
-    /// </summary>
-    public partial class Request : INotifyPropertyChanged
-    {
-        // Приватные поля (для хранения данных)
-        private int _requestId;
-        private int _serviceId;          // Внешний ключ: Service (тип услуги)
-        private string _requesterLastName;
-        private string _requesterFirstName;
-        private string _requesterPatronymic;
-        private string _requesterNumber;
-        private string _requesterCity;
-        private DateTime? _createdOn;
-
-        // Публичные свойства (snake_case - как в XAML)
-
-        // 1. ID Заявки
-        public int request_id { get => _requestId; set { _requestId = value; OnPropertyChanged(nameof(request_id)); } }
-
-        // 2. ID Услуги
-        public int service_id { get => _serviceId; set { _serviceId = value; OnPropertyChanged(nameof(service_id)); } }
-
-        // 3. ФИО Заявителя
-        public string requester_last_name { get => _requesterLastName; set { _requesterLastName = value; OnPropertyChanged(nameof(requester_last_name)); } }
-        public string requester_first_name { get => _requesterFirstName; set { _requesterFirstName = value; OnPropertyChanged(nameof(requester_first_name)); } }
-        public string requester_patronymic { get => _requesterPatronymic; set { _requesterPatronymic = value; OnPropertyChanged(nameof(requester_patronymic)); } }
-
-        // 4. Телефон и Город
-        public string requester_number { get => _requesterNumber; set { _requesterNumber = value; OnPropertyChanged(nameof(requester_number)); } }
-        public string requester_city { get => _requesterCity; set { _requesterCity = value; OnPropertyChanged(nameof(requester_city)); } }
-
-        // 6. Дата создания
-        public DateTime? created_on { get => _createdOn; set { _createdOn = value; OnPropertyChanged(nameof(created_on)); } }
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
-
-    #endregion
-
-    #region 1.11 Модель Категория (Category Model)
-
-/// <summary>
-/// Представляет категорию товара (например, Золото, Электроника).
-/// </summary>
-public class Category : INotifyPropertyChanged
-{
-    // Приватные поля (для хранения данных)
-    private int _categoryId;
-    private string _categoryName;
-    private string _categoryDescription;
-    private DateTime? _createdOn;
-
-    // Публичные свойства (snake_case - как в XAML)
-
-    // 1. ID Категории
-    public int category_id { get => _categoryId; set { _categoryId = value; OnPropertyChanged(nameof(category_id)); } }
-
-    // 2. Название Категории
-    public string category_name { get => _categoryName; set { _categoryName = value; OnPropertyChanged(nameof(category_name)); } }
-
-    // 3. Описание Категории
-    public string category_description { get => _categoryDescription; set { _categoryDescription = value; OnPropertyChanged(nameof(category_description)); } }
-
-    // 4. Дата создания
-    public DateTime? created_on { get => _createdOn; set { _createdOn = value; OnPropertyChanged(nameof(created_on)); } }
-
-
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    protected void OnPropertyChanged(string propertyName)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-}
-
-#endregion
-    // ====================================================================
-    // 2. VIEW MODELS (Логика данных и команд для таблиц)
-    // ====================================================================
-
-    #region 2.1 ViewModel Клиентов (ClientsViewModel)
-
-    public class ClientsViewModel : BaseViewModel
-    {
-        public ObservableCollection<Client> Clients { get; }
-
-        private Client _selectedClient;
-        public Client SelectedClient
-        {
-            get => _selectedClient;
-            set
-            {
-                _selectedClient = value;
-                OnPropertyChanged(nameof(SelectedClient));
-                // Обновление состояния кнопки "Удалить"
-                ((RelayCommand)DeleteCommand).RaiseCanExecuteChanged();
-            }
-        }
-
-        public ICommand AddCommand { get; }
-        public ICommand DeleteCommand { get; }
-        public ICommand SaveCommand { get; }
-
-        public ClientsViewModel()
-        {
-            // Инициализация коллекции и тестовые данные
-            Clients = new ObservableCollection<Client>
-    {
-        // Использование свойств в snake_case, как в модели Client
-        new Client { Id = 1, LastName = "Иванов", FirstName = "Иван", Patronymic = "Иванович", PassportSeries = "1234", PassportNumber = "567890", created_on = DateTime.Now },
-        new Client { Id = 2, LastName = "Петров", FirstName = "Петр", Patronymic = "Петрович", PassportSeries = "9876", PassportNumber = "543210", created_on = DateTime.Now }
-    };
-
-            AddCommand = new RelayCommand(AddClient);
-            DeleteCommand = new RelayCommand(DeleteClient, CanDeleteClient);
-            SaveCommand = new RelayCommand(SaveClients);
-        }
-
-        private void AddClient(object parameter)
-        {
-            // Вычисляем временный Id (для отображения, реальный Id будет от БД)
-            int newId = Clients.Any() ? Clients.Max(c => c.Id) + 1 : 1;
-            Clients.Add(new Client { Id = newId, LastName = "Новый клиент", PassportNumber = "000000" });
-        }
-
-        private void DeleteClient(object parameter)
-        {
-            if (SelectedClient != null)
-            {
-                Clients.Remove(SelectedClient);
-            }
-        }
-
-        private bool CanDeleteClient(object parameter)
-        {
-            return SelectedClient != null;
-        }
-
-        private void SaveClients(object parameter)
-        {
-            // !!! СЮДА ДОБАВИТЬ ЛОГИКУ ВЗАИМОДЕЙСТВИЯ С БАЗОЙ ДАННЫХ !!!
-            MessageBox.Show("Данные клиентов сохранены (эмуляция сохранения в БД).", "Сохранение", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-    }
-
-    #endregion
-
-    #region 2.2 ViewModel Сотрудников (EmployeesViewModel)
-
-    public class EmployeesViewModel : BaseViewModel
-    {
-        public ObservableCollection<Employee> Employees { get; }
-
-        private Employee _selectedEmployee;
-        public Employee SelectedEmployee
-        {
-            get => _selectedEmployee;
-            set
-            {
-                _selectedEmployee = value;
-                OnPropertyChanged(nameof(SelectedEmployee));
-                ((RelayCommand)DeleteCommand).RaiseCanExecuteChanged();
-            }
-        }
-
-        public ICommand AddCommand { get; }
-        public ICommand DeleteCommand { get; }
-        public ICommand SaveCommand { get; }
-
-        public EmployeesViewModel()
-        {
-            // Инициализация коллекции и тестовые данные
-            Employees = new ObservableCollection<Employee>
-    {
-        // Использование свойств в PascalCase, как в модели Employee
-        new Employee { Id = 1, FirstName = "Елена", LastName = "Смирнова", Patronymic = "Александровна", Position = "Кассир" },
-        new Employee { Id = 2, FirstName = "Максим", LastName = "Кузнецов", Patronymic = "Иванович", Position = "Оценщик" }
-    };
-
-            AddCommand = new RelayCommand(AddEmployee);
-            DeleteCommand = new RelayCommand(DeleteEmployee, CanDeleteEmployee);
-            SaveCommand = new RelayCommand(SaveEmployees);
-        }
-
-        private void AddEmployee(object parameter)
-        {
-            int newId = Employees.Any() ? Employees.Max(c => c.Id) + 1 : 1;
-            Employees.Add(new Employee { Id = newId, LastName = "Новый", FirstName = "сотрудник", Position = "Не назначен" });
-        }
-
-        private void DeleteEmployee(object parameter)
-        {
-            if (SelectedEmployee != null)
-            {
-                Employees.Remove(SelectedEmployee);
-            }
-        }
-
-        private bool CanDeleteEmployee(object parameter)
-        {
-            return SelectedEmployee != null;
-        }
-
-        private void SaveEmployees(object parameter)
-        {
-            // !!! СЮДА ДОБАВИТЬ ЛОГИКУ ВЗАИМОДЕЙСТВИЯ С БАЗОЙ ДАННЫХ !!!
-            MessageBox.Show("Данные сотрудников сохранены (эмуляция сохранения в БД).", "Сохранение", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-    }
-
-    #endregion
-
-    #region 2.3 ViewModel Товаров (ItemsViewModel)
-
-    public class ItemsViewModel : BaseViewModel
-    {
-        public ObservableCollection<Item> Items { get; } = new ObservableCollection<Item>();
-
-        private Item _selectedItem;
-        public Item SelectedItem
-        {
-            get => _selectedItem;
-            set
-            {
-                _selectedItem = value;
-                OnPropertyChanged(nameof(SelectedItem));
-                ((RelayCommand)DeleteCommand).RaiseCanExecuteChanged();
-            }
-        }
-
-        public ICommand AddCommand { get; }
-        public ICommand DeleteCommand { get; }
-        public ICommand SaveCommand { get; }
-
-        public ItemsViewModel()
-        {
-            Items.Add(new Item { item_id = 101, item_name = "Смартфон", item_estimated_price = 5000M, item_market_price = 7000M, created_on = DateTime.Now });
-
-            AddCommand = new RelayCommand(AddItem);
-            DeleteCommand = new RelayCommand(DeleteItem, CanDeleteItem);
-            SaveCommand = new RelayCommand(SaveItems);
-        }
-
-        private void AddItem(object parameter)
-        {
-            int newId = Items.Any() ? Items.Max(c => c.item_id) + 1 : 1;
-            Items.Add(new Item { item_id = newId, item_name = "Новый товар", item_estimated_price = 0M, item_market_price = 0M });
-        }
-
-        private void DeleteItem(object parameter)
-        {
-            if (SelectedItem != null) Items.Remove(SelectedItem);
-        }
-
-        private bool CanDeleteItem(object parameter) => SelectedItem != null;
-
-        private void SaveItems(object parameter) => MessageBox.Show("Данные товаров сохранены.", "Сохранение");
-    }
-
-    #endregion
-
-    #region 2.4 ViewModel Процентов (RatesViewModel)
-
-    public class RatesViewModel : BaseViewModel
-    {
-        public ObservableCollection<Rate> Rates { get; } = new ObservableCollection<Rate>();
-
-        private Rate _selectedRate;
-        public Rate SelectedRate
-        {
-            get => _selectedRate;
-            set
-            {
-                _selectedRate = value;
-                OnPropertyChanged(nameof(SelectedRate));
-                ((RelayCommand)DeleteCommand).RaiseCanExecuteChanged();
-            }
-        }
-
-        public ICommand AddCommand { get; }
-        public ICommand DeleteCommand { get; }
-        public ICommand SaveCommand { get; }
-
-        public RatesViewModel()
-        {
-            Rates.Add(new Rate { rate_id = 1, category_id = 1, min_days = 1, max_days = 30, interest_rate = 0.5M, created_on = DateTime.Now });
-
-            AddCommand = new RelayCommand(AddRate);
-            DeleteCommand = new RelayCommand(DeleteRate, CanDeleteRate);
-            SaveCommand = new RelayCommand(SaveRates);
-        }
-
-        private void AddRate(object parameter)
-        {
-            int newId = Rates.Any() ? Rates.Max(c => c.rate_id) + 1 : 1;
-            Rates.Add(new Rate { rate_id = newId, category_id = 1, min_days = 1, max_days = 1, interest_rate = 0M });
-        }
-
-        private void DeleteRate(object parameter)
-        {
-            if (SelectedRate != null) Rates.Remove(SelectedRate);
-        }
-
-        private bool CanDeleteRate(object parameter) => SelectedRate != null;
-
-        private void SaveRates(object parameter) => MessageBox.Show("Данные процентов сохранены.", "Сохранение");
-    }
-
-    #endregion
-
-    #region 2.5 ViewModel Контрактов (ContractsViewModel)
-
-    public class ContractsViewModel : BaseViewModel
-    {
-        public ObservableCollection<Contract> Contracts { get; } = new ObservableCollection<Contract>();
-
-        private Contract _selectedContract;
-        public Contract SelectedContract
-        {
-            get => _selectedContract;
-            set
-            {
-                _selectedContract = value;
-                OnPropertyChanged(nameof(SelectedContract));
-                ((RelayCommand)DeleteCommand).RaiseCanExecuteChanged();
-            }
-        }
-
-        public ICommand AddCommand { get; }
-        public ICommand DeleteCommand { get; }
-        public ICommand SaveCommand { get; }
-
-        public ContractsViewModel()
-        {
-            Contracts.Add(new Contract { contract_id = 501, client_id = 1, employee_id = 1, item_id = 101, issue_date = DateTime.Now, maturity_date = DateTime.Now.AddDays(30), loan_amount = 5000M, status = "Активен" });
-
-            AddCommand = new RelayCommand(AddContract);
-            DeleteCommand = new RelayCommand(DeleteContract, CanDeleteContract);
-            SaveCommand = new RelayCommand(SaveContracts);
-        }
-
-        private void AddContract(object parameter)
-        {
-            int newId = Contracts.Any() ? Contracts.Max(c => c.contract_id) + 1 : 1;
-            Contracts.Add(new Contract { contract_id = newId, client_id = 1, employee_id = 1, item_id = 1, issue_date = DateTime.Now, maturity_date = DateTime.Now.AddDays(1), loan_amount = 0M, status = "Черновик" });
-        }
-
-        private void DeleteContract(object parameter)
-        {
-            if (SelectedContract != null) Contracts.Remove(SelectedContract);
-        }
-
-        private bool CanDeleteContract(object parameter) => SelectedContract != null;
-
-        private void SaveContracts(object parameter) => MessageBox.Show("Данные контрактов сохранены.", "Сохранение");
-    }
-
-    #endregion
-
-    #region 2.6 ViewModel Продлений (ExtensionsViewModel)
-
-    public class ExtensionsViewModel : BaseViewModel
-    {
-        public ObservableCollection<Extension> Extensions { get; } = new ObservableCollection<Extension>();
-
-        private Extension _selectedExtension;
-        public Extension SelectedExtension
-        {
-            get => _selectedExtension;
-            set
-            {
-                _selectedExtension = value;
-                OnPropertyChanged(nameof(SelectedExtension));
-                ((RelayCommand)DeleteCommand).RaiseCanExecuteChanged();
-            }
-        }
-
-        public ICommand AddCommand { get; }
-        public ICommand DeleteCommand { get; }
-        public ICommand SaveCommand { get; }
-
-        public ExtensionsViewModel()
-        {
-            Extensions.Add(new Extension { extension_id = 1, contract_id = 501, old_maturity_date = DateTime.Now.AddDays(30), new_maturity_date = DateTime.Now.AddDays(60), interest_paid = 500M });
-
-            AddCommand = new RelayCommand(AddExtension);
-            DeleteCommand = new RelayCommand(DeleteExtension, CanDeleteExtension);
-            SaveCommand = new RelayCommand(SaveExtensions);
-        }
-
-        private void AddExtension(object parameter)
-        {
-            int newId = Extensions.Any() ? Extensions.Max(c => c.extension_id) + 1 : 1;
-            Extensions.Add(new Extension { extension_id = newId, contract_id = 1, old_maturity_date = DateTime.Now, new_maturity_date = DateTime.Now.AddDays(1), interest_paid = 0M });
-        }
-
-        private void DeleteExtension(object parameter)
-        {
-            if (SelectedExtension != null) Extensions.Remove(SelectedExtension);
-        }
-
-        private bool CanDeleteExtension(object parameter) => SelectedExtension != null;
-
-        private void SaveExtensions(object parameter) => MessageBox.Show("Данные продлений сохранены.", "Сохранение");
-    }
-
-    #endregion
-
-    #region 2.7 ViewModel Выкупов (RedemptionViewModel)
-
-    public class RedemptionViewModel : BaseViewModel
-    {
-        public ObservableCollection<Redemption> Redemptions { get; } = new ObservableCollection<Redemption>();
-
-        private Redemption _selectedRedemption;
-        public Redemption SelectedRedemption
-        {
-            get => _selectedRedemption;
-            set
-            {
-                _selectedRedemption = value;
-                OnPropertyChanged(nameof(SelectedRedemption));
-                ((RelayCommand)DeleteCommand).RaiseCanExecuteChanged();
-            }
-        }
-
-        public ICommand AddCommand { get; }
-        public ICommand DeleteCommand { get; }
-        public ICommand SaveCommand { get; }
-
-        public RedemptionViewModel()
-        {
-            Redemptions.Add(new Redemption { redemption_id = 1, contract_id = 502, redemption_date = DateTime.Now, total_paid = 6000M });
-
-            AddCommand = new RelayCommand(AddRedemption);
-            DeleteCommand = new RelayCommand(DeleteRedemption, CanDeleteRedemption);
-            SaveCommand = new RelayCommand(SaveRedemptions);
-        }
-
-        private void AddRedemption(object parameter)
-        {
-            int newId = Redemptions.Any() ? Redemptions.Max(c => c.redemption_id) + 1 : 1;
-            Redemptions.Add(new Redemption { redemption_id = newId, contract_id = 1, redemption_date = DateTime.Now, total_paid = 0M });
-        }
-
-        private void DeleteRedemption(object parameter)
-        {
-            if (SelectedRedemption != null) Redemptions.Remove(SelectedRedemption);
-        }
-
-        private bool CanDeleteRedemption(object parameter) => SelectedRedemption != null;
-
-        private void SaveRedemptions(object parameter) => MessageBox.Show("Данные выкупов сохранены.", "Сохранение");
-    }
-
-    #endregion
-
-    #region 2.8 ViewModel Покупки (BuyViewModel)
-
-    public class BuyViewModel : BaseViewModel
-    {
-        public ObservableCollection<Buy> Buys { get; } = new ObservableCollection<Buy>();
-
-        private Buy _selectedBuy;
-        public Buy SelectedBuy
-        {
-            get => _selectedBuy;
-            set
-            {
-                _selectedBuy = value;
-                OnPropertyChanged(nameof(SelectedBuy));
-                ((RelayCommand)DeleteCommand).RaiseCanExecuteChanged();
-            }
-        }
-
-        public ICommand AddCommand { get; }
-        public ICommand DeleteCommand { get; }
-        public ICommand SaveCommand { get; }
-
-        public BuyViewModel()
-        {
-            Buys.Add(new Buy { buy_id = 1, item_id = 102, buy_price = 1000M, buy_date = DateTime.Now, client_id = 3 });
-
-            AddCommand = new RelayCommand(AddBuy);
-            DeleteCommand = new RelayCommand(DeleteBuy, CanDeleteBuy);
-            SaveCommand = new RelayCommand(SaveBuys);
-        }
-
-        private void AddBuy(object parameter)
-        {
-            int newId = Buys.Any() ? Buys.Max(c => c.buy_id) + 1 : 1;
-            Buys.Add(new Buy { buy_id = newId, item_id = 1, buy_price = 0M, buy_date = DateTime.Now, client_id = 1 });
-        }
-
-        private void DeleteBuy(object parameter)
-        {
-            if (SelectedBuy != null) Buys.Remove(SelectedBuy);
-        }
-
-        private bool CanDeleteBuy(object parameter) => SelectedBuy != null;
-
-        private void SaveBuys(object parameter) => MessageBox.Show("Данные покупок сохранены.", "Сохранение");
-    }
-
-    #endregion
-
-    #region 2.9 ViewModel Продажи (SaleViewModel)
-
-    public class SaleViewModel : BaseViewModel
-    {
-        public ObservableCollection<Sale> Sales { get; } = new ObservableCollection<Sale>();
-
-        private Sale _selectedSale;
-        public Sale SelectedSale
-        {
-            get => _selectedSale;
-            set
-            {
-                _selectedSale = value;
-                OnPropertyChanged(nameof(SelectedSale));
-                ((RelayCommand)DeleteCommand).RaiseCanExecuteChanged();
-            }
-        }
-
-        public ICommand AddCommand { get; }
-        public ICommand DeleteCommand { get; }
-        public ICommand SaveCommand { get; }
-
-        public SaleViewModel()
-        {
-            Sales.Add(new Sale { sale_id = 1, item_id = 102, sale_price = 1500M, sale_date = DateTime.Now, sold_by_employee_id = 1 });
-
-            AddCommand = new RelayCommand(AddSale);
-            DeleteCommand = new RelayCommand(DeleteSale, CanDeleteSale);
-            SaveCommand = new RelayCommand(SaveSales);
-        }
-
-        private void AddSale(object parameter)
-        {
-            int newId = Sales.Any() ? Sales.Max(c => c.sale_id) + 1 : 1;
-            Sales.Add(new Sale { sale_id = newId, item_id = 1, sale_price = 0M, sale_date = DateTime.Now, sold_by_employee_id = 1 });
-        }
-
-        private void DeleteSale(object parameter)
-        {
-            if (SelectedSale != null) Sales.Remove(SelectedSale);
-        }
-
-        private bool CanDeleteSale(object parameter) => SelectedSale != null;
-
-        private void SaveSales(object parameter) => MessageBox.Show("Данные продаж сохранены.", "Сохранение");
-    }
-
-    #endregion
-
-    #region 2.10 ViewModel Заявки (RequestViewModel)
-
-    public class RequestViewModel : BaseViewModel
-    {
-        public ObservableCollection<Request> Requests { get; } = new ObservableCollection<Request>();
-
-        private Request _selectedRequest;
-        public Request SelectedRequest
-        {
-            get => _selectedRequest;
-            set
-            {
-                _selectedRequest = value;
-                OnPropertyChanged(nameof(SelectedRequest));
-                ((RelayCommand)DeleteCommand).RaiseCanExecuteChanged();
-            }
-        }
-
-        public ICommand AddCommand { get; }
-        public ICommand DeleteCommand { get; }
-        public ICommand SaveCommand { get; }
-
-        public RequestViewModel()
-        {
-            Requests.Add(new Request { request_id = 1, service_id = 1, requester_last_name = "Смирнов", requester_number = "89001234567"});
-
-            AddCommand = new RelayCommand(AddRequest);
-            DeleteCommand = new RelayCommand(DeleteRequest, CanDeleteRequest);
-            SaveCommand = new RelayCommand(SaveRequests);
-        }
-
-        private void AddRequest(object parameter)
-        {
-            int newId = Requests.Any() ? Requests.Max(c => c.request_id) + 1 : 1;
-            Requests.Add(new Request { request_id = newId, service_id = 1, requester_last_name = "Новая"});
-        }
-
-        private void DeleteRequest(object parameter)
-        {
-            if (SelectedRequest != null) Requests.Remove(SelectedRequest);
-        }
-
-        private bool CanDeleteRequest(object parameter) => SelectedRequest != null;
-
-        private void SaveRequests(object parameter) => MessageBox.Show("Данные заявок сохранены.", "Сохранение");
-    }
-
-    #endregion
-
-    #region 2.11 ViewModel Категории (CategoriesViewModel)
-
-    public class CategoriesViewModel : BaseViewModel
-    {
-        public ObservableCollection<Category> Categories { get; } = new ObservableCollection<Category>();
-
-        private Category _selectedCategory;
-        public Category SelectedCategory
-        {
-            get => _selectedCategory;
-            set
-            {
-                _selectedCategory = value;
-                OnPropertyChanged(nameof(SelectedCategory));
-                ((RelayCommand)DeleteCommand).RaiseCanExecuteChanged();
-            }
-        }
-
-        public ICommand AddCommand { get; }
-        public ICommand DeleteCommand { get; }
-        public ICommand SaveCommand { get; }
-
-        public CategoriesViewModel()
-        {
-            Categories.Add(new Category { category_id = 1, category_name = "Золото", category_description = "Ювелирные изделия из золота" });
-
-            AddCommand = new RelayCommand(AddCategory);
-            DeleteCommand = new RelayCommand(DeleteCategory, CanDeleteCategory);
-            SaveCommand = new RelayCommand(SaveCategories);
-        }
-
-        private void AddCategory(object parameter)
-        {
-            int newId = Categories.Any() ? Categories.Max(c => c.category_id) + 1 : 1;
-            Categories.Add(new Category { category_id = newId, category_name = "Новая категория", category_description = "" });
-        }
-
-        private void DeleteCategory(object parameter)
-        {
-            if (SelectedCategory != null) Categories.Remove(SelectedCategory);
-        }
-
-        private bool CanDeleteCategory(object parameter) => SelectedCategory != null;
-
-        private void SaveCategories(object parameter) => MessageBox.Show("Данные категорий сохранены.", "Сохранение");
-    }
-
-    #endregion
-
-    // ====================================================================
-    // 3. ГЛАВНАЯ VIEW MODEL (Управление навигацией)
-    // ====================================================================
-
-    #region 3.1 AdminViewModel - Навигация между ViewModels
-
-
+    // =======================================================
+    // 2. AdminViewModel (Главный навигатор)
+    // =======================================================
     public class AdminViewModel : BaseViewModel
     {
-        private int _currentUserId; // Поле для хранения ID вошедшего сотрудника
-        public int CurrentUserId
-        {
-            get => _currentUserId;
-            set
-            {
-                _currentUserId = value;
-                OnPropertyChanged(nameof(CurrentUserId));
-            }
-        }
-
         private BaseViewModel _currentViewModel;
-        // Используем readonly для словаря, который инициализируется только один раз
-        private readonly Dictionary<string, BaseViewModel> _viewModels;
-
-        /// <summary>
-        /// Активная ViewModel, отображаемая в ContentControl.
-        /// </summary>
         public BaseViewModel CurrentViewModel
         {
             get => _currentViewModel;
-            private set // Приватный сеттер, чтобы менять только через метод ChangeView
-            {
-                _currentViewModel = value;
-                OnPropertyChanged(nameof(CurrentViewModel));
-            }
+            set => Set(ref _currentViewModel, value);
         }
+
+        private int _currentUserId = 1;
+        public int CurrentUserId
+        {
+            get => _currentUserId;
+            set => Set(ref _currentUserId, value);
+        }
+
+        public ICommand NavigateCommand { get; }
 
         public AdminViewModel()
         {
-            // Инициализация всех ViewModels для вкладок
-            _viewModels = new Dictionary<string, BaseViewModel>
-    {
-        {"Клиенты", new ClientsViewModel()},
-        {"Сотрудники", new EmployeesViewModel()},
-        {"Товары", new ItemsViewModel()},
-        {"Проценты", new RatesViewModel()},
-        {"Контракты", new ContractsViewModel()},
-        {"Продление", new ExtensionsViewModel()},
-        {"Выкупы", new RedemptionViewModel()},
-        {"Покупки", new BuyViewModel()},
-        {"Продажи", new SaleViewModel()},
-        {"Заявки", new RequestViewModel()},
-        // Категории обычно не выводятся на отдельную вкладку, но если нужно:
-        // {"Категории", new CategoriesViewModel()}, 
+            NavigateCommand = new RelayCommand(NavigateToView);
+            // Инициализация первой ViewModel по умолчанию
+            CurrentViewModel = new ClientViewModel();
 
-        
-    };
-
-            // Установка начальной активной вкладки
-            CurrentViewModel = _viewModels["Клиенты"];
-        }
-
-        /// <summary>
-        /// Переключает активное представление по имени вкладки.
-        /// </summary>
-        public void ChangeView(string viewName)
-        {
-            if (_viewModels.TryGetValue(viewName, out BaseViewModel viewModel))
+            // Убедимся, что база данных существует
+            using (var db = new AppDbContext())
             {
-                CurrentViewModel = viewModel;
+                db.Database.EnsureCreated();
             }
         }
+
+        private void NavigateToView(object parameter)
+        {
+            string viewName = parameter as string;
+            if (viewName == null) return;
+
+            BaseViewModel newViewModel = viewName switch
+            {
+                "Клиенты" => new ClientViewModel(),
+                "Сотрудники" => new EmployeeViewModel(),
+                "Товары" => new ItemViewModel(),
+                "Проценты" => new InterestRateViewModel(),
+                "Контракты" => new ContractViewModel(),
+                "Продление" => new ExtensionViewModel(),
+                "Выкупы" => new RedemptionViewModel(),
+                "Покупки" => new PurchaseViewModel(),
+                "Продажи" => new SaleViewModel(),
+                "Заявки" => new RequestViewModel(),
+                _ => CurrentViewModel
+            };
+            CurrentViewModel = newViewModel;
+        }
+        public override void LoadData() { }
     }
 
-    #endregion
-
-    // ====================================================================
-    // 4. CODE-BEHIND (Логика окна Admin.xaml.cs)
-    // ====================================================================
-
-    #region 4.1 Admin - Окно (Code-Behind)
-
-    /// <summary>
-    /// Логика взаимодействия для Admin.xaml (Code-Behind)
-    /// </summary>
-    public partial class Admin : Window
+    // =======================================================
+    // 3. ClientViewModel (Клиенты)
+    // =======================================================
+    public class ClientViewModel : BaseViewModel
     {
-        private Button _activeButton;
-        private readonly AdminViewModel _viewModel; // Ссылка на главную ViewModel
+        private ObservableCollection<Client> _clients;
+        public ObservableCollection<Client> Clients { get => _clients; set => Set(ref _clients, value); }
+        private Client _selectedClient;
+        public Client SelectedClient { get => _selectedClient; set => Set(ref _selectedClient, value); }
 
-        // Цвета (Кисти)
-        private readonly SolidColorBrush ActiveBrush = new SolidColorBrush(Color.FromArgb(0xFF, 0xAE, 0xB7, 0xAB));
-        private readonly SolidColorBrush InactiveBrush = new SolidColorBrush(Color.FromArgb(0xFF, 0x70, 0x7B, 0x6D));
-
-        public Admin()
+        public ClientViewModel()
         {
-            InitializeComponent();
-
-            // Создание и установка главной ViewModel (DataContext)
-            _viewModel = new AdminViewModel();
-            this.DataContext = _viewModel;
-
-            // Инициализация активной кнопки меню при старте
-            Button clientsButton = FindName("clientsButton") as Button;
-            if (clientsButton != null)
-            {
-                _activeButton = clientsButton;
-                // Принудительно устанавливаем активный цвет для начальной кнопки
-                _activeButton.Background = ActiveBrush;
-            }
+            SaveCommand = new RelayCommand(_ => SaveChanges());
+            DeleteCommand = new RelayCommand(_ => DeleteItem(), _ => SelectedClient != null && SelectedClient.Id != 0);
+            AddCommand = new RelayCommand(_ => AddNewItem());
+            LoadData();
         }
 
-        /// <summary>
-        /// Обработчик клика по кнопкам меню (Клиенты, Сотрудники и т.д.)
-        /// </summary>
-        private void MenuButton_Click(object sender, RoutedEventArgs e)
+        public override void LoadData()
         {
-            if (sender is Button clickedButton && clickedButton.Content is string newTitle)
+            using (var db = new AppDbContext())
             {
-                // 1. Изменение активной ViewModel (смена таблицы)
-                _viewModel.ChangeView(newTitle);
-
-                // 2. Сброс цвета предыдущей активной кнопки
-                if (_activeButton != null)
+                Clients = new ObservableCollection<Client>(db.Clients.AsNoTracking().ToList());
+            }
+        }
+        private void AddNewItem()
+        {
+            var newItem = new Client
+            {
+                LastName = "Новая Фамилия",
+                Created_on = DateTime.Now, // PascalCase
+                PassportIssueDate = DateTime.Now,
+                DateOfBirth = DateTime.Now,
+                City = "Город",
+                Street = "Улица",
+                House_Number = 1
+            };
+            Clients.Add(newItem);
+            SelectedClient = newItem;
+        }
+        private void SaveChanges()
+        {
+            using (var db = new AppDbContext())
+            {
+                foreach (var item in Clients.Where(i => i.Id == 0 || db.Entry(i).State == EntityState.Modified))
                 {
-                    _activeButton.Background = InactiveBrush;
+                    if (item.Id == 0) db.Clients.Add(item);
+                    else db.Clients.Update(item);
                 }
-
-                // 3. Установка активного цвета для новой кнопки и сохранение
-                clickedButton.Background = ActiveBrush;
-                _activeButton = clickedButton;
-
-                // 4. Изменение заголовка
-                TitleLabel.Content = newTitle;
+                try
+                {
+                    db.SaveChanges();
+                    MessageBox.Show("Данные сохранены успешно!", "Успех");
+                    LoadData();
+                }
+                catch (DbUpdateException ex)
+                {
+                    MessageBox.Show($"Ошибка сохранения: {ex.InnerException?.Message ?? ex.Message}", "Ошибка БД");
+                }
             }
         }
-
-        private void Button_Click_4(object sender, RoutedEventArgs e)
+        private void DeleteItem()
         {
-            // Логика кнопки "Выход"
-            Application.Current.MainWindow.Show();
-            this.Close();
+            if (SelectedClient == null || SelectedClient.Id == 0) return;
+            var result = MessageBox.Show($"Удалить запись ID: {SelectedClient.Id}?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Yes)
+            {
+                using (var db = new AppDbContext())
+                {
+                    var itemToDelete = db.Clients.Find(SelectedClient.Id);
+                    if (itemToDelete != null)
+                    {
+                        db.Clients.Remove(itemToDelete);
+                        db.SaveChanges();
+                        Clients.Remove(SelectedClient);
+                        SelectedClient = null;
+                    }
+                }
+            }
         }
     }
 
-    #endregion
+    // =======================================================
+    // 4. EmployeeViewModel (Сотрудники)
+    // =======================================================
+    public class EmployeeViewModel : BaseViewModel
+    {
+        private ObservableCollection<Employee> _employees;
+        public ObservableCollection<Employee> Employees { get => _employees; set => Set(ref _employees, value); }
+        private Employee _selectedEmployee;
+        public Employee SelectedEmployee { get => _selectedEmployee; set => Set(ref _selectedEmployee, value); }
+
+        public EmployeeViewModel()
+        {
+            SaveCommand = new RelayCommand(_ => SaveChanges());
+            DeleteCommand = new RelayCommand(_ => DeleteItem(), _ => SelectedEmployee != null && SelectedEmployee.Id != 0);
+            AddCommand = new RelayCommand(_ => AddNewItem());
+            LoadData();
+        }
+        public override void LoadData()
+        {
+            using (var db = new AppDbContext())
+            {
+                Employees = new ObservableCollection<Employee>(db.Employees.AsNoTracking().ToList());
+            }
+        }
+        private void AddNewItem()
+        {
+            var newItem = new Employee { LastName = "Новый Сотрудник", created_on = DateTime.Now }; // snake_case
+            Employees.Add(newItem);
+            SelectedEmployee = newItem;
+        }
+        private void SaveChanges()
+        {
+            using (var db = new AppDbContext())
+            {
+                foreach (var item in Employees.Where(i => i.Id == 0 || db.Entry(i).State == EntityState.Modified))
+                {
+                    if (item.Id == 0) db.Employees.Add(item);
+                    else db.Employees.Update(item);
+                }
+                try { db.SaveChanges(); MessageBox.Show("Данные сохранены успешно!", "Успех"); LoadData(); }
+                catch (DbUpdateException ex) { MessageBox.Show($"Ошибка сохранения: {ex.InnerException?.Message ?? ex.Message}", "Ошибка БД"); }
+            }
+        }
+        private void DeleteItem()
+        {
+            if (SelectedEmployee == null || SelectedEmployee.Id == 0) return;
+            var result = MessageBox.Show($"Удалить запись ID: {SelectedEmployee.Id}?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Yes)
+            {
+                using (var db = new AppDbContext())
+                {
+                    var itemToDelete = db.Employees.Find(SelectedEmployee.Id);
+                    if (itemToDelete != null)
+                    {
+                        db.Employees.Remove(itemToDelete);
+                        db.SaveChanges();
+                        Employees.Remove(SelectedEmployee);
+                        SelectedEmployee = null;
+                    }
+                }
+            }
+        }
+    }
+
+    // =======================================================
+    // 5. ItemViewModel (Товары)
+    // =======================================================
+    public class ItemViewModel : BaseViewModel
+    {
+        private ObservableCollection<Item> _items;
+        public ObservableCollection<Item> Items { get => _items; set => Set(ref _items, value); }
+        private Item _selectedItem;
+        public Item SelectedItem { get => _selectedItem; set => Set(ref _selectedItem, value); }
+
+        public ItemViewModel()
+        {
+            SaveCommand = new RelayCommand(_ => SaveChanges());
+            DeleteCommand = new RelayCommand(_ => DeleteItem(), _ => SelectedItem != null && SelectedItem.Id != 0);
+            AddCommand = new RelayCommand(_ => AddNewItem());
+            LoadData();
+        }
+        public override void LoadData()
+        {
+            using (var db = new AppDbContext())
+            {
+                Items = new ObservableCollection<Item>(db.Items.AsNoTracking().ToList());
+            }
+        }
+        private void AddNewItem()
+        {
+            var newItem = new Item
+            {
+                item_category_id = 1,
+                item_name = "Новый товар",
+                item_description = "Описание товара",
+                item_estimated_price = 100m,
+                item_market_price = 150m,
+                item_image = "/Images/default.png",
+                created_on = DateTime.Now // snake_case
+            };
+            Items.Add(newItem);
+            SelectedItem = newItem;
+        }
+        private void SaveChanges()
+        {
+            using (var db = new AppDbContext())
+            {
+                foreach (var item in Items.Where(i => i.Id == 0 || db.Entry(i).State == EntityState.Modified))
+                {
+                    if (item.Id == 0) db.Items.Add(item);
+                    else db.Items.Update(item);
+                }
+                try { db.SaveChanges(); MessageBox.Show("Данные сохранены успешно!", "Успех"); LoadData(); }
+                catch (DbUpdateException ex) { MessageBox.Show($"Ошибка сохранения: {ex.InnerException?.Message ?? ex.Message}", "Ошибка БД"); }
+            }
+        }
+        private void DeleteItem()
+        {
+            if (SelectedItem == null || SelectedItem.Id == 0) return;
+            var result = MessageBox.Show($"Удалить запись ID: {SelectedItem.Id}?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Yes)
+            {
+                using (var db = new AppDbContext())
+                {
+                    var itemToDelete = db.Items.Find(SelectedItem.Id);
+                    if (itemToDelete != null)
+                    {
+                        db.Items.Remove(itemToDelete);
+                        db.SaveChanges();
+                        Items.Remove(SelectedItem);
+                        SelectedItem = null;
+                    }
+                }
+            }
+        }
+    }
+
+    // =======================================================
+    // 6. InterestRateViewModel (Проценты)
+    // =======================================================
+    public class InterestRateViewModel : BaseViewModel
+    {
+        private ObservableCollection<Interest_rate> _rates;
+        public ObservableCollection<Interest_rate> Rates { get => _rates; set => Set(ref _rates, value); }
+        private Interest_rate _selectedRate;
+        public Interest_rate SelectedRate { get => _selectedRate; set => Set(ref _selectedRate, value); }
+
+        public InterestRateViewModel()
+        {
+            SaveCommand = new RelayCommand(_ => SaveChanges());
+            DeleteCommand = new RelayCommand(_ => DeleteItem(), _ => SelectedRate != null && SelectedRate.Id != 0);
+            AddCommand = new RelayCommand(_ => AddNewItem());
+            LoadData();
+        }
+        public override void LoadData()
+        {
+            using (var db = new AppDbContext())
+            {
+                // ИСПРАВЛЕНО: DbSet теперь называется InterestRates
+                Rates = new ObservableCollection<Interest_rate>(db.InterestRates.AsNoTracking().ToList());
+            }
+        }
+        private void AddNewItem()
+        {
+            var newItem = new Interest_rate
+            {
+                Category_id = 1,
+                Min_days = 1,
+                Max_days = 30,
+                Daily_rate_percent = 0.5m // snake_case
+            };
+            Rates.Add(newItem);
+            SelectedRate = newItem;
+        }
+        private void SaveChanges()
+        {
+            using (var db = new AppDbContext())
+            {
+                foreach (var item in Rates.Where(i => i.Id == 0 || db.Entry(i).State == EntityState.Modified))
+                {
+                    if (item.Id == 0) db.InterestRates.Add(item);
+                    else db.InterestRates.Update(item);
+                }
+                try { db.SaveChanges(); MessageBox.Show("Данные сохранены успешно!", "Успех"); LoadData(); }
+                catch (DbUpdateException ex) { MessageBox.Show($"Ошибка сохранения: {ex.InnerException?.Message ?? ex.Message}", "Ошибка БД"); }
+            }
+        }
+        private void DeleteItem()
+        {
+            if (SelectedRate == null || SelectedRate.Id == 0) return;
+            var result = MessageBox.Show($"Удалить запись ID: {SelectedRate.Id}?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Yes)
+            {
+                using (var db = new AppDbContext())
+                {
+                    var itemToDelete = db.InterestRates.Find(SelectedRate.Id);
+                    if (itemToDelete != null)
+                    {
+                        db.InterestRates.Remove(itemToDelete);
+                        db.SaveChanges();
+                        Rates.Remove(SelectedRate);
+                        SelectedRate = null;
+                    }
+                }
+            }
+        }
+    }
+
+    // =======================================================
+    // 7. ContractViewModel (Контракты)
+    // =======================================================
+    public class ContractViewModel : BaseViewModel
+    {
+        private ObservableCollection<Contract> _contracts;
+        public ObservableCollection<Contract> Contracts { get => _contracts; set => Set(ref _contracts, value); }
+        private Contract _selectedContract;
+        public Contract SelectedContract { get => _selectedContract; set => Set(ref _selectedContract, value); }
+
+        public ContractViewModel()
+        {
+            SaveCommand = new RelayCommand(_ => SaveChanges());
+            DeleteCommand = new RelayCommand(_ => DeleteItem(), _ => SelectedContract != null && SelectedContract.Id != 0);
+            AddCommand = new RelayCommand(_ => AddNewItem());
+            LoadData();
+        }
+        public override void LoadData()
+        {
+            using (var db = new AppDbContext())
+            {
+                Contracts = new ObservableCollection<Contract>(db.Contracts.AsNoTracking().ToList());
+            }
+        }
+        private void AddNewItem()
+        {
+            var newItem = new Contract
+            {
+                Contract_status = "Новый",
+                Contract_date = DateTime.Now,
+                Due_date = DateTime.Now.AddMonths(1),
+                Pawn_amount = 0m,
+                Redemption_amount = 0m,
+                Created_on = DateTime.Now, // PascalCase
+                Contract_number = "0000",
+                client_id = 1, // snake_case
+                employee_id = 1, // snake_case
+                item_id = 1 // snake_case
+            };
+            Contracts.Add(newItem);
+            SelectedContract = newItem;
+        }
+        private void SaveChanges()
+        {
+            using (var db = new AppDbContext())
+            {
+                foreach (var item in Contracts.Where(i => i.Id == 0 || db.Entry(i).State == EntityState.Modified))
+                {
+                    if (item.Id == 0) db.Contracts.Add(item);
+                    else db.Contracts.Update(item);
+                }
+                try { db.SaveChanges(); MessageBox.Show("Данные сохранены успешно!", "Успех"); LoadData(); }
+                catch (DbUpdateException ex) { MessageBox.Show($"Ошибка сохранения: {ex.InnerException?.Message ?? ex.Message}", "Ошибка БД"); }
+            }
+        }
+        private void DeleteItem()
+        {
+            if (SelectedContract == null || SelectedContract.Id == 0) return;
+            var result = MessageBox.Show($"Удалить запись ID: {SelectedContract.Id}?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Yes)
+            {
+                using (var db = new AppDbContext())
+                {
+                    var itemToDelete = db.Contracts.Find(SelectedContract.Id);
+                    if (itemToDelete != null)
+                    {
+                        db.Contracts.Remove(itemToDelete);
+                        db.SaveChanges();
+                        Contracts.Remove(SelectedContract);
+                        SelectedContract = null;
+                    }
+                }
+            }
+        }
+    }
+
+    // =======================================================
+    // 8. ExtensionViewModel (Продление)
+    // =======================================================
+    public class ExtensionViewModel : BaseViewModel
+    {
+        private ObservableCollection<Extension> _extensions;
+        public ObservableCollection<Extension> Extensions { get => _extensions; set => Set(ref _extensions, value); }
+        private Extension _selectedExtension;
+        public Extension SelectedExtension { get => _selectedExtension; set => Set(ref _selectedExtension, value); }
+
+        public ExtensionViewModel()
+        {
+            SaveCommand = new RelayCommand(_ => SaveChanges());
+            DeleteCommand = new RelayCommand(_ => DeleteItem(), _ => SelectedExtension != null && SelectedExtension.Id != 0);
+            AddCommand = new RelayCommand(_ => AddNewItem());
+            LoadData();
+        }
+        public override void LoadData()
+        {
+            using (var db = new AppDbContext())
+            {
+                Extensions = new ObservableCollection<Extension>(db.Extensions.AsNoTracking().ToList());
+            }
+        }
+        private void AddNewItem()
+        {
+            var newItem = new Extension
+            {
+                contract_id = 1, // snake_case
+                Old_due_date = DateTime.Now.AddDays(30),
+                New_due_date = DateTime.Now.AddDays(60),
+                Extension_fee = 10.0m,
+                Extended_by_employee_id = 1, // PascalCase
+                Created_on = DateTime.Now // PascalCase
+            };
+            Extensions.Add(newItem);
+            SelectedExtension = newItem;
+        }
+        private void SaveChanges()
+        {
+            using (var db = new AppDbContext())
+            {
+                foreach (var item in Extensions.Where(i => i.Id == 0 || db.Entry(i).State == EntityState.Modified))
+                {
+                    if (item.Id == 0) db.Extensions.Add(item);
+                    else db.Extensions.Update(item);
+                }
+                try { db.SaveChanges(); MessageBox.Show("Данные сохранены успешно!", "Успех"); LoadData(); }
+                catch (DbUpdateException ex) { MessageBox.Show($"Ошибка сохранения: {ex.InnerException?.Message ?? ex.Message}", "Ошибка БД"); }
+            }
+        }
+        private void DeleteItem()
+        {
+            if (SelectedExtension == null || SelectedExtension.Id == 0) return;
+            var result = MessageBox.Show($"Удалить запись ID: {SelectedExtension.Id}?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Yes)
+            {
+                using (var db = new AppDbContext())
+                {
+                    var itemToDelete = db.Extensions.Find(SelectedExtension.Id);
+                    if (itemToDelete != null)
+                    {
+                        db.Extensions.Remove(itemToDelete);
+                        db.SaveChanges();
+                        Extensions.Remove(SelectedExtension);
+                        SelectedExtension = null;
+                    }
+                }
+            }
+        }
+    }
+
+    // =======================================================
+    // 9. RedemptionViewModel (Выкупы)
+    // =======================================================
+    public class RedemptionViewModel : BaseViewModel
+    {
+        private ObservableCollection<Redemption> _redemptions;
+        public ObservableCollection<Redemption> Redemptions { get => _redemptions; set => Set(ref _redemptions, value); }
+        private Redemption _selectedRedemption;
+        public Redemption SelectedRedemption { get => _selectedRedemption; set => Set(ref _selectedRedemption, value); }
+
+        public RedemptionViewModel()
+        {
+            SaveCommand = new RelayCommand(_ => SaveChanges());
+            DeleteCommand = new RelayCommand(_ => DeleteItem(), _ => SelectedRedemption != null && SelectedRedemption.Id != 0);
+            AddCommand = new RelayCommand(_ => AddNewItem());
+            LoadData();
+        }
+        public override void LoadData()
+        {
+            using (var db = new AppDbContext())
+            {
+                Redemptions = new ObservableCollection<Redemption>(db.Redemptions.AsNoTracking().ToList());
+            }
+        }
+        private void AddNewItem()
+        {
+            var newItem = new Redemption
+            {
+                contract_id = 1, // snake_case
+                Redemption_date = DateTime.Now, // PascalCase
+                Total_paid = 0m, // PascalCase
+                redeemed_by_employee_id = 1, // snake_case
+                Created_on = DateTime.Now // PascalCase
+            };
+            Redemptions.Add(newItem);
+            SelectedRedemption = newItem;
+        }
+        private void SaveChanges()
+        {
+            using (var db = new AppDbContext())
+            {
+                foreach (var item in Redemptions.Where(i => i.Id == 0 || db.Entry(i).State == EntityState.Modified))
+                {
+                    if (item.Id == 0) db.Redemptions.Add(item);
+                    else db.Redemptions.Update(item);
+                }
+                try { db.SaveChanges(); MessageBox.Show("Данные сохранены успешно!", "Успех"); LoadData(); }
+                catch (DbUpdateException ex) { MessageBox.Show($"Ошибка сохранения: {ex.InnerException?.Message ?? ex.Message}", "Ошибка БД"); }
+            }
+        }
+        private void DeleteItem()
+        {
+            if (SelectedRedemption == null || SelectedRedemption.Id == 0) return;
+            var result = MessageBox.Show($"Удалить запись ID: {SelectedRedemption.Id}?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Yes)
+            {
+                using (var db = new AppDbContext())
+                {
+                    var itemToDelete = db.Redemptions.Find(SelectedRedemption.Id);
+                    if (itemToDelete != null)
+                    {
+                        db.Redemptions.Remove(itemToDelete);
+                        db.SaveChanges();
+                        Redemptions.Remove(SelectedRedemption);
+                        SelectedRedemption = null;
+                    }
+                }
+            }
+        }
+    }
+
+    // =======================================================
+    // 10. PurchaseViewModel (Покупки)
+    // =======================================================
+    public class PurchaseViewModel : BaseViewModel
+    {
+        private ObservableCollection<Purchase> _purchases;
+        public ObservableCollection<Purchase> Buys { get => _purchases; set => Set(ref _purchases, value); }
+        private Purchase _selectedPurchase;
+        public Purchase SelectedBuy { get => _selectedPurchase; set => Set(ref _selectedPurchase, value); }
+
+        public PurchaseViewModel()
+        {
+            SaveCommand = new RelayCommand(_ => SaveChanges());
+            DeleteCommand = new RelayCommand(_ => DeleteItem(), _ => SelectedBuy != null && SelectedBuy.Id != 0);
+            AddCommand = new RelayCommand(_ => AddNewItem());
+            LoadData();
+        }
+        public override void LoadData()
+        {
+            using (var db = new AppDbContext())
+            {
+                Buys = new ObservableCollection<Purchase>(db.Purchases.AsNoTracking().ToList());
+            }
+        }
+        private void AddNewItem()
+        {
+            var newItem = new Purchase
+            {
+                item_id = 1, // snake_case
+                Buy_price = 100m, // PascalCase
+                Buy_date = DateTime.Now, // PascalCase
+                client_id = 1, // snake_case
+                buy_by_employee_id = 1, // snake_case
+                Created_on = DateTime.Now // PascalCase
+            };
+            Buys.Add(newItem);
+            SelectedBuy = newItem;
+        }
+        private void SaveChanges()
+        {
+            using (var db = new AppDbContext())
+            {
+                foreach (var item in Buys.Where(i => i.Id == 0 || db.Entry(i).State == EntityState.Modified))
+                {
+                    if (item.Id == 0) db.Purchases.Add(item);
+                    else db.Purchases.Update(item);
+                }
+                try { db.SaveChanges(); MessageBox.Show("Данные сохранены успешно!", "Успех"); LoadData(); }
+                catch (DbUpdateException ex) { MessageBox.Show($"Ошибка сохранения: {ex.InnerException?.Message ?? ex.Message}", "Ошибка БД"); }
+            }
+        }
+        private void DeleteItem()
+        {
+            if (SelectedBuy == null || SelectedBuy.Id == 0) return;
+            var result = MessageBox.Show($"Удалить запись ID: {SelectedBuy.Id}?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Yes)
+            {
+                using (var db = new AppDbContext())
+                {
+                    var itemToDelete = db.Purchases.Find(SelectedBuy.Id);
+                    if (itemToDelete != null)
+                    {
+                        db.Purchases.Remove(itemToDelete);
+                        db.SaveChanges();
+                        Buys.Remove(SelectedBuy);
+                        SelectedBuy = null;
+                    }
+                }
+            }
+        }
+    }
+
+    // =======================================================
+    // 11. SaleViewModel (Продажи)
+    // =======================================================
+    public class SaleViewModel : BaseViewModel
+    {
+        private ObservableCollection<Sale> _sales;
+        public ObservableCollection<Sale> Sales { get => _sales; set => Set(ref _sales, value); }
+        private Sale _selectedSale;
+        public Sale SelectedSale { get => _selectedSale; set => Set(ref _selectedSale, value); }
+
+        public SaleViewModel()
+        {
+            SaveCommand = new RelayCommand(_ => SaveChanges());
+            DeleteCommand = new RelayCommand(_ => DeleteItem(), _ => SelectedSale != null && SelectedSale.Id != 0);
+            AddCommand = new RelayCommand(_ => AddNewItem());
+            LoadData();
+        }
+        public override void LoadData()
+        {
+            using (var db = new AppDbContext())
+            {
+                Sales = new ObservableCollection<Sale>(db.Sales.AsNoTracking().ToList());
+            }
+        }
+        private void AddNewItem()
+        {
+            var newItem = new Sale
+            {
+                item_id = 1, // snake_case
+                Sale_price = 0m, // PascalCase
+                Sale_date = DateTime.Now, // PascalCase
+                client_id = 1, // snake_case
+                sold_by_employee_id = 1, // snake_case
+                Created_on = DateTime.Now // PascalCase
+            };
+            Sales.Add(newItem);
+            SelectedSale = newItem;
+        }
+        private void SaveChanges()
+        {
+            using (var db = new AppDbContext())
+            {
+                foreach (var item in Sales.Where(i => i.Id == 0 || db.Entry(i).State == EntityState.Modified))
+                {
+                    if (item.Id == 0) db.Sales.Add(item);
+                    else db.Sales.Update(item);
+                }
+                try { db.SaveChanges(); MessageBox.Show("Данные сохранены успешно!", "Успех"); LoadData(); }
+                catch (DbUpdateException ex) { MessageBox.Show($"Ошибка сохранения: {ex.InnerException?.Message ?? ex.Message}", "Ошибка БД"); }
+            }
+        }
+        private void DeleteItem()
+        {
+            if (SelectedSale == null || SelectedSale.Id == 0) return;
+            var result = MessageBox.Show($"Удалить запись ID: {SelectedSale.Id}?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Yes)
+            {
+                using (var db = new AppDbContext())
+                {
+                    var itemToDelete = db.Sales.Find(SelectedSale.Id);
+                    if (itemToDelete != null)
+                    {
+                        db.Sales.Remove(itemToDelete);
+                        db.SaveChanges();
+                        Sales.Remove(SelectedSale);
+                        SelectedSale = null;
+                    }
+                }
+            }
+        }
+    }
+
+    // =======================================================
+    // 12. RequestViewModel (Заявки)
+    // =======================================================
+    public class RequestViewModel : BaseViewModel
+    {
+        private ObservableCollection<Request> _requests;
+        public ObservableCollection<Request> Requests { get => _requests; set => Set(ref _requests, value); }
+        private Request _selectedRequest;
+        public Request SelectedRequest { get => _selectedRequest; set => Set(ref _selectedRequest, value); }
+
+        public RequestViewModel()
+        {
+            SaveCommand = new RelayCommand(_ => SaveChanges());
+            DeleteCommand = new RelayCommand(_ => DeleteItem(), _ => SelectedRequest != null && SelectedRequest.Id != 0);
+            AddCommand = new RelayCommand(_ => AddNewItem());
+            LoadData();
+        }
+        public override void LoadData()
+        {
+            using (var db = new AppDbContext())
+            {
+                Requests = new ObservableCollection<Request>(db.Requests.AsNoTracking().ToList());
+            }
+        }
+        private void AddNewItem()
+        {
+            var newItem = new Request
+            {
+                Service_id = 1, // PascalCase
+                Requester_last_name = "Новый",
+                Requester_first_name = "Заявитель",
+                Requester_patronymic = "Отчество",
+                Requester_number = "123456789",
+                Requester_city = "Город",
+                Created_on = DateTime.Now // PascalCase
+            };
+            Requests.Add(newItem);
+            SelectedRequest = newItem;
+        }
+        private void SaveChanges()
+        {
+            using (var db = new AppDbContext())
+            {
+                foreach (var item in Requests.Where(i => i.Id == 0 || db.Entry(i).State == EntityState.Modified))
+                {
+                    if (item.Id == 0) db.Requests.Add(item);
+                    else db.Requests.Update(item);
+                }
+                try { db.SaveChanges(); MessageBox.Show("Данные сохранены успешно!", "Успех"); LoadData(); }
+                catch (DbUpdateException ex) { MessageBox.Show($"Ошибка сохранения: {ex.InnerException?.Message ?? ex.Message}", "Ошибка БД"); }
+            }
+        }
+        private void DeleteItem()
+        {
+            if (SelectedRequest == null || SelectedRequest.Id == 0) return;
+            var result = MessageBox.Show($"Удалить запись ID: {SelectedRequest.Id}?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Yes)
+            {
+                using (var db = new AppDbContext())
+                {
+                    var itemToDelete = db.Requests.Find(SelectedRequest.Id);
+                    if (itemToDelete != null)
+                    {
+                        db.Requests.Remove(itemToDelete);
+                        db.SaveChanges();
+                        Requests.Remove(SelectedRequest);
+                        SelectedRequest = null;
+                    }
+                }
+            }
+        }
+    }
 }

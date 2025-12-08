@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace lombard.Models
 {
-    internal class clients
+    public class Client
     {
         public int Id { get; set; } // В XAML был Id, но в ItemEditorViewModel, скорее всего, client_id
         public string LastName { get; set; }
@@ -24,8 +24,8 @@ namespace lombard.Models
         public string Street { get; set; }
         public int House_Number { get; set; }
         public DateTime Created_on { get; set; }
-        public List<contracts> Contracts { get; set; } = new List<contracts>();
-        public List<purchases> Buys { get; set; } = new List<purchases>();
-        public List<sales> Sales { get; set; } = new List<sales>();
+        public List<Contract> Contracts { get; set; } = new List<Contract>();
+        public List<Purchase> Buys { get; set; } = new List<Purchase>();
+        public List<Sale> Sales { get; set; } = new List<Sale>();
     }
 }

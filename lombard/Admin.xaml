@@ -5,22 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:lombard"
         mc:Ignorable="d"
-        Title="Admin" Height="450" Width="800">
+        Title="Панель Администратора" Height="447" Width="782"
+        MinHeight="450" MinWidth="800">
 
     <Window.Resources>
 
-        <DataTemplate x:Key="f">
-            <DataGrid ItemsSource="{Binding Clients}" SelectedItem="{Binding SelectedClient, Mode=TwoWay}" Margin="-5,90,0,0" AutoGenerateColumns="False" CanUserAddRows="False">
+        <DataTemplate x:Key="asdzXC">
+            <DataGrid ItemsSource="{Binding Clients}" SelectedItem="{Binding SelectedClient, Mode=TwoWay}" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID Клиента" Binding="{Binding Id}" IsReadOnly="True" Width="80"/>
                     <DataGridTextColumn Header="Фамилия" Binding="{Binding LastName, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
                     <DataGridTextColumn Header="Имя" Binding="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
                     <DataGridTextColumn Header="Отчество" Binding="{Binding Patronymic, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
-                    <DataGridTextColumn Header="Дата рождения" Binding="{Binding DateOfBirth, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
+                    <DataGridTextColumn Header="Дата рождения" Binding="{Binding DateOfBirth, StringFormat=\{0:yyyy-MM-dd\}, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
                     <DataGridTextColumn Header="Серия паспорта" Binding="{Binding PassportSeries, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
                     <DataGridTextColumn Header="Номер паспорта" Binding="{Binding PassportNumber, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
                     <DataGridTextColumn Header="Кем выдан" Binding="{Binding PassportIssuedBy, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
-                    <DataGridTextColumn Header="Дата выдачи" Binding="{Binding PassportIssueDate, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
+                    <DataGridTextColumn Header="Дата выдачи" Binding="{Binding PassportIssueDate, StringFormat=\{0:yyyy-MM-dd\}, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
                     <DataGridTextColumn Header="Телефон" Binding="{Binding Phone, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
                     <DataGridTextColumn Header="Почта" Binding="{Binding Email, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
                     <DataGridTextColumn Header="Адрес" Binding="{Binding Address, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
@@ -30,14 +31,13 @@
             </DataGrid>
         </DataTemplate>
 
-        <DataTemplate x:Key="s">
-            <DataGrid ItemsSource="{Binding Employees}" SelectedItem="{Binding SelectedEmployee, Mode=TwoWay}" Margin="-5,90,0,0" AutoGenerateColumns="False" CanUserAddRows="False">
+        <DataTemplate x:Key="sdzXC">
+            <DataGrid ItemsSource="{Binding Employees}" SelectedItem="{Binding SelectedEmployee, Mode=TwoWay}" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID Сотрудника" Binding="{Binding Id}" IsReadOnly="True" Width="80"/>
                     <DataGridTextColumn Header="Фамилия" Binding="{Binding LastName, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
                     <DataGridTextColumn Header="Имя" Binding="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
                     <DataGridTextColumn Header="Отчество" Binding="{Binding Patronymic, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
-                    <DataGridTextColumn Header="Должность" Binding="{Binding Position, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
                     <DataGridTextColumn Header="Телефон" Binding="{Binding Number, UpdateSourceTrigger=PropertyChanged}" Width="120"/>
                     <DataGridTextColumn Header="Почта" Binding="{Binding Email, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
                     <DataGridTextColumn Header="User id" Binding="{Binding UserId, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
@@ -46,10 +46,10 @@
             </DataGrid>
         </DataTemplate>
 
-        <DataTemplate x:Key="sd">
-            <DataGrid ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" Margin="-5,90,0,0" AutoGenerateColumns="False" CanUserAddRows="False">
+        <DataTemplate x:Key="dzXC">
+            <DataGrid ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID Товара" Binding="{Binding item_id}" IsReadOnly="True" Width="80"/>
+                    <DataGridTextColumn Header="ID Товара" Binding="{Binding Id}" IsReadOnly="True" Width="80"/>
                     <DataGridTextColumn Header="ID Категории" Binding="{Binding item_category_id, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
                     <DataGridTextColumn Header="Название" Binding="{Binding item_name, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
                     <DataGridTextColumn Header="Описание" Binding="{Binding item_description, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
@@ -67,23 +67,23 @@
             </DataGrid>
         </DataTemplate>
 
-        <DataTemplate x:Key="h">
-            <DataGrid ItemsSource="{Binding Rates}" SelectedItem="{Binding SelectedRate, Mode=TwoWay}" Margin="-5,90,0,0" AutoGenerateColumns="False" CanUserAddRows="False">
+        <DataTemplate x:Key="zXC">
+            <DataGrid ItemsSource="{Binding Rates}" SelectedItem="{Binding SelectedRate, Mode=TwoWay}" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID Процента" Binding="{Binding rate_id}" IsReadOnly="True" Width="80"/>
-                    <DataGridTextColumn Header="Категория" Binding="{Binding category_id, StringFormat=F2, UpdateSourceTrigger=PropertyChanged}" Width="80"/>
-                    <DataGridTextColumn Header="Мин. дней" Binding="{Binding min_days, StringFormat=F2, UpdateSourceTrigger=PropertyChanged}" Width="80"/>
-                    <DataGridTextColumn Header="Макс. дней" Binding="{Binding max_days, StringFormat=F2, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
+                    <DataGridTextColumn Header="ID Процента" Binding="{Binding Id}" IsReadOnly="True" Width="80"/>
+                    <DataGridTextColumn Header="Категория" Binding="{Binding category_id, UpdateSourceTrigger=PropertyChanged}" Width="80"/>
+                    <DataGridTextColumn Header="Мин. дней" Binding="{Binding min_days, UpdateSourceTrigger=PropertyChanged}" Width="80"/>
+                    <DataGridTextColumn Header="Макс. дней" Binding="{Binding max_days, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
                     <DataGridTextColumn Header="Ставка (%)" Binding="{Binding interest_rate, StringFormat=F2, UpdateSourceTrigger=PropertyChanged}" Width="80"/>
                     <DataGridTextColumn Header="Создано" Binding="{Binding created_on, StringFormat=\{0:yyyy-MM-dd\}}" Width="100"/>
                 </DataGrid.Columns>
             </DataGrid>
         </DataTemplate>
 
-        <DataTemplate x:Key="hhh">
-            <DataGrid ItemsSource="{Binding Contracts}" SelectedItem="{Binding SelectedContract, Mode=TwoWay}" Margin="-5,90,0,0" AutoGenerateColumns="False" CanUserAddRows="False">
+        <DataTemplate x:Key="XC">
+            <DataGrid ItemsSource="{Binding Contracts}" SelectedItem="{Binding SelectedContract, Mode=TwoWay}" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID Контракта" Binding="{Binding contract_id}" IsReadOnly="True" Width="80"/>
+                    <DataGridTextColumn Header="ID Контракта" Binding="{Binding Id}" IsReadOnly="True" Width="80"/>
                     <DataGridTextColumn Header="ID Клиента" Binding="{Binding client_id, UpdateSourceTrigger=PropertyChanged}" Width="80"/>
                     <DataGridTextColumn Header="ID Сотрудника" Binding="{Binding employee_id, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
                     <DataGridTextColumn Header="ID Товара" Binding="{Binding item_id, UpdateSourceTrigger=PropertyChanged}" Width="80"/>
@@ -98,10 +98,10 @@
             </DataGrid>
         </DataTemplate>
 
-        <DataTemplate x:Key="qqqq">
-            <DataGrid ItemsSource="{Binding Extensions}" SelectedItem="{Binding SelectedExtension, Mode=TwoWay}" Margin="-5,90,0,0" AutoGenerateColumns="False" CanUserAddRows="False">
+        <DataTemplate x:Key="C">
+            <DataGrid ItemsSource="{Binding Extensions}" SelectedItem="{Binding SelectedExtension, Mode=TwoWay}" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID Продления" Binding="{Binding extension_id}" IsReadOnly="True" Width="100"/>
+                    <DataGridTextColumn Header="ID Продления" Binding="{Binding Id}" IsReadOnly="True" Width="100"/>
                     <DataGridTextColumn Header="ID Контракта" Binding="{Binding contract_id, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
                     <DataGridTextColumn Header="Дата продления" Binding="{Binding extension_date, StringFormat=\{0:yyyy-MM-dd\}}" Width="120"/>
                     <DataGridTextColumn Header="Новый срок до" Binding="{Binding new_due_date, StringFormat=\{0:yyyy-MM-dd\}}" Width="120"/>
@@ -112,10 +112,10 @@
             </DataGrid>
         </DataTemplate>
 
-        <DataTemplate x:Key="zzzz">
-            <DataGrid ItemsSource="{Binding Redemptions}" SelectedItem="{Binding SelectedRedemption, Mode=TwoWay}" Margin="-5,90,0,0" AutoGenerateColumns="False" CanUserAddRows="False">
+        <DataTemplate x:Key="fgju">
+            <DataGrid ItemsSource="{Binding Redemptions}" SelectedItem="{Binding SelectedRedemption, Mode=TwoWay}" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID Выкупа" Binding="{Binding redemption_id}" IsReadOnly="True" Width="80"/>
+                    <DataGridTextColumn Header="ID Выкупа" Binding="{Binding Id}" IsReadOnly="True" Width="80"/>
                     <DataGridTextColumn Header="ID Контракта" Binding="{Binding contract_id, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
                     <DataGridTextColumn Header="Дата выкупа" Binding="{Binding redemption_date, StringFormat=\{0:yyyy-MM-dd\}}" Width="100"/>
                     <DataGridTextColumn Header="Сумма оплаты" Binding="{Binding total_paid, StringFormat=C2, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
@@ -125,10 +125,10 @@
             </DataGrid>
         </DataTemplate>
 
-        <DataTemplate x:Key="asd">
-            <DataGrid ItemsSource="{Binding Buys}" SelectedItem="{Binding SelectedBuy, Mode=TwoWay}" Margin="-5,90,0,0" AutoGenerateColumns="False" CanUserAddRows="False">
+        <DataTemplate x:Key="ui">
+            <DataGrid ItemsSource="{Binding Buys}" SelectedItem="{Binding SelectedBuy, Mode=TwoWay}" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID Покупки" Binding="{Binding buy_id}" IsReadOnly="True" Width="80"/>
+                    <DataGridTextColumn Header="ID Покупки" Binding="{Binding Id}" IsReadOnly="True" Width="80"/>
                     <DataGridTextColumn Header="ID Товара" Binding="{Binding item_id, UpdateSourceTrigger=PropertyChanged}" Width="80"/>
                     <DataGridTextColumn Header="Цена покупки" Binding="{Binding buy_price, StringFormat=C2, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
                     <DataGridTextColumn Header="Дата покупки" Binding="{Binding buy_date, StringFormat=\{0:yyyy-MM-dd\}}" Width="100"/>
@@ -139,10 +139,10 @@
             </DataGrid>
         </DataTemplate>
 
-        <DataTemplate x:Key="xzczc">
-            <DataGrid ItemsSource="{Binding Sales}" SelectedItem="{Binding SelectedSale, Mode=TwoWay}" Margin="-5,90,0,0" AutoGenerateColumns="False" CanUserAddRows="False">
+        <DataTemplate x:Key="a">
+            <DataGrid ItemsSource="{Binding Sales}" SelectedItem="{Binding SelectedSale, Mode=TwoWay}" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID Продажи" Binding="{Binding sale_id}" IsReadOnly="True" Width="80"/>
+                    <DataGridTextColumn Header="ID Продажи" Binding="{Binding Id}" IsReadOnly="True" Width="80"/>
                     <DataGridTextColumn Header="ID Товара" Binding="{Binding item_id, UpdateSourceTrigger=PropertyChanged}" Width="80"/>
                     <DataGridTextColumn Header="Дата продажи" Binding="{Binding sale_date, StringFormat=\{0:yyyy-MM-dd\}}" Width="100"/>
                     <DataGridTextColumn Header="Цена продажи" Binding="{Binding sale_price, StringFormat=C2, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
@@ -153,10 +153,10 @@
             </DataGrid>
         </DataTemplate>
 
-        <DataTemplate x:Key="liiii">
-            <DataGrid ItemsSource="{Binding Requests}" SelectedItem="{Binding SelectedRequest, Mode=TwoWay}" Margin="-5,90,0,0" AutoGenerateColumns="False" CanUserAddRows="False">
+        <DataTemplate x:Key="tiyu">
+            <DataGrid ItemsSource="{Binding Requests}" SelectedItem="{Binding SelectedRequest, Mode=TwoWay}" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID Заявки" Binding="{Binding request_id}" IsReadOnly="True" Width="80"/>
+                    <DataGridTextColumn Header="ID Заявки" Binding="{Binding Id}" IsReadOnly="True" Width="80"/>
                     <DataGridTextColumn Header="ID Услуги" Binding="{Binding service_id, UpdateSourceTrigger=PropertyChanged}" Width="80"/>
                     <DataGridTextColumn Header="Фамилия" Binding="{Binding requester_last_name, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
                     <DataGridTextColumn Header="Имя" Binding="{Binding requester_first_name, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
@@ -168,60 +168,52 @@
             </DataGrid>
         </DataTemplate>
 
-        <DataTemplate x:Key="asdzXC">
-            <DataGrid ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" Margin="-5,90,0,0" AutoGenerateColumns="False" CanUserAddRows="False">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID Категории" Binding="{Binding category_id}" IsReadOnly="True" Width="80"/>
-                    <DataGridTextColumn Header="Название" Binding="{Binding category_name, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
-                    <DataGridTextColumn Header="Создано" Binding="{Binding created_on, StringFormat=\{0:yyyy-MM-dd\}}" Width="100"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </DataTemplate>
-
     </Window.Resources>
 
     <Grid Background="#FFF7F2F0">
-        <Rectangle HorizontalAlignment="Center" Height="44" VerticalAlignment="Top" Width="800" Fill="#FF707B6D" Stroke="#FFF7F2F0"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="904"/>
+        </Grid.ColumnDefinitions>
 
-        <Button x:Name="clientsButton" Content="Клиенты" HorizontalAlignment="Left" Height="37" Margin="0,44,0,0" VerticalAlignment="Top" Width="169" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FFAEB7AB" Click="MenuButton_Click"/>
-        <Button Content="Сотрудники" HorizontalAlignment="Left" Height="37" Margin="0,81,0,0" VerticalAlignment="Top" Width="169" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
-        <Button Content="Товары" HorizontalAlignment="Left" Height="37" Margin="0,118,0,0" VerticalAlignment="Top" Width="169" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
-        <Button Content="Проценты" HorizontalAlignment="Left" Height="37" Margin="0,155,0,0" VerticalAlignment="Top" Width="169" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
-        <Button Content="Контракты" HorizontalAlignment="Left" Height="37" Margin="0,192,0,0" VerticalAlignment="Top" Width="169" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
-        <Button Content="Продление" HorizontalAlignment="Left" Height="37" Margin="0,229,0,0" VerticalAlignment="Top" Width="169" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
-        <Button Content="Выкупы" HorizontalAlignment="Left" Height="37" Margin="0,266,0,0" VerticalAlignment="Top" Width="169" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
-        <Button Content="Покупки" HorizontalAlignment="Left" Height="37" Margin="0,303,0,0" VerticalAlignment="Top" Width="169" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
-        <Button Content="Продажи" HorizontalAlignment="Left" Height="37" Margin="0,340,0,0" VerticalAlignment="Top" Width="169" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
-        <Button Content="Заявки" HorizontalAlignment="Left" Height="37" Margin="0,377,0,0" VerticalAlignment="Top" Width="169" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
+        <Grid Height="44" VerticalAlignment="Top" Background="#FF707B6D">
+            <Label Content="ID сотрудника:" HorizontalAlignment="Left" Margin="19,6,0,0" VerticalAlignment="Top" Foreground="#FFF7F2F0" FontFamily="Bahnschrift" FontSize="18"/>
+            <TextBlock Text="{Binding CurrentUserId}" HorizontalAlignment="Left" Margin="164,12,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16" Foreground="#FFF7F2F0"/>
 
-        <Label Content="ID сотрудника:" HorizontalAlignment="Left" Margin="19,6,0,0" VerticalAlignment="Top" Foreground="#FFF7F2F0" FontFamily="Bahnschrift" FontSize="18"/>
+            <Button Content="Добавить" HorizontalAlignment="Left" Height="24" Margin="392,10,0,0" VerticalAlignment="Top" Width="79" 
+                    Command="{Binding CurrentViewModel.AddCommand}" Background="#FFF7F2F0" BorderBrush="#FF707B6D"/>
 
-        <Button Content="Выход" HorizontalAlignment="Left" Height="24" Margin="680,10,0,0" VerticalAlignment="Top" Width="79" Click="Button_Click_4" Background="#FFF7F2F0" BorderBrush="#FF707B6D"/>
+            <Button Content="Удалить" HorizontalAlignment="Left" Height="24" Margin="490,10,0,0" VerticalAlignment="Top" Width="79" 
+                    Command="{Binding CurrentViewModel.DeleteCommand}" Background="#FFF7F2F0" BorderBrush="#FF707B6D"/>
 
-        <Button Content="Сохранить" 
-                HorizontalAlignment="Left" Height="24" Margin="585,10,0,0" VerticalAlignment="Top" Width="79" 
-                Command="{Binding CurrentViewModel.SaveCommand}" 
-                Background="#FFF7F2F0" BorderBrush="#FF707B6D"/>
+            <Button Content="Сохранить" HorizontalAlignment="Left" Height="24" Margin="585,10,0,0" VerticalAlignment="Top" Width="79" 
+                    Command="{Binding CurrentViewModel.SaveCommand}" Background="#FFF7F2F0" BorderBrush="#FF707B6D"/>
 
-        <Button Content="Удалить" 
-                HorizontalAlignment="Left" Height="24" Margin="490,10,0,0" VerticalAlignment="Top" Width="79" 
-                Command="{Binding CurrentViewModel.DeleteCommand}" 
-                Background="#FFF7F2F0" BorderBrush="#FF707B6D"/>
+            <Button Content="Выход" HorizontalAlignment="Left" Height="24" Margin="680,10,0,0" VerticalAlignment="Top" Width="79" 
+                    Click="Button_Click_4" Background="#FFF7F2F0" BorderBrush="#FF707B6D"/>
+        </Grid>
 
-        <Button Content="Добавить" 
-                HorizontalAlignment="Left" Height="24" Margin="392,10,0,0" VerticalAlignment="Top" Width="79" 
-                Command="{Binding CurrentViewModel.AddCommand}" 
-                Background="#FFF7F2F0" BorderBrush="#FF707B6D"/>
+        <StackPanel Grid.Column="0" Margin="0,44,735,0">
+            <Button x:Name="clientsButton" Content="Клиенты" Height="37" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FFAEB7AB" Click="MenuButton_Click"/>
+            <Button Content="Сотрудники" Height="37" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
+            <Button Content="Товары" Height="37" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
+            <Button Content="Проценты" Height="37" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
+            <Button Content="Контракты" Height="37" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
+            <Button Content="Продление" Height="37" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
+            <Button Content="Выкупы" Height="37" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
+            <Button Content="Покупки" Height="37" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
+            <Button Content="Продажи" Height="37" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
+            <Button Content="Заявки" Height="37" Foreground="#FFF7F2F0" BorderBrush="#FFF7F2F0" Background="#FF707B6D" Click="MenuButton_Click"/>
+        </StackPanel>
 
-        <Label x:Name="TitleLabel" Content="Клиенты" HorizontalAlignment="Left" Margin="191,49,0,0" VerticalAlignment="Top" FontSize="18"/>
+        <Grid Margin="169,44,0,326">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <ContentControl Content="{Binding CurrentViewModel}" 
-                        HorizontalAlignment="Stretch" 
-                        VerticalAlignment="Stretch" 
-                        Margin="174,0,0,0"/>
-        <TextBlock Text="{Binding CurrentUserId}" HorizontalAlignment="Left" Margin="164,12,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Bahnschrift" FontSize="16" Foreground="#FFF7F2F0"/>
+            <Label x:Name="TitleLabel" Content="Клиенты" Grid.Row="0" Margin="10,5,0,0" VerticalAlignment="Top" FontSize="18"/>
 
-
+            <ContentControl Grid.Row="1" Content="{Binding CurrentViewModel}" Margin="10,0,10,10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        </Grid>
     </Grid>
-    
 </Window>

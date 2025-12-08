@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace lombard.Models
 {
-    internal class sales
+    public class Sale
     {
         public int Id { get; set; }
         public int item_id { get; set; }

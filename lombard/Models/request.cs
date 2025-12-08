@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace lombard.Models
 {
-    internal class request
+    public class Request
     {
         public int Id { get; set; }
         public int Service_id { get; set; }

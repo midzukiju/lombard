@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace lombard.Models
 {
-    internal class items
+    public class Item
     {
         public int Id { get; set; }
         public int item_category_id { get; set; }
@@ -16,8 +16,8 @@ namespace lombard.Models
         public decimal item_market_price { get; set; }
         public string item_image { get; set; }
         public DateTime created_on { get; set; }
-        public ICollection<contracts> Contracts { get; set; } = new List<contracts>();
-        public ICollection<purchases> Buys { get; set; } = new List<purchases>();
-        public ICollection<sales> Sales { get; set; } = new List<sales>();
+        public ICollection<Contract> Contracts { get; set; } = new List<Contract>();
+        public ICollection<Purchase> Buys { get; set; } = new List<Purchase>();
+        public ICollection<Sale> Sales { get; set; } = new List<Sale>();
     }
 }

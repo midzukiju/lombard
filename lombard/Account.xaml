@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:lombard"
         mc:Ignorable="d"
         Title="Account" Height="450" Width="800">
-    <Grid>
+    <Grid Height="434" VerticalAlignment="Bottom">
         <Grid.Background>
             <ImageBrush/>
         </Grid.Background>

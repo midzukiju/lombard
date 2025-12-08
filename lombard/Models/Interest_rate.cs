@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace lombard.Models
 {
-    internal class interest_rates
+    public class Interest_rate
     {
         public int Id { get; set; }
         public int Category_id { get; set; }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace lombard.Models
 {
-    internal class employees
+    public class Employee
     {
         public int Id { get; set; } // В XAML был Id
         public string LastName { get; set; }
@@ -16,10 +16,10 @@ namespace lombard.Models
         public string Email { get; set; }
         public int UserId { get; set; }
         public DateTime created_on { get; set; }
-        public List<contracts> Contracts { get; set; } = new List<contracts>();
-        public List<extensions> Extensions { get; set; } = new List<extensions>();
-        public List<redemptions> Redemptions { get; set; } = new List<redemptions>();
-        public List<purchases> Buys { get; set; } = new List<purchases>();
-        public List<sales> Sales { get; set; } = new List<sales>();
+        public List<Contract> Contracts { get; set; } = new List<Contract>();
+        public List<Extension> Extensions { get; set; } = new List<Extension>();
+        public List<Redemption> Redemptions { get; set; } = new List<Redemption>();
+        public List<Purchase> Buys { get; set; } = new List<Purchase>();
+        public List<Sale> Sales { get; set; } = new List<Sale>();
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace lombard.Models
 {
-    internal class contracts
+    public class Contract
     {
         public int Id { get; set; }
         public int client_id { get; set; }
@@ -24,7 +24,7 @@ namespace lombard.Models
         public DateTime Due_date { get; set; }
         public string Contract_status { get; set; }
         public DateTime Created_on { get; set; }
-        public ICollection<extensions> Extensions { get; set; } = new List<extensions>();
-        public ICollection<redemptions> Redemptions { get; set; } = new List<redemptions>();
+        public ICollection<Extension> Extensions { get; set; } = new List<Extension>();
+        public ICollection<Redemption> Redemptions { get; set; } = new List<Redemption>();
     }
 }
