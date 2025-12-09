@@ -8,7 +8,7 @@ namespace lombard.Models
 {
     public class Item
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public int item_category_id { get; set; }
         public string item_name { get; set; }
         public string item_description { get; set; }

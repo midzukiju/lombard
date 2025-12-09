@@ -8,7 +8,7 @@ namespace lombard.Models
 {
     public class Employee
     {
-        public int Id { get; set; } // В XAML был Id
+        public long Id { get; set; } // В XAML был Id
         public string LastName { get; set; }
         public string FirstName { get; set; }
         public string Patronymic { get; set; }

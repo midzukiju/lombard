@@ -4,12 +4,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using lombard.Models;
 
 namespace lombard.Models
 {
     internal class AppDbContext : DbContext
     {
+        public AppDbContext(DbContextOptions<AppDbContext> options)
+    : base(options)
+        {
+        }
+        public AppDbContext()
+        {
+        }
         // Основные таблицы
         public DbSet<Client> Clients { get; set; }
         public DbSet<Employee> Employees { get; set; }
@@ -24,7 +30,7 @@ namespace lombard.Models
         public DbSet<Request> Requests { get; set; }
 
         // Вспомогательные таблицы
-        public DbSet<Rate> Rates { get; set; }
+        public DbSet<Interest_rate> Interest_rates { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -34,6 +40,7 @@ namespace lombard.Models
                 "Database=tompsons_stud03;" +
                 "User=tompsons_stud03;" +
                 $"Password=10230901Sd;" +
+                "SslMode=Preferred;" +
                 "Connection Timeout=30;"; ;
 
             optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
@@ -65,7 +72,7 @@ namespace lombard.Models
             // Client (1) -> Buy (M)
             modelBuilder.Entity<Purchase>()
                 .HasOne(b => b.Client)
-                .WithMany(cl => cl.Buys)
+                .WithMany(cl => cl.Purchases)
                 .HasForeignKey(b => b.client_id);
 
             // Client (1) -> Sale (M)

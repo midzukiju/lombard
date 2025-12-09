@@ -8,7 +8,7 @@ namespace lombard.Models
 {
     public class Client
     {
-        public int Id { get; set; } // В XAML был Id, но в ItemEditorViewModel, скорее всего, client_id
+        public long Id { get; set; } // В XAML был Id, но в ItemEditorViewModel, скорее всего, client_id
         public string LastName { get; set; }
         public string FirstName { get; set; }
         public string Patronymic { get; set; }
@@ -20,12 +20,12 @@ namespace lombard.Models
         public string Phone { get; set; }
         public string Email { get; set; }
         public int UserId { get; set; }
-        public string City { get; set; }
+        public string City { get; set; } = string.Empty;
         public string Street { get; set; }
         public int House_Number { get; set; }
         public DateTime Created_on { get; set; }
         public List<Contract> Contracts { get; set; } = new List<Contract>();
-        public List<Purchase> Buys { get; set; } = new List<Purchase>();
+        public List<Purchase> Purchases { get; set; } = new List<Purchase>();
         public List<Sale> Sales { get; set; } = new List<Sale>();
     }
 }

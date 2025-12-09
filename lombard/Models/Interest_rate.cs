@@ -8,7 +8,7 @@ namespace lombard.Models
 {
     public class Interest_rate
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public int Category_id { get; set; }
         public int Min_days { get; set; }
         public int Max_days { get; set; }

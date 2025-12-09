@@ -9,6 +9,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ViewModels\**" />
+    <EmbeddedResource Remove="ViewModels\**" />
+    <None Remove="ViewModels\**" />
+    <Page Remove="ViewModels\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\Request.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="bx_map.png" />
     <None Remove="famicons_trash-outline.png" />
     <None Remove="Group 10 %281%29.png" />
@@ -27,6 +38,12 @@
     <None Remove="lets-icons_setting-fill.png" />
     <None Remove="line-md_heart-filled.png" />
     <None Remove="weui_arrow-filled.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Models\Request.cs">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
@@ -97,10 +114,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="weui_arrow-filled.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ViewModels\" />
   </ItemGroup>
 
 </Project>
