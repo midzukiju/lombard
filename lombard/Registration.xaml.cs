@@ -81,19 +81,38 @@ namespace lombard
 
             if (input == "admin" && password == "123")
             {
-                // Если логин и пароль совпадают с данными администратора, открываем окно Admin
+                // Открываем админку для администратора
                 Admin adminWindow = new Admin();
+                adminWindow.SetUserRole("admin");
                 adminWindow.Show();
                 this.Close();
             }
-            else
+            else if (input == "appraiser" && password == "123")
             {
-                // Если это не администратор, то пытаемся открыть обычный аккаунт
+                // Открываем админку для оценщика (ограниченные права)
+                Admin adminWindow = new Admin();
+                adminWindow.SetUserRole("appraiser");
+                adminWindow.Show();
+                this.Close();
+            }
+            else if (input == "user" && password == "123")
+            {
+                // Открываем личный кабинет для обычного пользователя
                 Account account = new Account();
                 account.Show();
                 this.Close();
             }
+            else
+            {
+                // Неверные данные
+                MessageBox.Show("Неверный логин или пароль. Попробуйте еще раз.",
+                                "Ошибка авторизации",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Error);
+            }
         }
+
+        
 
         private void SetLoginMode()
         {

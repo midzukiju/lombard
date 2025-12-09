@@ -19,22 +19,6 @@
             </Button.Background>
         </Button>
         <Button x:Name="PhoneButton" Content="Телефон" HorizontalAlignment="Left" Margin="400,97,0,0" VerticalAlignment="Top" Height="38" Width="166" BorderBrush="#FFDDDDDD" Foreground="#FF262D24" FontFamily="Bahnschrift" Click="PhoneButton_Click"/>
-        <TextBox HorizontalAlignment="Left" Margin="223,286,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="362" Height="26" BorderBrush="#FF707B6D" FontFamily="Bahnschrift">
-            <TextBox.Foreground>
-                <SolidColorBrush Color="#FF262D24" Opacity="1"/>
-            </TextBox.Foreground>
-        </TextBox>
-        <PasswordBox x:Name="PasswordInput" HorizontalAlignment="Left" Margin="223,322,0,0" VerticalAlignment="Top" Width="362" BorderBrush="#FF707B6D" Height="26"/>
-        <Label x:Name="InputLabel" Content="Введите логин" HorizontalAlignment="Left" Margin="125,288,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" Width="93">
-            <Label.Foreground>
-                <SolidColorBrush Color="#FF262D24" Opacity="0.5"/>
-            </Label.Foreground>
-        </Label>
-        <Label Content="Введите пароль" HorizontalAlignment="Left" Margin="122,322,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift">
-            <Label.Foreground>
-                <SolidColorBrush Color="#FF262D24" Opacity="0.5"/>
-            </Label.Foreground>
-        </Label>
         <TextBox x:Name="NameTextBox" HorizontalAlignment="Left" Margin="223,150,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="362" Height="26" BorderBrush="#FF707B6D" FontFamily="Bahnschrift">
             <TextBox.Foreground>
                 <SolidColorBrush Color="#FF262D24" Opacity="1"/>
@@ -55,6 +39,16 @@
                 <SolidColorBrush Color="#FF262D24" Opacity="1"/>
             </TextBox.Foreground>
         </TextBox>
+        <Label x:Name="InputLabel" Content="Введите логин (email)" HorizontalAlignment="Left" Margin="100,288,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" Width="118">
+            <Label.Foreground>
+                <SolidColorBrush Color="#FF262D24" Opacity="0.5"/>
+            </Label.Foreground>
+        </Label>
+        <Label Content="Введите пароль" HorizontalAlignment="Left" Margin="122,322,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift">
+            <Label.Foreground>
+                <SolidColorBrush Color="#FF262D24" Opacity="0.5"/>
+            </Label.Foreground>
+        </Label>
         <Label x:Name="InputLabel_Копировать" Content="Введите имя" HorizontalAlignment="Left" Margin="137,150,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" Width="81">
             <Label.Foreground>
                 <SolidColorBrush Color="#FF262D24" Opacity="0.5"/>
@@ -88,6 +82,6 @@
                 <ImageBrush ImageSource="/ion_diamond-outline.png"/>
             </Rectangle.Fill>
         </Rectangle>
-
+        <PasswordBox x:Name="PasswordInput" HorizontalAlignment="Left" Margin="223,322,0,0" VerticalAlignment="Top" Width="362" BorderBrush="#FF707B6D" Height="26"/>
     </Grid>
 </Window>

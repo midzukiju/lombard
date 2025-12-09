@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Models\Request.cs" />
+    <Compile Remove="Models\requests.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,7 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Models\Request.cs">
+    <EmbeddedResource Include="Models\requests.cs">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

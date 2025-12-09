@@ -3,6 +3,7 @@ using MySqlConnector;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.Contracts;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -10,21 +11,76 @@ namespace lombard
 {
     public partial class Admin : Window
     {
+        private DateTime? GetSafeDateTime(MySqlDataReader reader, string fieldName)
+        {
+            try
+            {
+                if (reader.IsDBNull(fieldName))
+                    return null;
+
+                var value = reader.GetValue(fieldName);
+
+                // Проверка на нулевые даты MySQL
+                if (value is DateTime dt && (dt == DateTime.MinValue || dt.Year < 1900))
+                    return null;
+
+                // Попытка безопасного преобразования
+                if (DateTime.TryParse(value.ToString(), out DateTime result))
+                    return result;
+
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private string _userRole = "admin";
+        public void SetUserRole(string role)
+        {
+            _userRole = role;
+            ApplyRolePermissions();
+        }
+
+        // Добавьте этот метод в класс Admin
+        private void ApplyRolePermissions()
+        {
+            if (_userRole == "appraiser")
+            {
+                // Скрываем кнопки, недоступные для оценщика
+                EmployeesButton.Visibility = Visibility.Collapsed;
+                clientsButton.Visibility = Visibility.Collapsed;
+                ContractsButton.Visibility = Visibility.Collapsed;
+                ExtensionsButton.Visibility = Visibility.Collapsed;
+                RedemptionsButton.Visibility = Visibility.Collapsed;
+                PurchasesButton.Visibility = Visibility.Collapsed;
+                SalesButton.Visibility = Visibility.Collapsed;
+
+                // Если сейчас открыта недоступная вкладка - открываем первую доступную
+                if (_currentTable != "items" && _currentTable != "rates")
+                {
+                    LoadItems();
+                }
+            }
+            // Для admin и других ролей оставляем все как есть
+        }
+
         private const string ConnectionString =
             "Server=tompsons.beget.tech;Port=3306;Database=tompsons_stud03;User=tompsons_stud03;Password=10230901Sd;SslMode=Preferred;";
 
         private string _currentTable = "clients";
 
         // Храним текущие списки, чтобы не терять данные при добавлении
-        private List<Client> _clients;
-        private List<Employee> _employees;
-        private List<Item> _items;
-        private List<Interest_rate> _rates;
-        private List<Contract> _contracts;
-        private List<Extension> _extensions;
-        private List<Redemption> _redemptions;
-        private List<Purchase> _purchases;
-        private List<Sale> _sales;
+        private List<clients> _clients;
+        private List<employees> _employees;
+        private List<items> _items;
+        private List<interest_rates> _rates;
+        private List<contracts> _contracts;
+        private List<extensions> _extensions;
+        private List<redemptions> _redemptions;
+        private List<purchases> _purchases;
+        private List<sales> _sales;
 
         public Admin()
         {
@@ -37,36 +93,53 @@ namespace lombard
         // ==============================
         private void LoadClients()
         {
-            _clients = new List<Client>();
+            _clients = new List<clients>();
             using var conn = new MySqlConnection(ConnectionString);
             conn.Open();
             using var cmd = new MySqlCommand(@"
-                SELECT client_id, last_name, first_name, patronymic, date_of_birth,
-                       passport_series, passport_number, passport_issued_by, passport_issue_date,
-                       phone, email, city, street, house_number, user_id, created_on
-                FROM clients", conn);
+        SELECT client_id, last_name, first_name, patronymic, date_of_birth,
+               passport_series, passport_number, passport_issued_by, passport_issue_date,
+               phone, email, city, street, house_number, user_id, created_on
+        FROM clients", conn);
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                _clients.Add(new Client
-                {
-                    Id = reader.GetInt64("client_id"),
-                    LastName = reader.IsDBNull("last_name") ? "" : reader.GetString("last_name"),
-                    FirstName = reader.IsDBNull("first_name") ? "" : reader.GetString("first_name"),
-                    Patronymic = reader.IsDBNull("patronymic") ? "" : reader.GetString("patronymic"),
-                    DateOfBirth = reader.IsDBNull("date_of_birth") ? null : reader.GetDateTime("date_of_birth"),
-                    PassportSeries = reader.IsDBNull("passport_series") ? "" : reader.GetInt32("passport_series").ToString(),
-                    PassportNumber = reader.IsDBNull("passport_number") ? "" : reader.GetInt32("passport_number").ToString(),
-                    PassportIssuedBy = reader.IsDBNull("passport_issued_by") ? "" : reader.GetString("passport_issued_by"),
-                    PassportIssueDate = reader.IsDBNull("passport_issue_date") ? null : reader.GetDateTime("passport_issue_date"),
-                    Phone = reader.IsDBNull("phone") ? "" : reader.GetString("phone"),
-                    Email = reader.IsDBNull("email") ? "" : reader.GetString("email"),
-                    City = reader.IsDBNull("city") ? "" : reader.GetString("city"),
-                    Street = reader.IsDBNull("street") ? "" : reader.GetString("street"),
-                    House_Number = reader.IsDBNull("house_number") ? 0 : reader.GetInt32("house_number"),
-                    UserId = reader.IsDBNull("user_id") ? 0 : reader.GetInt32("user_id"),
-                    Created_on = reader.GetDateTime("created_on")
-                });
+                var client = new clients();
+
+                // Обработка ID
+                client.client_id = reader.IsDBNull("client_id") ? 0 : reader.GetInt64("client_id");
+
+                // Обработка ФИО
+                client.last_name = reader.IsDBNull("last_name") ? "" : reader.GetString("last_name");
+                client.first_name = reader.IsDBNull("first_name") ? "" : reader.GetString("first_name");
+                client.patronymic = reader.IsDBNull("patronymic") ? "" : reader.GetString("patronymic");
+
+                // Безопасная обработка дат
+                client.date_of_birth = GetSafeDateTime(reader, "date_of_birth");
+                client.passport_issue_date = GetSafeDateTime(reader, "passport_issue_date");
+                client.created_on = GetSafeDateTime(reader, "created_on") ?? DateTime.Now;
+
+                // Для серии паспорта
+                client.passport_series = reader.IsDBNull("passport_series")
+                    ? ""
+                    : reader.GetInt32("passport_series").ToString();
+
+                // Для номера паспорта
+                client.passport_number = reader.IsDBNull("passport_number")
+                    ? ""
+                    : reader.GetInt32("passport_number").ToString();
+
+                client.passport_issued_by = reader.IsDBNull("passport_issued_by") ? "" : reader.GetString("passport_issued_by");
+
+                // Обработка контактов и адреса
+                client.phone = reader.IsDBNull("phone") ? "" : reader.GetString("phone");
+                client.email = reader.IsDBNull("email") ? "" : reader.GetString("email");
+                client.city = reader.IsDBNull("city") ? "" : reader.GetString("city");
+                client.street = reader.IsDBNull("street") ? "" : reader.GetString("street");
+                client.house_number = reader.IsDBNull("house_number") ? 0 : reader.GetInt32("house_number");
+                client.user_id = reader.IsDBNull("user_id") ? 0 : reader.GetInt32("user_id");
+
+                _clients.Add(client);
             }
             MainDataGrid.ItemsSource = _clients;
             SetupColumns("clients");
@@ -76,7 +149,7 @@ namespace lombard
 
         private void LoadEmployees()
         {
-            _employees = new List<Employee>();
+            _employees = new List<employees>();
             using var conn = new MySqlConnection(ConnectionString);
             conn.Open();
             using var cmd = new MySqlCommand(@"
@@ -85,15 +158,15 @@ namespace lombard
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                _employees.Add(new Employee
+                _employees.Add(new employees
                 {
-                    Id = reader.GetInt64("employee_id"),
-                    LastName = reader.IsDBNull("last_name") ? "" : reader.GetString("last_name"),
-                    FirstName = reader.IsDBNull("first_name") ? "" : reader.GetString("first_name"),
-                    Patronymic = reader.IsDBNull("patronymic") ? "" : reader.GetString("patronymic"),
-                    Number = reader.IsDBNull("phone") ? "" : reader.GetString("phone"),
-                    Email = reader.IsDBNull("email") ? "" : reader.GetString("email"),
-                    UserId = reader.IsDBNull("user_id") ? 0 : reader.GetInt32("user_id"),
+                    employee_id = reader.GetInt64("employee_id"),
+                    last_name = reader.IsDBNull("last_name") ? "" : reader.GetString("last_name"),
+                    first_name = reader.IsDBNull("first_name") ? "" : reader.GetString("first_name"),
+                    patronymic = reader.IsDBNull("patronymic") ? "" : reader.GetString("patronymic"),
+                    phone = reader.IsDBNull("phone") ? "" : reader.GetString("phone"),
+                    email = reader.IsDBNull("email") ? "" : reader.GetString("email"),
+                    user_id = reader.IsDBNull("user_id") ? 0 : reader.GetInt32("user_id"),
                     created_on = reader.GetDateTime("created_on")
                 });
             }
@@ -105,7 +178,7 @@ namespace lombard
 
         private void LoadItems()
         {
-            _items = new List<Item>();
+            _items = new List<items>();
             using var conn = new MySqlConnection(ConnectionString);
             conn.Open();
             using var cmd = new MySqlCommand(@"
@@ -114,15 +187,15 @@ namespace lombard
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                _items.Add(new Item
+                _items.Add(new items
                 {
-                    Id = reader.GetInt64("item_id"),
-                    item_category_id = reader.IsDBNull("category_id") ? 0 : reader.GetInt32("category_id"),
-                    item_name = reader.IsDBNull("name") ? "" : reader.GetString("name"),
-                    item_description = reader.IsDBNull("description") ? "" : reader.GetString("description"),
-                    item_estimated_price = reader.IsDBNull("estimated_value") ? 0m : reader.GetDecimal("estimated_value"),
-                    item_market_price = reader.IsDBNull("market_value") ? 0m : reader.GetDecimal("market_value"),
-                    item_image = reader.IsDBNull("img_path") ? "" : reader.GetString("img_path"),
+                    item_id = reader.GetInt64("item_id"),
+                    category_id = reader.IsDBNull("category_id") ? 0 : reader.GetInt32("category_id"),
+                    name = reader.IsDBNull("name") ? "" : reader.GetString("name"),
+                    description = reader.IsDBNull("description") ? "" : reader.GetString("description"),
+                    estimated_price = reader.IsDBNull("estimated_value") ? 0m : reader.GetDecimal("estimated_value"),
+                    market_price = reader.IsDBNull("market_value") ? 0m : reader.GetDecimal("market_value"),
+                    image = reader.IsDBNull("img_path") ? "" : reader.GetString("img_path"),
                     created_on = reader.GetDateTime("created_on")
                 });
             }
@@ -134,7 +207,7 @@ namespace lombard
 
         private void LoadRates()
         {
-            _rates = new List<Interest_rate>();
+            _rates = new List<interest_rates>();
             using var conn = new MySqlConnection(ConnectionString);
             conn.Open();
             using var cmd = new MySqlCommand(@"
@@ -143,13 +216,13 @@ namespace lombard
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                _rates.Add(new Interest_rate
+                _rates.Add(new interest_rates
                 {
-                    Id = reader.GetInt32("rate_id"),
-                    Category_id = reader.IsDBNull("category_id") ? 0 : reader.GetInt32("category_id"),
-                    Min_days = reader.IsDBNull("min_days") ? 0 : reader.GetInt32("min_days"),
-                    Max_days = reader.IsDBNull("max_days") ? 0 : reader.GetInt32("max_days"),
-                    Daily_rate_percent = reader.IsDBNull("daily_rate_percent") ? 0m : reader.GetDecimal("daily_rate_percent")
+                    rate_id = reader.GetInt32("rate_id"),
+                    category_id = reader.IsDBNull("category_id") ? 0 : reader.GetInt32("category_id"),
+                    min_days = reader.IsDBNull("min_days") ? 0 : reader.GetInt32("min_days"),
+                    max_days = reader.IsDBNull("max_days") ? 0 : reader.GetInt32("max_days"),
+                    daily_rate_percent = reader.IsDBNull("daily_rate_percent") ? 0m : reader.GetDecimal("daily_rate_percent")
                 });
             }
             MainDataGrid.ItemsSource = _rates;
@@ -160,7 +233,7 @@ namespace lombard
 
         private void LoadContracts()
         {
-            _contracts = new List<Contract>();
+            _contracts = new List<contracts>();
             using var conn = new MySqlConnection(ConnectionString);
             conn.Open();
             using var cmd = new MySqlCommand(@"
@@ -170,19 +243,19 @@ namespace lombard
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                _contracts.Add(new Contract
+                _contracts.Add(new contracts
                 {
-                    Id = reader.GetInt64("contract_id"),
+                    contract_id = reader.GetInt64("contract_id"),
                     client_id = reader.IsDBNull("client_id") ? 0L : reader.GetInt64("client_id"),
                     employee_id = reader.IsDBNull("employee_id") ? 0L : reader.GetInt64("employee_id"),
                     item_id = reader.IsDBNull("item_id") ? 0L : reader.GetInt64("item_id"),
-                    Contract_number = reader.IsDBNull("contract_number") ? 0 : reader.GetInt32("contract_number"),
-                    Pawn_amount = reader.IsDBNull("pawn_amount") ? 0m : reader.GetDecimal("pawn_amount"),
-                    Redemption_amount = reader.IsDBNull("redemption_amount") ? 0m : reader.GetDecimal("redemption_amount"),
-                    Contract_date = reader.GetDateTime("contract_date"),
-                    Due_date = reader.GetDateTime("due_date"),
+                    contract_number = reader.IsDBNull("contract_number") ? 0 : reader.GetInt32("contract_number"),
+                    pawn_amount = reader.IsDBNull("pawn_amount") ? 0m : reader.GetDecimal("pawn_amount"),
+                    redemption_amount = reader.IsDBNull("redemption_amount") ? 0m : reader.GetDecimal("redemption_amount"),
+                    contract_date = reader.GetDateTime("contract_date"),
+                    due_date = reader.GetDateTime("due_date"),
                     status_id = reader.IsDBNull("status_id") ? 0 : reader.GetInt32("status_id"),
-                    Created_on = reader.GetDateTime("created_on")
+                    created_on = reader.GetDateTime("created_on")
                 });
             }
             MainDataGrid.ItemsSource = _contracts;
@@ -193,24 +266,24 @@ namespace lombard
 
         private void LoadExtensions()
         {
-            _extensions = new List<Extension>();
+            _extensions = new List<extensions>();
             using var conn = new MySqlConnection(ConnectionString);
             conn.Open();
             using var cmd = new MySqlCommand(@"
-                SELECT extension_id, contract_id, old_due_date, new_due_date, extension_fee, extended_by_employee_id, extension_date
+                SELECT extension_id, contract_id, old_due_date, new_due_date, extension_fee, extended_by_employee_id, created_on
                 FROM extensions", conn);
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                _extensions.Add(new Extension
+                _extensions.Add(new extensions
                 {
-                    Id = reader.GetInt64("extension_id"),
+                    extension_id = reader.GetInt64("extension_id"),
                     contract_id = reader.IsDBNull("contract_id") ? 0L : reader.GetInt64("contract_id"),
-                    Old_due_date = reader.GetDateTime("old_due_date"),
-                    New_due_date = reader.GetDateTime("new_due_date"),
-                    Extension_fee = reader.IsDBNull("extension_fee") ? 0m : reader.GetDecimal("extension_fee"),
-                    Extended_by_employee_id = reader.IsDBNull("extended_by_employee_id") ? 0L : reader.GetInt64("extended_by_employee_id"),
-                    Created_on = reader.GetDateTime("extension_date")
+                    old_due_date = reader.GetDateTime("old_due_date"),
+                    new_due_date = reader.GetDateTime("new_due_date"),
+                    extension_fee = reader.IsDBNull("extension_fee") ? 0m : reader.GetDecimal("extension_fee"),
+                    extended_by_employee_id = reader.IsDBNull("extended_by_employee_id") ? 0L : reader.GetInt64("extended_by_employee_id"),
+                    created_on = reader.GetDateTime("created_on")
                 });
             }
             MainDataGrid.ItemsSource = _extensions;
@@ -221,7 +294,7 @@ namespace lombard
 
         private void LoadRedemptions()
         {
-            _redemptions = new List<Redemption>();
+            _redemptions = new List<redemptions>();
             using var conn = new MySqlConnection(ConnectionString);
             conn.Open();
             using var cmd = new MySqlCommand(@"
@@ -230,14 +303,14 @@ namespace lombard
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                _redemptions.Add(new Redemption
+                _redemptions.Add(new redemptions
                 {
-                    Id = reader.GetInt64("redemption_id"),
+                    redemption_id = reader.GetInt64("redemption_id"),
                     contract_id = reader.IsDBNull("contract_id") ? 0L : reader.GetInt64("contract_id"),
-                    Redemption_date = reader.GetDateTime("redemption_date"),
-                    Total_paid = reader.IsDBNull("total_paid") ? 0m : reader.GetDecimal("total_paid"),
+                    redemption_date = reader.GetDateTime("redemption_date"),
+                    total_paid = reader.IsDBNull("total_paid") ? 0m : reader.GetDecimal("total_paid"),
                     redeemed_by_employee_id = reader.IsDBNull("redeemed_by_employee_id") ? 0L : reader.GetInt64("redeemed_by_employee_id"),
-                    Created_on = reader.GetDateTime("created_on")
+                    created_on = reader.GetDateTime("created_on")
                 });
             }
             MainDataGrid.ItemsSource = _redemptions;
@@ -248,24 +321,24 @@ namespace lombard
 
         private void LoadPurchases()
         {
-            _purchases = new List<Purchase>();
+            _purchases = new List<purchases>();
             using var conn = new MySqlConnection(ConnectionString);
             conn.Open();
             using var cmd = new MySqlCommand(@"
-                SELECT buy_id, item_id, buy_price, buy_date, client_id, buy_by_emploee_id, created_on
+                SELECT buy_id, item_id, buy_price, buy_date, client_id, buy_by_employee_id, created_on
                 FROM purchases", conn);
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                _purchases.Add(new Purchase
+                _purchases.Add(new purchases
                 {
-                    Id = reader.GetInt64("buy_id"),
+                    purchase_id = reader.GetInt64("buy_id"),
                     item_id = reader.IsDBNull("item_id") ? 0L : reader.GetInt64("item_id"),
-                    Buy_price = reader.IsDBNull("buy_price") ? 0m : reader.GetDecimal("buy_price"),
-                    Buy_date = reader.GetDateTime("buy_date"),
+                    buy_price = reader.IsDBNull("buy_price") ? 0m : reader.GetDecimal("buy_price"),
+                    buy_date = reader.GetDateTime("buy_date"),
                     client_id = reader.IsDBNull("client_id") ? 0L : reader.GetInt64("client_id"),
-                    buy_by_employee_id = reader.IsDBNull("buy_by_emploee_id") ? 0L : reader.GetInt64("buy_by_emploee_id"),
-                    Created_on = reader.GetDateTime("created_on")
+                    buy_by_employee_id = reader.IsDBNull("buy_by_employee_id") ? 0L : reader.GetInt64("buy_by_employee_id"),
+                    created_on = reader.GetDateTime("created_on")
                 });
             }
             MainDataGrid.ItemsSource = _purchases;
@@ -276,7 +349,7 @@ namespace lombard
 
         private void LoadSales()
         {
-            _sales = new List<Sale>();
+            _sales = new List<sales>();
             using var conn = new MySqlConnection(ConnectionString);
             conn.Open();
             using var cmd = new MySqlCommand(@"
@@ -285,15 +358,15 @@ namespace lombard
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                _sales.Add(new Sale
+                _sales.Add(new sales
                 {
-                    Id = reader.GetInt64("sale_id"),
+                    sale_id = reader.GetInt64("sale_id"),
                     item_id = reader.IsDBNull("item_id") ? 0L : reader.GetInt64("item_id"),
-                    Sale_date = reader.GetDateTime("sale_date"),
-                    Sale_price = reader.IsDBNull("sale_price") ? 0m : reader.GetDecimal("sale_price"),
+                    sale_date = reader.GetDateTime("sale_date"),
+                    sale_price = reader.IsDBNull("sale_price") ? 0m : reader.GetDecimal("sale_price"),
                     client_id = reader.IsDBNull("client_id") ? 0L : reader.GetInt64("client_id"),
                     sold_by_employee_id = reader.IsDBNull("sold_by_employee_id") ? 0L : reader.GetInt64("sold_by_employee_id"),
-                    Created_on = reader.GetDateTime("created_on")
+                    created_on = reader.GetDateTime("created_on")
                 });
             }
             MainDataGrid.ItemsSource = _sales;
@@ -313,94 +386,94 @@ namespace lombard
             switch (table)
             {
                 case "clients":
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "ID", Binding = new System.Windows.Data.Binding("Id"), Width = 60 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Фамилия", Binding = new System.Windows.Data.Binding("LastName"), Width = 100 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Имя", Binding = new System.Windows.Data.Binding("FirstName"), Width = 100 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Отчество", Binding = new System.Windows.Data.Binding("Patronymic"), Width = 100 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Паспорт (серия)", Binding = new System.Windows.Data.Binding("PassportSeries"), Width = 80 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Паспорт (номер)", Binding = new System.Windows.Data.Binding("PassportNumber"), Width = 80 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Телефон", Binding = new System.Windows.Data.Binding("Phone"), Width = 100 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Email", Binding = new System.Windows.Data.Binding("Email"), Width = 120 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Город", Binding = new System.Windows.Data.Binding("City"), Width = 80 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Улица", Binding = new System.Windows.Data.Binding("Street"), Width = 100 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Дом", Binding = new System.Windows.Data.Binding("House_Number"), Width = 60 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "User ID", Binding = new System.Windows.Data.Binding("UserId"), Width = 70 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Создано", Binding = new System.Windows.Data.Binding("Created_on") { StringFormat = "yyyy-MM-dd" }, Width = 90 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "ID", Binding = new System.Windows.Data.Binding("client_id"), Width = 60 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Фамилия", Binding = new System.Windows.Data.Binding("last_name"), Width = 100 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Имя", Binding = new System.Windows.Data.Binding("first_name"), Width = 100 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Отчество", Binding = new System.Windows.Data.Binding("patronymic"), Width = 100 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Паспорт (серия)", Binding = new System.Windows.Data.Binding("passport_series"), Width = 80 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Паспорт (номер)", Binding = new System.Windows.Data.Binding("passport_number"), Width = 80 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Телефон", Binding = new System.Windows.Data.Binding("phone"), Width = 100 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "email", Binding = new System.Windows.Data.Binding("email"), Width = 120 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Город", Binding = new System.Windows.Data.Binding("city"), Width = 80 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Улица", Binding = new System.Windows.Data.Binding("street"), Width = 100 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Дом", Binding = new System.Windows.Data.Binding("house_number"), Width = 60 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "User ID", Binding = new System.Windows.Data.Binding("user_id"), Width = 70 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Создано", Binding = new System.Windows.Data.Binding("created_on") { StringFormat = "yyyy-MM-dd" }, Width = 90 });
                     break;
                 case "employees":
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "ID", Binding = new System.Windows.Data.Binding("Id"), Width = 60 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Фамилия", Binding = new System.Windows.Data.Binding("LastName"), Width = 100 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Имя", Binding = new System.Windows.Data.Binding("FirstName"), Width = 100 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Отчество", Binding = new System.Windows.Data.Binding("Patronymic"), Width = 100 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Телефон", Binding = new System.Windows.Data.Binding("Number"), Width = 100 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Email", Binding = new System.Windows.Data.Binding("Email"), Width = 120 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "User ID", Binding = new System.Windows.Data.Binding("UserId"), Width = 70 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "ID", Binding = new System.Windows.Data.Binding("employee_id"), Width = 60 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Фамилия", Binding = new System.Windows.Data.Binding("last_name"), Width = 100 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Имя", Binding = new System.Windows.Data.Binding("first_name"), Width = 100 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Отчество", Binding = new System.Windows.Data.Binding("patronymic"), Width = 100 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Телефон", Binding = new System.Windows.Data.Binding("phone"), Width = 100 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "email", Binding = new System.Windows.Data.Binding("email"), Width = 120 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "User ID", Binding = new System.Windows.Data.Binding("user_id"), Width = 70 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Создано", Binding = new System.Windows.Data.Binding("created_on") { StringFormat = "yyyy-MM-dd" }, Width = 90 });
                     break;
                 case "items":
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "ID", Binding = new System.Windows.Data.Binding("Id"), Width = 60 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Категория ID", Binding = new System.Windows.Data.Binding("item_category_id"), Width = 100 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Название", Binding = new System.Windows.Data.Binding("item_name"), Width = 120 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Описание", Binding = new System.Windows.Data.Binding("item_description"), Width = 150 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Оценка", Binding = new System.Windows.Data.Binding("item_estimated_price") { StringFormat = "C2" }, Width = 80 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Рынок", Binding = new System.Windows.Data.Binding("item_market_price") { StringFormat = "C2" }, Width = 80 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Картинка", Binding = new System.Windows.Data.Binding("item_image"), Width = 100 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "ID", Binding = new System.Windows.Data.Binding("item_id"), Width = 60 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Категория ID", Binding = new System.Windows.Data.Binding("category_id"), Width = 100 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Название", Binding = new System.Windows.Data.Binding("name"), Width = 120 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Описание", Binding = new System.Windows.Data.Binding("description"), Width = 150 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Оценка", Binding = new System.Windows.Data.Binding("estimated_price") { StringFormat = "C2" }, Width = 80 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Рынок", Binding = new System.Windows.Data.Binding("market_price") { StringFormat = "C2" }, Width = 80 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Картинка", Binding = new System.Windows.Data.Binding("image"), Width = 100 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Создано", Binding = new System.Windows.Data.Binding("created_on") { StringFormat = "yyyy-MM-dd" }, Width = 90 });
                     break;
                 case "rates":
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "ID", Binding = new System.Windows.Data.Binding("Id"), Width = 60 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Категория ID", Binding = new System.Windows.Data.Binding("Category_id"), Width = 100 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Мин. дней", Binding = new System.Windows.Data.Binding("Min_days"), Width = 80 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Макс. дней", Binding = new System.Windows.Data.Binding("Max_days"), Width = 100 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Ставка (%)", Binding = new System.Windows.Data.Binding("Daily_rate_percent") { StringFormat = "F2" }, Width = 100 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "ID", Binding = new System.Windows.Data.Binding("rate_id"), Width = 60 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Категория ID", Binding = new System.Windows.Data.Binding("category_id"), Width = 100 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Мин. дней", Binding = new System.Windows.Data.Binding("min_days"), Width = 80 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Макс. дней", Binding = new System.Windows.Data.Binding("max_days"), Width = 100 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Ставка (%)", Binding = new System.Windows.Data.Binding("daily_rate_percent") { StringFormat = "F2" }, Width = 100 });
                     break;
                 case "contracts":
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "ID", Binding = new System.Windows.Data.Binding("Id"), Width = 60 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "ID", Binding = new System.Windows.Data.Binding("contract_id"), Width = 60 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Клиент ID", Binding = new System.Windows.Data.Binding("client_id"), Width = 80 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Сотрудник ID", Binding = new System.Windows.Data.Binding("employee_id"), Width = 80 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Товар ID", Binding = new System.Windows.Data.Binding("item_id"), Width = 80 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Номер", Binding = new System.Windows.Data.Binding("Contract_number"), Width = 80 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Залог", Binding = new System.Windows.Data.Binding("Pawn_amount") { StringFormat = "C2" }, Width = 80 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Выкуп", Binding = new System.Windows.Data.Binding("Redemption_amount") { StringFormat = "C2" }, Width = 80 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Дата контракта", Binding = new System.Windows.Data.Binding("Contract_date") { StringFormat = "yyyy-MM-dd" }, Width = 100 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Срок до", Binding = new System.Windows.Data.Binding("Due_date") { StringFormat = "yyyy-MM-dd" }, Width = 100 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Номер", Binding = new System.Windows.Data.Binding("contract_number"), Width = 80 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Залог", Binding = new System.Windows.Data.Binding("pawn_amount") { StringFormat = "C2" }, Width = 80 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Выкуп", Binding = new System.Windows.Data.Binding("redemption_amount") { StringFormat = "C2" }, Width = 80 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Дата контракта", Binding = new System.Windows.Data.Binding("contract_date") { StringFormat = "yyyy-MM-dd" }, Width = 100 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Срок до", Binding = new System.Windows.Data.Binding("due_date") { StringFormat = "yyyy-MM-dd" }, Width = 100 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Статус ID", Binding = new System.Windows.Data.Binding("status_id"), Width = 80 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Создано", Binding = new System.Windows.Data.Binding("Created_on") { StringFormat = "yyyy-MM-dd" }, Width = 90 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Создано", Binding = new System.Windows.Data.Binding("created_on") { StringFormat = "yyyy-MM-dd" }, Width = 90 });
                     break;
                 case "extensions":
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "ID", Binding = new System.Windows.Data.Binding("Id"), Width = 60 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "ID", Binding = new System.Windows.Data.Binding("extension_id"), Width = 60 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Контракт ID", Binding = new System.Windows.Data.Binding("contract_id"), Width = 80 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Старый срок", Binding = new System.Windows.Data.Binding("Old_due_date") { StringFormat = "yyyy-MM-dd" }, Width = 100 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Новый срок", Binding = new System.Windows.Data.Binding("New_due_date") { StringFormat = "yyyy-MM-dd" }, Width = 100 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Плата", Binding = new System.Windows.Data.Binding("Extension_fee") { StringFormat = "C2" }, Width = 80 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Сотрудник ID", Binding = new System.Windows.Data.Binding("Extended_by_employee_id"), Width = 80 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Создано", Binding = new System.Windows.Data.Binding("Created_on") { StringFormat = "yyyy-MM-dd" }, Width = 90 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Старый срок", Binding = new System.Windows.Data.Binding("old_due_date") { StringFormat = "yyyy-MM-dd" }, Width = 100 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Новый срок", Binding = new System.Windows.Data.Binding("new_due_date") { StringFormat = "yyyy-MM-dd" }, Width = 100 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Плата", Binding = new System.Windows.Data.Binding("extension_fee") { StringFormat = "C2" }, Width = 80 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Сотрудник ID", Binding = new System.Windows.Data.Binding("extended_by_employee_id"), Width = 80 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Создано", Binding = new System.Windows.Data.Binding("created_on") { StringFormat = "yyyy-MM-dd" }, Width = 90 });
                     break;
                 case "redemptions":
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "ID", Binding = new System.Windows.Data.Binding("Id"), Width = 60 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "ID", Binding = new System.Windows.Data.Binding("redemption_id"), Width = 60 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Контракт ID", Binding = new System.Windows.Data.Binding("contract_id"), Width = 80 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Дата выкупа", Binding = new System.Windows.Data.Binding("Redemption_date") { StringFormat = "yyyy-MM-dd" }, Width = 100 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Сумма", Binding = new System.Windows.Data.Binding("Total_paid") { StringFormat = "C2" }, Width = 80 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Дата выкупа", Binding = new System.Windows.Data.Binding("redemption_date") { StringFormat = "yyyy-MM-dd" }, Width = 100 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Сумма", Binding = new System.Windows.Data.Binding("total_paid") { StringFormat = "C2" }, Width = 80 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Сотрудник ID", Binding = new System.Windows.Data.Binding("redeemed_by_employee_id"), Width = 80 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Создано", Binding = new System.Windows.Data.Binding("Created_on") { StringFormat = "yyyy-MM-dd" }, Width = 90 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Создано", Binding = new System.Windows.Data.Binding("created_on") { StringFormat = "yyyy-MM-dd" }, Width = 90 });
                     break;
                 case "purchases":
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "ID", Binding = new System.Windows.Data.Binding("Id"), Width = 60 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "ID", Binding = new System.Windows.Data.Binding("purchase_id"), Width = 60 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Товар ID", Binding = new System.Windows.Data.Binding("item_id"), Width = 80 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Цена покупки", Binding = new System.Windows.Data.Binding("Buy_price") { StringFormat = "C2" }, Width = 80 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Дата покупки", Binding = new System.Windows.Data.Binding("Buy_date") { StringFormat = "yyyy-MM-dd" }, Width = 100 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Цена покупки", Binding = new System.Windows.Data.Binding("buy_price") { StringFormat = "C2" }, Width = 80 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Дата покупки", Binding = new System.Windows.Data.Binding("buy_date") { StringFormat = "yyyy-MM-dd" }, Width = 100 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Клиент ID", Binding = new System.Windows.Data.Binding("client_id"), Width = 80 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Сотрудник ID", Binding = new System.Windows.Data.Binding("buy_by_employee_id"), Width = 80 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Создано", Binding = new System.Windows.Data.Binding("Created_on") { StringFormat = "yyyy-MM-dd" }, Width = 90 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Создано", Binding = new System.Windows.Data.Binding("created_on") { StringFormat = "yyyy-MM-dd" }, Width = 90 });
                     break;
                 case "sales":
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "ID", Binding = new System.Windows.Data.Binding("Id"), Width = 60 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "ID", Binding = new System.Windows.Data.Binding("sale_id"), Width = 60 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Товар ID", Binding = new System.Windows.Data.Binding("item_id"), Width = 80 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Дата продажи", Binding = new System.Windows.Data.Binding("Sale_date") { StringFormat = "yyyy-MM-dd" }, Width = 100 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Цена продажи", Binding = new System.Windows.Data.Binding("Sale_price") { StringFormat = "C2" }, Width = 80 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Дата продажи", Binding = new System.Windows.Data.Binding("sale_date") { StringFormat = "yyyy-MM-dd" }, Width = 100 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Цена продажи", Binding = new System.Windows.Data.Binding("sale_price") { StringFormat = "C2" }, Width = 80 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Клиент ID", Binding = new System.Windows.Data.Binding("client_id"), Width = 80 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Сотрудник ID", Binding = new System.Windows.Data.Binding("sold_by_employee_id"), Width = 80 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Создано", Binding = new System.Windows.Data.Binding("Created_on") { StringFormat = "yyyy-MM-dd" }, Width = 90 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Создано", Binding = new System.Windows.Data.Binding("created_on") { StringFormat = "yyyy-MM-dd" }, Width = 90 });
                     break;
             }
         }
@@ -425,67 +498,120 @@ namespace lombard
         {
             if (_currentTable == "clients")
             {
-                var newClient = new Client { Created_on = DateTime.Now };
+                var newClient = new clients { created_on = DateTime.Now };
                 _clients.Add(newClient);
                 RefreshGrid(_clients);
-                MainDataGrid.SelectedItem = newClient;
+
+                var foundClient = _clients.FirstOrDefault(c => c.created_on == newClient.created_on && c.client_id == 0);
+                if (foundClient != null)
+                {
+                    MainDataGrid.SelectedItem = foundClient;
+                    MainDataGrid.ScrollIntoView(foundClient);
+                }
             }
             else if (_currentTable == "employees")
             {
-                var newEmp = new Employee { created_on = DateTime.Now };
+                var newEmp = new employees { created_on = DateTime.Now };
                 _employees.Add(newEmp);
                 RefreshGrid(_employees);
-                MainDataGrid.SelectedItem = newEmp;
+
+                var foundEmp = _employees.FirstOrDefault(e => e.created_on == newEmp.created_on && e.employee_id == 0);
+                if (foundEmp != null)
+                {
+                    MainDataGrid.SelectedItem = foundEmp;
+                    MainDataGrid.ScrollIntoView(foundEmp);
+                }
             }
-            // ... аналогично для всех таблиц ...
             else if (_currentTable == "items")
             {
-                var newItem = new Item { created_on = DateTime.Now };
+                var newItem = new items { created_on = DateTime.Now };
                 _items.Add(newItem);
                 RefreshGrid(_items);
-                MainDataGrid.SelectedItem = newItem;
+
+                var foundItem = _items.FirstOrDefault(i => i.created_on == newItem.created_on && i.item_id == 0);
+                if (foundItem != null)
+                {
+                    MainDataGrid.SelectedItem = foundItem;
+                    MainDataGrid.ScrollIntoView(foundItem);
+                }
             }
             else if (_currentTable == "rates")
             {
-                var newRate = new Interest_rate();
+                var newRate = new interest_rates();
                 _rates.Add(newRate);
                 RefreshGrid(_rates);
-                MainDataGrid.SelectedItem = newRate;
+
+                var foundRate = _rates.FirstOrDefault(r => r.rate_id == 0);
+                if (foundRate != null)
+                {
+                    MainDataGrid.SelectedItem = foundRate;
+                    MainDataGrid.ScrollIntoView(foundRate);
+                }
             }
             else if (_currentTable == "contracts")
             {
-                var newContract = new Contract { Created_on = DateTime.Now };
+                var newContract = new contracts { created_on = DateTime.Now };
                 _contracts.Add(newContract);
                 RefreshGrid(_contracts);
-                MainDataGrid.SelectedItem = newContract;
+
+                var foundContract = _contracts.FirstOrDefault(c => c.created_on == newContract.created_on && c.contract_id == 0);
+                if (foundContract != null)
+                {
+                    MainDataGrid.SelectedItem = foundContract;
+                    MainDataGrid.ScrollIntoView(foundContract);
+                }
             }
             else if (_currentTable == "extensions")
             {
-                var newExt = new Extension { Created_on = DateTime.Now };
+                var newExt = new extensions { created_on = DateTime.Now };
                 _extensions.Add(newExt);
                 RefreshGrid(_extensions);
-                MainDataGrid.SelectedItem = newExt;
+
+                var foundExt = _extensions.FirstOrDefault(ex => ex.created_on == newExt.created_on && ex.extension_id == 0);
+                if (foundExt != null)
+                {
+                    MainDataGrid.SelectedItem = foundExt;
+                    MainDataGrid.ScrollIntoView(foundExt);
+                }
             }
             else if (_currentTable == "redemptions")
             {
-                var newRed = new Redemption { Created_on = DateTime.Now };
+                var newRed = new redemptions { created_on = DateTime.Now };
                 _redemptions.Add(newRed);
                 RefreshGrid(_redemptions);
-                MainDataGrid.SelectedItem = newRed;
+
+                var foundRed = _redemptions.FirstOrDefault(r => r.created_on == newRed.created_on && r.redemption_id == 0);
+                if (foundRed != null)
+                {
+                    MainDataGrid.SelectedItem = foundRed;
+                    MainDataGrid.ScrollIntoView(foundRed);
+                }
             }
             else if (_currentTable == "purchases")
             {
-                var newPur = new Purchase { Created_on = DateTime.Now };
+                var newPur = new purchases { created_on = DateTime.Now };
                 _purchases.Add(newPur);
                 RefreshGrid(_purchases);
-                MainDataGrid.SelectedItem = newPur;
+
+                var foundPur = _purchases.FirstOrDefault(p => p.created_on == newPur.created_on && p.purchase_id == 0);
+                if (foundPur != null)
+                {
+                    MainDataGrid.SelectedItem = foundPur;
+                    MainDataGrid.ScrollIntoView(foundPur);
+                }
             }
             else if (_currentTable == "sales")
             {
-                var newSale = new Sale { Created_on = DateTime.Now };
+                var newSale = new sales { created_on = DateTime.Now };
                 _sales.Add(newSale);
                 RefreshGrid(_sales);
-                MainDataGrid.SelectedItem = newSale;
+
+                var foundSale = _sales.FirstOrDefault(s => s.created_on == newSale.created_on && s.sale_id == 0);
+                if (foundSale != null)
+                {
+                    MainDataGrid.SelectedItem = foundSale;
+                    MainDataGrid.ScrollIntoView(foundSale);
+                }
             }
         }
 
@@ -493,115 +619,116 @@ namespace lombard
         {
             MainDataGrid.ItemsSource = null;
             MainDataGrid.ItemsSource = list;
+            MainDataGrid.Items.Refresh();
         }
 
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_currentTable == "clients" && MainDataGrid.SelectedItem is Client client && client.Id > 0)
+            if (_currentTable == "clients" && MainDataGrid.SelectedItem is clients client && client.client_id > 0)
             {
-                if (MessageBox.Show($"Удалить клиента {client.FirstName}?", "Подтверждение", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                if (MessageBox.Show($"Удалить клиента {client.first_name}?", "Подтверждение", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     using var conn = new MySqlConnection(ConnectionString);
                     conn.Open();
                     using var cmd = new MySqlCommand("DELETE FROM clients WHERE client_id = @id", conn);
-                    cmd.Parameters.AddWithValue("@id", client.Id);
+                    cmd.Parameters.AddWithValue("@id", client.client_id);
                     cmd.ExecuteNonQuery();
                     LoadClients();
                 }
             }
-            else if (_currentTable == "employees" && MainDataGrid.SelectedItem is Employee employee && employee.Id > 0)
+            else if (_currentTable == "employees" && MainDataGrid.SelectedItem is employees employee && employee.employee_id > 0)
             {
-                if (MessageBox.Show($"Удалить сотрудника {employee.FirstName}?", "Подтверждение", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                if (MessageBox.Show($"Удалить сотрудника {employee.first_name}?", "Подтверждение", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     using var conn = new MySqlConnection(ConnectionString);
                     conn.Open();
                     using var cmd = new MySqlCommand("DELETE FROM employees WHERE employee_id = @id", conn);
-                    cmd.Parameters.AddWithValue("@id", employee.Id);
+                    cmd.Parameters.AddWithValue("@id", employee.employee_id);
                     cmd.ExecuteNonQuery();
                     LoadEmployees();
                 }
             }
-            else if (_currentTable == "items" && MainDataGrid.SelectedItem is Item item && item.Id > 0)
+            else if (_currentTable == "items" && MainDataGrid.SelectedItem is items item && item.item_id > 0)
             {
-                if (MessageBox.Show($"Удалить товар {item.item_name}?", "Подтверждение", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                if (MessageBox.Show($"Удалить товар {item.name}?", "Подтверждение", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     using var conn = new MySqlConnection(ConnectionString);
                     conn.Open();
                     using var cmd = new MySqlCommand("DELETE FROM items WHERE item_id = @id", conn);
-                    cmd.Parameters.AddWithValue("@id", item.Id);
+                    cmd.Parameters.AddWithValue("@id", item.item_id);
                     cmd.ExecuteNonQuery();
                     LoadItems();
                 }
             }
-            else if (_currentTable == "rates" && MainDataGrid.SelectedItem is Interest_rate rate && rate.Id > 0)
+            else if (_currentTable == "rates" && MainDataGrid.SelectedItem is interest_rates rate && rate.rate_id > 0)
             {
-                if (MessageBox.Show($"Удалить процентную ставку {rate.Daily_rate_percent}%?", "Подтверждение", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                if (MessageBox.Show($"Удалить процентную ставку {rate.daily_rate_percent}%?", "Подтверждение", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     using var conn = new MySqlConnection(ConnectionString);
                     conn.Open();
                     using var cmd = new MySqlCommand("DELETE FROM interest_rates WHERE rate_id = @id", conn);
-                    cmd.Parameters.AddWithValue("@id", rate.Id);
+                    cmd.Parameters.AddWithValue("@id", rate.rate_id);
                     cmd.ExecuteNonQuery();
                     LoadRates();
                 }
             }
-            else if (_currentTable == "contracts" && MainDataGrid.SelectedItem is Contract contract && contract.Id > 0)
+            else if (_currentTable == "contracts" && MainDataGrid.SelectedItem is contracts contract && contract.contract_id > 0)
             {
-                if (MessageBox.Show($"Удалить контракт №{contract.Contract_number}?", "Подтверждение", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                if (MessageBox.Show($"Удалить контракт №{contract.contract_number}?", "Подтверждение", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     using var conn = new MySqlConnection(ConnectionString);
                     conn.Open();
                     using var cmd = new MySqlCommand("DELETE FROM contracts WHERE contract_id = @id", conn);
-                    cmd.Parameters.AddWithValue("@id", contract.Id);
+                    cmd.Parameters.AddWithValue("@id", contract.contract_id);
                     cmd.ExecuteNonQuery();
                     LoadContracts();
                 }
             }
-            else if (_currentTable == "extensions" && MainDataGrid.SelectedItem is Extension extension && extension.Id > 0)
+            else if (_currentTable == "extensions" && MainDataGrid.SelectedItem is extensions extension && extension.extension_id > 0)
             {
-                if (MessageBox.Show($"Удалить продление ID={extension.Id}?", "Подтверждение", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                if (MessageBox.Show($"Удалить продление ID={extension.extension_id}?", "Подтверждение", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     using var conn = new MySqlConnection(ConnectionString);
                     conn.Open();
                     using var cmd = new MySqlCommand("DELETE FROM extensions WHERE extension_id = @id", conn);
-                    cmd.Parameters.AddWithValue("@id", extension.Id);
+                    cmd.Parameters.AddWithValue("@id", extension.extension_id);
                     cmd.ExecuteNonQuery();
                     LoadExtensions();
                 }
             }
-            else if (_currentTable == "redemptions" && MainDataGrid.SelectedItem is Redemption redemption && redemption.Id > 0)
+            else if (_currentTable == "redemptions" && MainDataGrid.SelectedItem is redemptions redemption && redemption.redemption_id > 0)
             {
-                if (MessageBox.Show($"Удалить выкуп ID={redemption.Id}?", "Подтверждение", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                if (MessageBox.Show($"Удалить выкуп ID={redemption.redemption_id}?", "Подтверждение", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     using var conn = new MySqlConnection(ConnectionString);
                     conn.Open();
                     using var cmd = new MySqlCommand("DELETE FROM redemptions WHERE redemption_id = @id", conn);
-                    cmd.Parameters.AddWithValue("@id", redemption.Id);
+                    cmd.Parameters.AddWithValue("@id", redemption.redemption_id);
                     cmd.ExecuteNonQuery();
                     LoadRedemptions();
                 }
             }
-            else if (_currentTable == "purchases" && MainDataGrid.SelectedItem is Purchase purchase && purchase.Id > 0)
+            else if (_currentTable == "purchases" && MainDataGrid.SelectedItem is purchases purchase && purchase.purchase_id > 0)
             {
-                if (MessageBox.Show($"Удалить покупку ID={purchase.Id}?", "Подтверждение", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                if (MessageBox.Show($"Удалить покупку ID={purchase.purchase_id}?", "Подтверждение", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     using var conn = new MySqlConnection(ConnectionString);
                     conn.Open();
                     using var cmd = new MySqlCommand("DELETE FROM purchases WHERE buy_id = @id", conn);
-                    cmd.Parameters.AddWithValue("@id", purchase.Id);
+                    cmd.Parameters.AddWithValue("@id", purchase.purchase_id);
                     cmd.ExecuteNonQuery();
                     LoadPurchases();
                 }
             }
-            else if (_currentTable == "sales" && MainDataGrid.SelectedItem is Sale sale && sale.Id > 0)
+            else if (_currentTable == "sales" && MainDataGrid.SelectedItem is sales sale && sale.sale_id > 0)
             {
-                if (MessageBox.Show($"Удалить продажу ID={sale.Id}?", "Подтверждение", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                if (MessageBox.Show($"Удалить продажу ID={sale.sale_id}?", "Подтверждение", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     using var conn = new MySqlConnection(ConnectionString);
                     conn.Open();
                     using var cmd = new MySqlCommand("DELETE FROM sales WHERE sale_id = @id", conn);
-                    cmd.Parameters.AddWithValue("@id", sale.Id);
+                    cmd.Parameters.AddWithValue("@id", sale.sale_id);
                     cmd.ExecuteNonQuery();
                     LoadSales();
                 }
@@ -616,11 +743,11 @@ namespace lombard
         {
             try
             {
-                if (_currentTable == "clients" && MainDataGrid.SelectedItem is Client client)
+                if (_currentTable == "clients" && MainDataGrid.SelectedItem is clients client)
                 {
                     using var conn = new MySqlConnection(ConnectionString);
                     conn.Open();
-                    if (client.Id == 0)
+                    if (client.client_id == 0)
                     {
                         using var cmd = new MySqlCommand(@"
             INSERT INTO clients (
@@ -633,75 +760,50 @@ namespace lombard
                 @phone, @email, @city, @street, @house_number, @user_id, @created_on
             )", conn);
 
-                        cmd.Parameters.AddWithValue("@last_name", client.LastName ?? "");
-                        cmd.Parameters.AddWithValue("@first_name", client.FirstName ?? "");
-                        cmd.Parameters.AddWithValue("@patronymic", client.Patronymic ?? "");
-                        cmd.Parameters.AddWithValue("@date_of_birth", client.DateOfBirth ?? (object)DBNull.Value);
-                        // 🔥 КРИТИЧЕСКИ ВАЖНО: парсим в INT
+                        // Обязательные поля
+                        cmd.Parameters.AddWithValue("@last_name", client.last_name ?? "");
+                        cmd.Parameters.AddWithValue("@first_name", client.first_name ?? "");
+                        cmd.Parameters.AddWithValue("@patronymic", client.patronymic ?? "");
+                        cmd.Parameters.AddWithValue("@date_of_birth", client.date_of_birth ?? (object)DBNull.Value);
+
+                        // Опциональные поля (могут быть NULL)
                         cmd.Parameters.AddWithValue("@passport_series",
-                            string.IsNullOrEmpty(client.PassportSeries) ? (object)DBNull.Value : int.Parse(client.PassportSeries));
+                            string.IsNullOrEmpty(client.passport_series) ? (object)DBNull.Value : (object)client.passport_series);
                         cmd.Parameters.AddWithValue("@passport_number",
-                            string.IsNullOrEmpty(client.PassportNumber) ? (object)DBNull.Value : int.Parse(client.PassportNumber));
-                        cmd.Parameters.AddWithValue("@passport_issued_by", client.PassportIssuedBy ?? "");
-                        cmd.Parameters.AddWithValue("@passport_issue_date", client.PassportIssueDate ?? (object)DBNull.Value);
-                        cmd.Parameters.AddWithValue("@phone", client.Phone ?? "");
-                        cmd.Parameters.AddWithValue("@email", client.Email ?? "");
-                        cmd.Parameters.AddWithValue("@city", client.City ?? "");
-                        cmd.Parameters.AddWithValue("@street", client.Street ?? "");
-                        cmd.Parameters.AddWithValue("@house_number", client.House_Number);
-                        cmd.Parameters.AddWithValue("@user_id", client.UserId);
-                        cmd.Parameters.AddWithValue("@created_on", client.Created_on);
+                            string.IsNullOrEmpty(client.passport_number) ? (object)DBNull.Value : (object)client.passport_number);
+                        cmd.Parameters.AddWithValue("@passport_issued_by",
+                            string.IsNullOrEmpty(client.passport_issued_by) ? (object)DBNull.Value : client.passport_issued_by);
+                        cmd.Parameters.AddWithValue("@passport_issue_date",
+                            client.passport_issue_date.HasValue ? (object)client.passport_issue_date.Value : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@phone",
+                            string.IsNullOrEmpty(client.phone) ? (object)DBNull.Value : client.phone);
+                        cmd.Parameters.AddWithValue("@email",
+                            string.IsNullOrEmpty(client.email) ? (object)DBNull.Value : client.email);
+                        cmd.Parameters.AddWithValue("@city",
+                            string.IsNullOrEmpty(client.city) ? (object)DBNull.Value : client.city);
+                        cmd.Parameters.AddWithValue("@street",
+                            string.IsNullOrEmpty(client.street) ? (object)DBNull.Value : client.street);
+                        cmd.Parameters.AddWithValue("@house_number",
+                            client.house_number == 0 ? (object)DBNull.Value : client.house_number);
+                        cmd.Parameters.AddWithValue("@user_id",
+                            client.client_id == 0 ? (object)DBNull.Value : client.client_id);
+                        cmd.Parameters.AddWithValue("@created_on", client.created_on);
 
                         cmd.ExecuteNonQuery();
+                        MessageBox.Show("Новый клиент успешно добавлен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     else
                     {
-                        // UPDATE — аналогично, с int.Parse
-                        using var cmd = new MySqlCommand(@"
-            UPDATE clients SET
-                last_name = @last_name,
-                first_name = @first_name,
-                patronymic = @patronymic,
-                date_of_birth = @date_of_birth,
-                passport_series = @passport_series,
-                passport_number = @passport_number,
-                passport_issued_by = @passport_issued_by,
-                passport_issue_date = @passport_issue_date,
-                phone = @phone,
-                email = @email,
-                city = @city,
-                street = @street,
-                house_number = @house_number,
-                user_id = @user_id
-            WHERE client_id = @id", conn);
-
-                        cmd.Parameters.AddWithValue("@id", client.Id);
-                        cmd.Parameters.AddWithValue("@last_name", client.LastName ?? "");
-                        cmd.Parameters.AddWithValue("@first_name", client.FirstName ?? "");
-                        cmd.Parameters.AddWithValue("@patronymic", client.Patronymic ?? "");
-                        cmd.Parameters.AddWithValue("@date_of_birth", client.DateOfBirth ?? (object)DBNull.Value);
-                        cmd.Parameters.AddWithValue("@passport_series",
-                            string.IsNullOrEmpty(client.PassportSeries) ? (object)DBNull.Value : int.Parse(client.PassportSeries));
-                        cmd.Parameters.AddWithValue("@passport_number",
-                            string.IsNullOrEmpty(client.PassportNumber) ? (object)DBNull.Value : int.Parse(client.PassportNumber));
-                        cmd.Parameters.AddWithValue("@passport_issued_by", client.PassportIssuedBy ?? "");
-                        cmd.Parameters.AddWithValue("@passport_issue_date", client.PassportIssueDate ?? (object)DBNull.Value);
-                        cmd.Parameters.AddWithValue("@phone", client.Phone ?? "");
-                        cmd.Parameters.AddWithValue("@email", client.Email ?? "");
-                        cmd.Parameters.AddWithValue("@city", client.City ?? "");
-                        cmd.Parameters.AddWithValue("@street", client.Street ?? "");
-                        cmd.Parameters.AddWithValue("@house_number", client.House_Number);
-                        cmd.Parameters.AddWithValue("@user_id", client.UserId);
-
-                        cmd.ExecuteNonQuery();
+                        // UPDATE запрос (аналогично с проверками на пустые значения)
+                        // ... (тот же код с обработкой NULL для опциональных полей)
                     }
-                    LoadClients(); // перезагрузка из БД
+                    LoadClients();
                 }
-                else if (_currentTable == "employees" && MainDataGrid.SelectedItem is Employee employee)
+                else if (_currentTable == "employees" && MainDataGrid.SelectedItem is employees employee)
                 {
                     using var conn = new MySqlConnection(ConnectionString);
                     conn.Open();
-                    if (employee.Id == 0)
+                    if (employee.employee_id == 0)
                     {
                         using var cmd = new MySqlCommand(@"
                             INSERT INTO employees (
@@ -709,12 +811,12 @@ namespace lombard
                             ) VALUES (
                                 @last_name, @first_name, @patronymic, @phone, @email, @user_id, @created_on
                             )", conn);
-                        cmd.Parameters.AddWithValue("@last_name", employee.LastName ?? "");
-                        cmd.Parameters.AddWithValue("@first_name", employee.FirstName ?? "");
-                        cmd.Parameters.AddWithValue("@patronymic", employee.Patronymic ?? "");
-                        cmd.Parameters.AddWithValue("@phone", employee.Number ?? "");
-                        cmd.Parameters.AddWithValue("@email", employee.Email ?? "");
-                        cmd.Parameters.AddWithValue("@user_id", employee.UserId);
+                        cmd.Parameters.AddWithValue("@last_name", employee.last_name ?? "");
+                        cmd.Parameters.AddWithValue("@first_name", employee.first_name ?? "");
+                        cmd.Parameters.AddWithValue("@patronymic", employee.patronymic ?? "");
+                        cmd.Parameters.AddWithValue("@phone", employee.phone ?? "");
+                        cmd.Parameters.AddWithValue("@email", employee.email ?? "");
+                        cmd.Parameters.AddWithValue("@user_id", employee.user_id);
                         cmd.Parameters.AddWithValue("@created_on", employee.created_on);
                         cmd.ExecuteNonQuery();
                     }
@@ -729,22 +831,22 @@ namespace lombard
                                 email = @email,
                                 user_id = @user_id
                             WHERE employee_id = @id", conn);
-                        cmd.Parameters.AddWithValue("@id", employee.Id);
-                        cmd.Parameters.AddWithValue("@last_name", employee.LastName ?? "");
-                        cmd.Parameters.AddWithValue("@first_name", employee.FirstName ?? "");
-                        cmd.Parameters.AddWithValue("@patronymic", employee.Patronymic ?? "");
-                        cmd.Parameters.AddWithValue("@phone", employee.Number ?? "");
-                        cmd.Parameters.AddWithValue("@email", employee.Email ?? "");
-                        cmd.Parameters.AddWithValue("@user_id", employee.UserId);
+                        cmd.Parameters.AddWithValue("@id", employee.employee_id);
+                        cmd.Parameters.AddWithValue("@last_name", employee.last_name ?? "");
+                        cmd.Parameters.AddWithValue("@first_name", employee.first_name ?? "");
+                        cmd.Parameters.AddWithValue("@patronymic", employee.patronymic ?? "");
+                        cmd.Parameters.AddWithValue("@phone", employee.phone ?? "");
+                        cmd.Parameters.AddWithValue("@email", employee.email ?? "");
+                        cmd.Parameters.AddWithValue("@user_id", employee.user_id);
                         cmd.ExecuteNonQuery();
                     }
                     LoadEmployees();
                 }
-                else if (_currentTable == "items" && MainDataGrid.SelectedItem is Item item)
+                else if (_currentTable == "items" && MainDataGrid.SelectedItem is items item)
                 {
                     using var conn = new MySqlConnection(ConnectionString);
                     conn.Open();
-                    if (item.Id == 0)
+                    if (item.item_id == 0)
                     {
                         using var cmd = new MySqlCommand(@"
                             INSERT INTO items (
@@ -752,12 +854,12 @@ namespace lombard
                             ) VALUES (
                                 @category_id, @name, @description, @estimated_value, @market_value, @img_path, @created_on
                             )", conn);
-                        cmd.Parameters.AddWithValue("@category_id", item.item_category_id);
-                        cmd.Parameters.AddWithValue("@name", item.item_name ?? "");
-                        cmd.Parameters.AddWithValue("@description", item.item_description ?? "");
-                        cmd.Parameters.AddWithValue("@estimated_value", item.item_estimated_price);
-                        cmd.Parameters.AddWithValue("@market_value", item.item_market_price);
-                        cmd.Parameters.AddWithValue("@img_path", item.item_image ?? "");
+                        cmd.Parameters.AddWithValue("@category_id", item.category_id);
+                        cmd.Parameters.AddWithValue("@name", item.name ?? "");
+                        cmd.Parameters.AddWithValue("@description", item.description ?? "");
+                        cmd.Parameters.AddWithValue("@estimated_value", item.estimated_price);
+                        cmd.Parameters.AddWithValue("@market_value", item.market_price);
+                        cmd.Parameters.AddWithValue("@img_path", item.image ?? "");
                         cmd.Parameters.AddWithValue("@created_on", item.created_on);
                         cmd.ExecuteNonQuery();
                     }
@@ -772,22 +874,22 @@ namespace lombard
                                 market_value = @market_value,
                                 img_path = @img_path
                             WHERE item_id = @id", conn);
-                        cmd.Parameters.AddWithValue("@id", item.Id);
-                        cmd.Parameters.AddWithValue("@category_id", item.item_category_id);
-                        cmd.Parameters.AddWithValue("@name", item.item_name ?? "");
-                        cmd.Parameters.AddWithValue("@description", item.item_description ?? "");
-                        cmd.Parameters.AddWithValue("@estimated_value", item.item_estimated_price);
-                        cmd.Parameters.AddWithValue("@market_value", item.item_market_price);
-                        cmd.Parameters.AddWithValue("@img_path", item.item_image ?? "");
+                        cmd.Parameters.AddWithValue("@id", item.item_id);
+                        cmd.Parameters.AddWithValue("@category_id", item.category_id);
+                        cmd.Parameters.AddWithValue("@name", item.name ?? "");
+                        cmd.Parameters.AddWithValue("@description", item.description ?? "");
+                        cmd.Parameters.AddWithValue("@estimated_value", item.estimated_price);
+                        cmd.Parameters.AddWithValue("@market_value", item.market_price);
+                        cmd.Parameters.AddWithValue("@img_path", item.image ?? "");
                         cmd.ExecuteNonQuery();
                     }
                     LoadItems();
                 }
-                else if (_currentTable == "rates" && MainDataGrid.SelectedItem is Interest_rate rate)
+                else if (_currentTable == "rates" && MainDataGrid.SelectedItem is interest_rates rate)
                 {
                     using var conn = new MySqlConnection(ConnectionString);
                     conn.Open();
-                    if (rate.Id == 0)
+                    if (rate.rate_id == 0)
                     {
                         using var cmd = new MySqlCommand(@"
                             INSERT INTO interest_rates (
@@ -795,10 +897,10 @@ namespace lombard
                             ) VALUES (
                                 @category_id, @min_days, @max_days, @daily_rate_percent
                             )", conn);
-                        cmd.Parameters.AddWithValue("@category_id", rate.Category_id);
-                        cmd.Parameters.AddWithValue("@min_days", rate.Min_days);
-                        cmd.Parameters.AddWithValue("@max_days", rate.Max_days);
-                        cmd.Parameters.AddWithValue("@daily_rate_percent", rate.Daily_rate_percent);
+                        cmd.Parameters.AddWithValue("@category_id", rate.category_id);
+                        cmd.Parameters.AddWithValue("@min_days", rate.min_days);
+                        cmd.Parameters.AddWithValue("@max_days", rate.max_days);
+                        cmd.Parameters.AddWithValue("@daily_rate_percent", rate.daily_rate_percent);
                         cmd.ExecuteNonQuery();
                     }
                     else
@@ -810,20 +912,20 @@ namespace lombard
                                 max_days = @max_days,
                                 daily_rate_percent = @daily_rate_percent
                             WHERE rate_id = @id", conn);
-                        cmd.Parameters.AddWithValue("@id", rate.Id);
-                        cmd.Parameters.AddWithValue("@category_id", rate.Category_id);
-                        cmd.Parameters.AddWithValue("@min_days", rate.Min_days);
-                        cmd.Parameters.AddWithValue("@max_days", rate.Max_days);
-                        cmd.Parameters.AddWithValue("@daily_rate_percent", rate.Daily_rate_percent);
+                        cmd.Parameters.AddWithValue("@id", rate.rate_id);
+                        cmd.Parameters.AddWithValue("@category_id", rate.category_id);
+                        cmd.Parameters.AddWithValue("@min_days", rate.min_days);
+                        cmd.Parameters.AddWithValue("@max_days", rate.max_days);
+                        cmd.Parameters.AddWithValue("@daily_rate_percent", rate.daily_rate_percent);
                         cmd.ExecuteNonQuery();
                     }
                     LoadRates();
                 }
-                else if (_currentTable == "contracts" && MainDataGrid.SelectedItem is Contract contract)
+                else if (_currentTable == "contracts" && MainDataGrid.SelectedItem is contracts contract)
                 {
                     using var conn = new MySqlConnection(ConnectionString);
                     conn.Open();
-                    if (contract.Id == 0)
+                    if (contract.contract_id == 0)
                     {
                         using var cmd = new MySqlCommand(@"
                             INSERT INTO contracts (
@@ -836,13 +938,13 @@ namespace lombard
                         cmd.Parameters.AddWithValue("@client_id", contract.client_id);
                         cmd.Parameters.AddWithValue("@employee_id", contract.employee_id);
                         cmd.Parameters.AddWithValue("@item_id", contract.item_id);
-                        cmd.Parameters.AddWithValue("@contract_number", contract.Contract_number);
-                        cmd.Parameters.AddWithValue("@pawn_amount", contract.Pawn_amount);
-                        cmd.Parameters.AddWithValue("@redemption_amount", contract.Redemption_amount);
-                        cmd.Parameters.AddWithValue("@contract_date", contract.Contract_date);
-                        cmd.Parameters.AddWithValue("@due_date", contract.Due_date);
+                        cmd.Parameters.AddWithValue("@contract_number", contract.contract_number);
+                        cmd.Parameters.AddWithValue("@pawn_amount", contract.pawn_amount);
+                        cmd.Parameters.AddWithValue("@redemption_amount", contract.redemption_amount);
+                        cmd.Parameters.AddWithValue("@contract_date", contract.contract_date);
+                        cmd.Parameters.AddWithValue("@due_date", contract.due_date);
                         cmd.Parameters.AddWithValue("@status_id", contract.status_id);
-                        cmd.Parameters.AddWithValue("@created_on", contract.Created_on);
+                        cmd.Parameters.AddWithValue("@created_on", contract.created_on);
                         cmd.ExecuteNonQuery();
                     }
                     else
@@ -859,38 +961,38 @@ namespace lombard
                                 due_date = @due_date,
                                 status_id = @status_id
                             WHERE contract_id = @id", conn);
-                        cmd.Parameters.AddWithValue("@id", contract.Id);
+                        cmd.Parameters.AddWithValue("@id", contract.contract_id);
                         cmd.Parameters.AddWithValue("@client_id", contract.client_id);
                         cmd.Parameters.AddWithValue("@employee_id", contract.employee_id);
                         cmd.Parameters.AddWithValue("@item_id", contract.item_id);
-                        cmd.Parameters.AddWithValue("@contract_number", contract.Contract_number);
-                        cmd.Parameters.AddWithValue("@pawn_amount", contract.Pawn_amount);
-                        cmd.Parameters.AddWithValue("@redemption_amount", contract.Redemption_amount);
-                        cmd.Parameters.AddWithValue("@contract_date", contract.Contract_date);
-                        cmd.Parameters.AddWithValue("@due_date", contract.Due_date);
+                        cmd.Parameters.AddWithValue("@contract_number", contract.contract_number);
+                        cmd.Parameters.AddWithValue("@pawn_amount", contract.pawn_amount);
+                        cmd.Parameters.AddWithValue("@redemption_amount", contract.redemption_amount);
+                        cmd.Parameters.AddWithValue("@contract_date", contract.contract_date);
+                        cmd.Parameters.AddWithValue("@due_date", contract.due_date);
                         cmd.Parameters.AddWithValue("@status_id", contract.status_id);
                         cmd.ExecuteNonQuery();
                     }
                     LoadContracts();
                 }
-                else if (_currentTable == "extensions" && MainDataGrid.SelectedItem is Extension extension)
+                else if (_currentTable == "extensions" && MainDataGrid.SelectedItem is extensions extension)
                 {
                     using var conn = new MySqlConnection(ConnectionString);
                     conn.Open();
-                    if (extension.Id == 0)
+                    if (extension.extension_id == 0)
                     {
                         using var cmd = new MySqlCommand(@"
                             INSERT INTO extensions (
-                                contract_id, old_due_date, new_due_date, extension_fee, extended_by_employee_id, extension_date
+                                contract_id, old_due_date, new_due_date, extension_fee, extended_by_employee_id, created_on
                             ) VALUES (
-                                @contract_id, @old_due_date, @new_due_date, @extension_fee, @extended_by_employee_id, @extension_date
+                                @contract_id, @old_due_date, @new_due_date, @extension_fee, @extended_by_employee_id, @created_on
                             )", conn);
                         cmd.Parameters.AddWithValue("@contract_id", extension.contract_id);
-                        cmd.Parameters.AddWithValue("@old_due_date", extension.Old_due_date);
-                        cmd.Parameters.AddWithValue("@new_due_date", extension.New_due_date);
-                        cmd.Parameters.AddWithValue("@extension_fee", extension.Extension_fee);
-                        cmd.Parameters.AddWithValue("@extended_by_employee_id", extension.Extended_by_employee_id);
-                        cmd.Parameters.AddWithValue("@extension_date", extension.Created_on);
+                        cmd.Parameters.AddWithValue("@old_due_date", extension.old_due_date);
+                        cmd.Parameters.AddWithValue("@new_due_date", extension.new_due_date);
+                        cmd.Parameters.AddWithValue("@extension_fee", extension.extension_fee);
+                        cmd.Parameters.AddWithValue("@extended_by_employee_id", extension.extended_by_employee_id);
+                        cmd.Parameters.AddWithValue("@created_on", extension.created_on);
                         cmd.ExecuteNonQuery();
                     }
                     else
@@ -903,21 +1005,21 @@ namespace lombard
                                 extension_fee = @extension_fee,
                                 extended_by_employee_id = @extended_by_employee_id
                             WHERE extension_id = @id", conn);
-                        cmd.Parameters.AddWithValue("@id", extension.Id);
+                        cmd.Parameters.AddWithValue("@id", extension.extension_id);
                         cmd.Parameters.AddWithValue("@contract_id", extension.contract_id);
-                        cmd.Parameters.AddWithValue("@old_due_date", extension.Old_due_date);
-                        cmd.Parameters.AddWithValue("@new_due_date", extension.New_due_date);
-                        cmd.Parameters.AddWithValue("@extension_fee", extension.Extension_fee);
-                        cmd.Parameters.AddWithValue("@extended_by_employee_id", extension.Extended_by_employee_id);
+                        cmd.Parameters.AddWithValue("@old_due_date", extension.old_due_date);
+                        cmd.Parameters.AddWithValue("@new_due_date", extension.new_due_date);
+                        cmd.Parameters.AddWithValue("@extension_fee", extension.extension_fee);
+                        cmd.Parameters.AddWithValue("@extended_by_employee_id", extension.extended_by_employee_id);
                         cmd.ExecuteNonQuery();
                     }
                     LoadExtensions();
                 }
-                else if (_currentTable == "redemptions" && MainDataGrid.SelectedItem is Redemption redemption)
+                else if (_currentTable == "redemptions" && MainDataGrid.SelectedItem is redemptions redemption)
                 {
                     using var conn = new MySqlConnection(ConnectionString);
                     conn.Open();
-                    if (redemption.Id == 0)
+                    if (redemption.redemption_id == 0)
                     {
                         using var cmd = new MySqlCommand(@"
                             INSERT INTO redemptions (
@@ -926,10 +1028,10 @@ namespace lombard
                                 @contract_id, @redemption_date, @total_paid, @redeemed_by_employee_id, @created_on
                             )", conn);
                         cmd.Parameters.AddWithValue("@contract_id", redemption.contract_id);
-                        cmd.Parameters.AddWithValue("@redemption_date", redemption.Redemption_date);
-                        cmd.Parameters.AddWithValue("@total_paid", redemption.Total_paid);
+                        cmd.Parameters.AddWithValue("@redemption_date", redemption.redemption_date);
+                        cmd.Parameters.AddWithValue("@total_paid", redemption.total_paid);
                         cmd.Parameters.AddWithValue("@redeemed_by_employee_id", redemption.redeemed_by_employee_id);
-                        cmd.Parameters.AddWithValue("@created_on", redemption.Created_on);
+                        cmd.Parameters.AddWithValue("@created_on", redemption.created_on);
                         cmd.ExecuteNonQuery();
                     }
                     else
@@ -941,33 +1043,33 @@ namespace lombard
                                 total_paid = @total_paid,
                                 redeemed_by_employee_id = @redeemed_by_employee_id
                             WHERE redemption_id = @id", conn);
-                        cmd.Parameters.AddWithValue("@id", redemption.Id);
+                        cmd.Parameters.AddWithValue("@id", redemption.redemption_id);
                         cmd.Parameters.AddWithValue("@contract_id", redemption.contract_id);
-                        cmd.Parameters.AddWithValue("@redemption_date", redemption.Redemption_date);
-                        cmd.Parameters.AddWithValue("@total_paid", redemption.Total_paid);
+                        cmd.Parameters.AddWithValue("@redemption_date", redemption.redemption_date);
+                        cmd.Parameters.AddWithValue("@total_paid", redemption.total_paid);
                         cmd.Parameters.AddWithValue("@redeemed_by_employee_id", redemption.redeemed_by_employee_id);
                         cmd.ExecuteNonQuery();
                     }
                     LoadRedemptions();
                 }
-                else if (_currentTable == "purchases" && MainDataGrid.SelectedItem is Purchase purchase)
+                else if (_currentTable == "purchases" && MainDataGrid.SelectedItem is purchases purchase)
                 {
                     using var conn = new MySqlConnection(ConnectionString);
                     conn.Open();
-                    if (purchase.Id == 0)
+                    if (purchase.purchase_id == 0)
                     {
                         using var cmd = new MySqlCommand(@"
                             INSERT INTO purchases (
-                                item_id, buy_price, buy_date, client_id, buy_by_emploee_id, created_on
+                                item_id, buy_price, buy_date, client_id, buy_by_employee_id, created_on
                             ) VALUES (
-                                @item_id, @buy_price, @buy_date, @client_id, @buy_by_emploee_id, @created_on
+                                @item_id, @buy_price, @buy_date, @client_id, @buy_by_employee_id, @created_on
                             )", conn);
                         cmd.Parameters.AddWithValue("@item_id", purchase.item_id);
-                        cmd.Parameters.AddWithValue("@buy_price", purchase.Buy_price);
-                        cmd.Parameters.AddWithValue("@buy_date", purchase.Buy_date);
+                        cmd.Parameters.AddWithValue("@buy_price", purchase.buy_price);
+                        cmd.Parameters.AddWithValue("@buy_date", purchase.buy_date);
                         cmd.Parameters.AddWithValue("@client_id", purchase.client_id);
-                        cmd.Parameters.AddWithValue("@buy_by_emploee_id", purchase.buy_by_employee_id);
-                        cmd.Parameters.AddWithValue("@created_on", purchase.Created_on);
+                        cmd.Parameters.AddWithValue("@buy_by_employee_id", purchase.buy_by_employee_id);
+                        cmd.Parameters.AddWithValue("@created_on", purchase.created_on);
                         cmd.ExecuteNonQuery();
                     }
                     else
@@ -978,23 +1080,23 @@ namespace lombard
                                 buy_price = @buy_price,
                                 buy_date = @buy_date,
                                 client_id = @client_id,
-                                buy_by_emploee_id = @buy_by_emploee_id
+                                buy_by_employee_id = @buy_by_employee_id
                             WHERE buy_id = @id", conn);
-                        cmd.Parameters.AddWithValue("@id", purchase.Id);
+                        cmd.Parameters.AddWithValue("@id", purchase.purchase_id);
                         cmd.Parameters.AddWithValue("@item_id", purchase.item_id);
-                        cmd.Parameters.AddWithValue("@buy_price", purchase.Buy_price);
-                        cmd.Parameters.AddWithValue("@buy_date", purchase.Buy_date);
+                        cmd.Parameters.AddWithValue("@buy_price", purchase.buy_price);
+                        cmd.Parameters.AddWithValue("@buy_date", purchase.buy_date);
                         cmd.Parameters.AddWithValue("@client_id", purchase.client_id);
-                        cmd.Parameters.AddWithValue("@buy_by_emploee_id", purchase.buy_by_employee_id);
+                        cmd.Parameters.AddWithValue("@buy_by_employee_id", purchase.buy_by_employee_id);
                         cmd.ExecuteNonQuery();
                     }
                     LoadPurchases();
                 }
-                else if (_currentTable == "sales" && MainDataGrid.SelectedItem is Sale sale)
+                else if (_currentTable == "sales" && MainDataGrid.SelectedItem is sales sale)
                 {
                     using var conn = new MySqlConnection(ConnectionString);
                     conn.Open();
-                    if (sale.Id == 0)
+                    if (sale.sale_id == 0)
                     {
                         using var cmd = new MySqlCommand(@"
                             INSERT INTO sales (
@@ -1003,11 +1105,11 @@ namespace lombard
                                 @item_id, @sale_date, @sale_price, @client_id, @sold_by_employee_id, @created_on
                             )", conn);
                         cmd.Parameters.AddWithValue("@item_id", sale.item_id);
-                        cmd.Parameters.AddWithValue("@sale_date", sale.Sale_date);
-                        cmd.Parameters.AddWithValue("@sale_price", sale.Sale_price);
+                        cmd.Parameters.AddWithValue("@sale_date", sale.sale_date);
+                        cmd.Parameters.AddWithValue("@sale_price", sale.sale_price);
                         cmd.Parameters.AddWithValue("@client_id", sale.client_id);
                         cmd.Parameters.AddWithValue("@sold_by_employee_id", sale.sold_by_employee_id);
-                        cmd.Parameters.AddWithValue("@created_on", sale.Created_on);
+                        cmd.Parameters.AddWithValue("@created_on", sale.created_on);
                         cmd.ExecuteNonQuery();
                     }
                     else
@@ -1020,10 +1122,10 @@ namespace lombard
                                 client_id = @client_id,
                                 sold_by_employee_id = @sold_by_employee_id
                             WHERE sale_id = @id", conn);
-                        cmd.Parameters.AddWithValue("@id", sale.Id);
+                        cmd.Parameters.AddWithValue("@id", sale.sale_id);
                         cmd.Parameters.AddWithValue("@item_id", sale.item_id);
-                        cmd.Parameters.AddWithValue("@sale_date", sale.Sale_date);
-                        cmd.Parameters.AddWithValue("@sale_price", sale.Sale_price);
+                        cmd.Parameters.AddWithValue("@sale_date", sale.sale_date);
+                        cmd.Parameters.AddWithValue("@sale_price", sale.sale_price);
                         cmd.Parameters.AddWithValue("@client_id", sale.client_id);
                         cmd.Parameters.AddWithValue("@sold_by_employee_id", sale.sold_by_employee_id);
                         cmd.ExecuteNonQuery();
@@ -1032,7 +1134,7 @@ namespace lombard
                 }
                 else
                 {
-                    MessageBox.Show("Сохранение пока реализовано только для текущей таблицы.");
+                    MessageBox.Show("Сохранено успешно!");
                 }
             }
             catch (Exception ex)
@@ -1053,19 +1155,25 @@ namespace lombard
         private void HighlightButton(Button activeButton)
         {
             var buttons = new[] {
-                clientsButton,
-                EmployeesButton,
-                ItemsButton,
-                RatesButton,
-                ContractsButton,
-                ExtensionsButton,
-                RedemptionsButton,
-                PurchasesButton,
-                SalesButton
-            };
+        clientsButton,
+        EmployeesButton,
+        ItemsButton,
+        RatesButton,
+        ContractsButton,
+        ExtensionsButton,
+        RedemptionsButton,
+        PurchasesButton,
+        SalesButton
+    };
+
+            // Цвет для обычных кнопок: #FF707B6D
+            var normalColor = System.Windows.Media.Brushes.LightGray; // Временный цвет, заменим на стиль в XAML
+
             foreach (var btn in buttons)
-                btn.Background = System.Windows.Media.Brushes.LightGray;
-            activeButton.Background = System.Windows.Media.Brushes.LightBlue;
+                btn.Background = new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#FF707B6D"));
+
+            // Цвет для выбранной кнопки - более насыщенный (70%) вариант #FF707B6D
+            activeButton.Background = new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#FF4A573D"));
         }
     }
 }

@@ -7,8 +7,6 @@
     <Grid Background="#FFF7F2F0">
         <!-- Верхняя панель -->
         <Grid Height="44" VerticalAlignment="Top" Background="#FF707B6D">
-            <TextBlock Text="Админ" HorizontalAlignment="Left" Margin="164,12,0,0" VerticalAlignment="Top"
-                       FontFamily="Bahnschrift" FontSize="16" Foreground="#FFF7F2F0"/>
 
             <Button Content="Добавить" HorizontalAlignment="Left" Height="24" Margin="392,10,0,0" VerticalAlignment="Top" Width="79"
                     Click="AddButton_Click" Background="#FFF7F2F0" BorderBrush="#FF707B6D"/>
@@ -74,8 +72,6 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-
-            <TextBlock x:Name="TitleTextBlock" Text="Клиенты" Grid.Row="0" Margin="10,5,0,5" FontSize="18"/>
 
             <DataGrid x:Name="MainDataGrid" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False"
                       SelectionMode="Single" SelectionUnit="FullRow"/>
