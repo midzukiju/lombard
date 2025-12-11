@@ -125,8 +125,8 @@ namespace lombard
 
                         // === 2. Вставка в таблицу USERS ===
                         string insertUserQuery = _isEmailMode
-                            ? "INSERT INTO users (login, password, role_id, created_on) VALUES (@login, @password, 3, @created_on); SELECT LAST_INSERT_ID();"
-                            : "INSERT INTO users (phone, password, role_id, created_on) VALUES (@phone, @password, 3, @created_on); SELECT LAST_INSERT_ID();";
+                            ? "INSERT INTO users (login, password, role_id) VALUES (@login, @password, 3); SELECT LAST_INSERT_ID();"
+                            : "INSERT INTO users (phone, password, role_id) VALUES (@phone, @password, 3); SELECT LAST_INSERT_ID();";
 
                         long userId;
                         using (var userCmd = new MySqlCommand(insertUserQuery, conn, transaction))
@@ -140,7 +140,7 @@ namespace lombard
                                 userCmd.Parameters.AddWithValue("@phone", contactInfo);
                             }
                             userCmd.Parameters.AddWithValue("@password", password); // ← временно в открытом виде
-                            userCmd.Parameters.AddWithValue("@created_on", DateTime.Now);
+                            
 
                             userId = Convert.ToInt64(userCmd.ExecuteScalar());
                         }

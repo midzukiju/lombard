@@ -39,7 +39,7 @@
                 <SolidColorBrush Color="#FF262D24" Opacity="1"/>
             </TextBox.Foreground>
         </TextBox>
-        <Label x:Name="InputLabel" Content="Введите логин (email)" HorizontalAlignment="Left" Margin="100,288,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" Width="118">
+        <Label x:Name="InputLabel" Content="Введите логин (email)" HorizontalAlignment="Left" Margin="84,288,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift" Width="134">
             <Label.Foreground>
                 <SolidColorBrush Color="#FF262D24" Opacity="0.5"/>
             </Label.Foreground>
