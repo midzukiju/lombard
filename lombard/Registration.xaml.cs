@@ -52,67 +52,103 @@ namespace lombard
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            // Получаем введенные данные
-            string input = InputTextBox.Text.Trim(); // .Trim() убирает лишние пробелы
+            string input = InputTextBox.Text.Trim();
             string password = PasswordInput.Password;
 
-            // 1. Проверка на пустоту
+            // Проверка на пустоту
             if (string.IsNullOrEmpty(input) || string.IsNullOrEmpty(password))
             {
-                string missingField = "";
-
-                if (string.IsNullOrEmpty(input))
-                {
-                    missingField = InputLabel.Content.ToString();
-                }
-                else if (string.IsNullOrEmpty(password))
-                {
-                    missingField = "пароль";
-                }
-
-                // Показываем предупреждение
-                MessageBox.Show($"Пожалуйста, {missingField} и пароль.",
+                MessageBox.Show("Пожалуйста, введите логин (или телефон) и пароль.",
                                 "Не все поля заполнены",
                                 MessageBoxButton.OK,
                                 MessageBoxImage.Warning);
-                return; // Прекращаем выполнение метода, если поля пусты
+                return;
             }
 
+            const string ConnectionString =
+                "Server=tompsons.beget.tech;Port=3306;Database=tompsons_stud03;User=tompsons_stud03;Password=10230901Sd;SslMode=Preferred;ConvertZeroDateTime=True;";
 
-            if (input == "admin" && password == "123")
+            try
             {
-                // Открываем админку для администратора
-                Admin adminWindow = new Admin();
-                adminWindow.SetUserRole("admin");
-                adminWindow.Show();
-                this.Close();
+                using (var conn = new MySqlConnector.MySqlConnection(ConnectionString))
+                {
+                    conn.Open();
+
+                    // Ищем пользователя по логину 
+                    string query = @"
+                SELECT Id, password, role_id 
+                FROM users 
+                WHERE (login = @input)
+                LIMIT 1";
+
+                    using (var cmd = new MySqlConnector.MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@input", input);
+
+                        var reader = cmd.ExecuteReader();
+                        if (reader.Read())
+                        {
+                            string storedPassword = reader.GetString("password");
+                            int roleId = reader.GetInt32("role_id");
+                            int userId = reader.GetInt32("Id");
+
+                            // Сравниваем пароль (временно — в открытом виде)
+                            if (password == storedPassword)
+                            {
+                                reader.Close();
+
+                                // Открываем нужную панель в зависимости от роли
+                                switch (roleId)
+                                {
+                                    case 1: // Админ
+                                        var adminWindow = new Admin();
+                                        adminWindow.SetUserRole("admin");
+                                        adminWindow.Show();
+                                        break;
+
+                                    case 2: // Оценщик
+                                        var appraiserWindow = new Admin();
+                                        appraiserWindow.SetUserRole("appraiser");
+                                        appraiserWindow.Show();
+                                        break;
+
+                                    case 3: // Клиент
+                                        var accountWindow = new Account();
+                                        // Передай userId, если нужно для загрузки данных
+                                        accountWindow.Show();
+                                        break;
+
+                                    default:
+                                        MessageBox.Show("Неизвестная роль пользователя.",
+                                                        "Ошибка",
+                                                        MessageBoxButton.OK,
+                                                        MessageBoxImage.Error);
+                                        return;
+                                }
+
+                                this.Close();
+                                return;
+                            }
+                        }
+
+                        // Если дошли сюда — пользователь не найден или пароль неверен
+                        MessageBox.Show("Неверный логин/телефон или пароль.",
+                                        "Ошибка авторизации",
+                                        MessageBoxButton.OK,
+                                        MessageBoxImage.Error);
+                    }
+                }
             }
-            else if (input == "appraiser" && password == "123")
+            catch (Exception ex)
             {
-                // Открываем админку для оценщика (ограниченные права)
-                Admin adminWindow = new Admin();
-                adminWindow.SetUserRole("appraiser");
-                adminWindow.Show();
-                this.Close();
-            }
-            else if (input == "user" && password == "123")
-            {
-                // Открываем личный кабинет для обычного пользователя
-                Account account = new Account();
-                account.Show();
-                this.Close();
-            }
-            else
-            {
-                // Неверные данные
-                MessageBox.Show("Неверный логин или пароль. Попробуйте еще раз.",
-                                "Ошибка авторизации",
+                MessageBox.Show($"Ошибка подключения к базе данных: {ex.Message}",
+                                "Ошибка",
                                 MessageBoxButton.OK,
                                 MessageBoxImage.Error);
             }
         }
 
-        
+
 
         private void SetLoginMode()
         {

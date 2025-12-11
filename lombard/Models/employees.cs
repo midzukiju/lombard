@@ -12,8 +12,6 @@ namespace lombard.Models
         public string last_name { get; set; }
         public string first_name { get; set; }
         public string patronymic { get; set; }
-        public string phone { get; set; }
-        public string email { get; set; }
         public int user_id { get; set; }
         public DateTime created_on { get; set; }
         public List<contracts> Contracts { get; set; } = new List<contracts>();
@@ -21,5 +19,6 @@ namespace lombard.Models
         public List<redemptions> Redemptions { get; set; } = new List<redemptions>();
         public List<purchases> Buys { get; set; } = new List<purchases>();
         public List<sales> Sales { get; set; } = new List<sales>();
+        public users? User { get; set; }  // Один связанный пользователь (может быть null)
     }
 }

@@ -89,7 +89,7 @@ namespace lombard
 
             if (string.IsNullOrEmpty(contactInfo) || string.IsNullOrEmpty(password))
             {
-                string inputType = _isEmailMode ? "email" : "телефон";
+                string inputType = _isEmailMode ? "логин/email" : "телефон";
                 MessageBox.Show($"Пожалуйста, введите {inputType} и пароль.",
                                 "Не все поля заполнены",
                                 MessageBoxButton.OK,
@@ -99,55 +99,82 @@ namespace lombard
 
             try
             {
-                // Проверка на уникальность email/телефона
-                if (!IsContactInfoUnique(contactInfo))
-                {
-                    string inputType = _isEmailMode ? "email" : "телефон";
-                    MessageBox.Show($"Этот {inputType} уже зарегистрирован. Пожалуйста, используйте другой {inputType}.",
-                                    "Ошибка регистрации",
-                                    MessageBoxButton.OK,
-                                    MessageBoxImage.Error);
-                    return;
-                }
-
-                // Сохранение пользователя в базу данных
                 using (var conn = new MySqlConnection(ConnectionString))
                 {
                     conn.Open();
-
-                    // SQL-запрос для вставки данных
-                    string query = _isEmailMode ?
-                        @"INSERT INTO clients (first_name, last_name, patronymic, date_of_birth, email, created_on) 
-                          VALUES (@first_name, @last_name, @patronymic, @date_of_birth, @email, @created_on)" :
-                        @"INSERT INTO clients (first_name, last_name, patronymic, date_of_birth, phone, created_on) 
-                          VALUES (@first_name, @last_name, @patronymic, @date_of_birth, @phone, @created_on)";
-
-                    using (var cmd = new MySqlCommand(query, conn))
+                    using (var transaction = conn.BeginTransaction())
                     {
-                        cmd.Parameters.AddWithValue("@first_name", name);
-                        cmd.Parameters.AddWithValue("@last_name", surname);
-                        cmd.Parameters.AddWithValue("@patronymic", string.IsNullOrEmpty(patronymic) ? (object)DBNull.Value : patronymic);
-                        cmd.Parameters.AddWithValue("@date_of_birth", dateOfBirth.Value);
+                        // === 1. Проверка: не занят ли логин/телефон ===
+                        string checkQuery = _isEmailMode
+                            ? "SELECT COUNT(*) FROM users WHERE login = @contact"
+                            : "SELECT COUNT(*) FROM users WHERE phone = @contact";
 
-                        if (_isEmailMode)
+                        using (var checkCmd = new MySqlCommand(checkQuery, conn, transaction))
                         {
-                            cmd.Parameters.AddWithValue("@email", contactInfo);
+                            checkCmd.Parameters.AddWithValue("@contact", contactInfo);
+                            if (Convert.ToInt32(checkCmd.ExecuteScalar()) > 0)
+                            {
+                                string inputType = _isEmailMode ? "логин" : "телефон";
+                                MessageBox.Show($"Этот {inputType} уже зарегистрирован.",
+                                                "Ошибка регистрации",
+                                                MessageBoxButton.OK,
+                                                MessageBoxImage.Error);
+                                return;
+                            }
                         }
-                        else
+
+                        // === 2. Вставка в таблицу USERS ===
+                        string insertUserQuery = _isEmailMode
+                            ? "INSERT INTO users (login, password, role_id, created_on) VALUES (@login, @password, 3, @created_on); SELECT LAST_INSERT_ID();"
+                            : "INSERT INTO users (phone, password, role_id, created_on) VALUES (@phone, @password, 3, @created_on); SELECT LAST_INSERT_ID();";
+
+                        long userId;
+                        using (var userCmd = new MySqlCommand(insertUserQuery, conn, transaction))
                         {
-                            cmd.Parameters.AddWithValue("@phone", contactInfo);
+                            if (_isEmailMode)
+                            {
+                                userCmd.Parameters.AddWithValue("@login", contactInfo);
+                            }
+                            else
+                            {
+                                userCmd.Parameters.AddWithValue("@phone", contactInfo);
+                            }
+                            userCmd.Parameters.AddWithValue("@password", password); // ← временно в открытом виде
+                            userCmd.Parameters.AddWithValue("@created_on", DateTime.Now);
+
+                            userId = Convert.ToInt64(userCmd.ExecuteScalar());
                         }
 
-                        cmd.Parameters.AddWithValue("@created_on", DateTime.Now);
+                        // === 3. Вставка в CLIENTS с user_id ===
+                        string insertClientQuery = @"
+                    INSERT INTO clients (
+                        last_name, first_name, patronymic, date_of_birth,
+                        user_id, created_on
+                    ) VALUES (
+                        @last_name, @first_name, @patronymic, @date_of_birth,
+                        @user_id, @created_on
+                    )";
 
-                        cmd.ExecuteNonQuery();
+                        using (var clientCmd = new MySqlCommand(insertClientQuery, conn, transaction))
+                        {
+                            clientCmd.Parameters.AddWithValue("@last_name", surname);
+                            clientCmd.Parameters.AddWithValue("@first_name", name);
+                            clientCmd.Parameters.AddWithValue("@patronymic", string.IsNullOrEmpty(patronymic) ? (object)DBNull.Value : patronymic);
+                            clientCmd.Parameters.AddWithValue("@date_of_birth", dateOfBirth.Value);
+                            clientCmd.Parameters.AddWithValue("@user_id", userId);
+                            clientCmd.Parameters.AddWithValue("@created_on", DateTime.Now);
+
+                            clientCmd.ExecuteNonQuery();
+                        }
+
+                        transaction.Commit();
                     }
                 }
 
                 MessageBox.Show("Регистрация успешно завершена!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 // Переход в личный кабинет
-                Account account = new Account();
+                var account = new Account();
                 account.Show();
                 this.Close();
             }

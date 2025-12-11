@@ -17,8 +17,6 @@ namespace lombard.Models
         public string passport_number { get; set; }
         public string passport_issued_by { get; set; }
         public DateTime? passport_issue_date { get; set; }
-        public string phone { get; set; }
-        public string email { get; set; }
         public int user_id { get; set; }
         public string city { get; set; } = string.Empty;
         public string street { get; set; }
@@ -27,5 +25,6 @@ namespace lombard.Models
         public List<contracts> Contracts { get; set; } = new List<contracts>();
         public List<purchases> Purchases { get; set; } = new List<purchases>();
         public List<sales> Sales { get; set; } = new List<sales>();
+        public users? User { get; set; }  // Один связанный пользователь (может быть null)
     }
 }

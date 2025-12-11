@@ -99,7 +99,7 @@ namespace lombard
             using var cmd = new MySqlCommand(@"
         SELECT client_id, last_name, first_name, patronymic, date_of_birth,
                passport_series, passport_number, passport_issued_by, passport_issue_date,
-               phone, email, city, street, house_number, user_id, created_on
+               city, street, house_number, user_id, created_on
         FROM clients", conn);
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
@@ -132,8 +132,6 @@ namespace lombard
                 client.passport_issued_by = reader.IsDBNull("passport_issued_by") ? "" : reader.GetString("passport_issued_by");
 
                 // Обработка контактов и адреса
-                client.phone = reader.IsDBNull("phone") ? "" : reader.GetString("phone");
-                client.email = reader.IsDBNull("email") ? "" : reader.GetString("email");
                 client.city = reader.IsDBNull("city") ? "" : reader.GetString("city");
                 client.street = reader.IsDBNull("street") ? "" : reader.GetString("street");
                 client.house_number = reader.IsDBNull("house_number") ? 0 : reader.GetInt32("house_number");
@@ -153,7 +151,7 @@ namespace lombard
             using var conn = new MySqlConnection(ConnectionString);
             conn.Open();
             using var cmd = new MySqlCommand(@"
-                SELECT employee_id, last_name, first_name, patronymic, phone, email, user_id, created_on
+                SELECT employee_id, last_name, first_name, patronymic, user_id, created_on
                 FROM employees", conn);
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
@@ -164,8 +162,6 @@ namespace lombard
                     last_name = reader.IsDBNull("last_name") ? "" : reader.GetString("last_name"),
                     first_name = reader.IsDBNull("first_name") ? "" : reader.GetString("first_name"),
                     patronymic = reader.IsDBNull("patronymic") ? "" : reader.GetString("patronymic"),
-                    phone = reader.IsDBNull("phone") ? "" : reader.GetString("phone"),
-                    email = reader.IsDBNull("email") ? "" : reader.GetString("email"),
                     user_id = reader.IsDBNull("user_id") ? 0 : reader.GetInt32("user_id"),
                     created_on = reader.GetDateTime("created_on")
                 });
@@ -390,13 +386,15 @@ namespace lombard
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Фамилия", Binding = new System.Windows.Data.Binding("last_name"), Width = 100 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Имя", Binding = new System.Windows.Data.Binding("first_name"), Width = 100 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Отчество", Binding = new System.Windows.Data.Binding("patronymic"), Width = 100 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Дата рождения", Binding = new System.Windows.Data.Binding("date_of_birth") { StringFormat = "yyyy-MM-dd" }, Width = 100 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Паспорт (серия)", Binding = new System.Windows.Data.Binding("passport_series"), Width = 80 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Паспорт (номер)", Binding = new System.Windows.Data.Binding("passport_number"), Width = 80 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Телефон", Binding = new System.Windows.Data.Binding("phone"), Width = 100 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "email", Binding = new System.Windows.Data.Binding("email"), Width = 120 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Кем выдан", Binding = new System.Windows.Data.Binding("passport_issued_by"), Width = 120 });
+                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Дата выдачи", Binding = new System.Windows.Data.Binding("passport_issue_date") { StringFormat = "yyyy-MM-dd" }, Width = 100 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Город", Binding = new System.Windows.Data.Binding("city"), Width = 80 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Улица", Binding = new System.Windows.Data.Binding("street"), Width = 100 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Дом", Binding = new System.Windows.Data.Binding("house_number"), Width = 60 });
+
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "User ID", Binding = new System.Windows.Data.Binding("user_id"), Width = 70 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Создано", Binding = new System.Windows.Data.Binding("created_on") { StringFormat = "yyyy-MM-dd" }, Width = 90 });
                     break;
@@ -405,8 +403,6 @@ namespace lombard
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Фамилия", Binding = new System.Windows.Data.Binding("last_name"), Width = 100 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Имя", Binding = new System.Windows.Data.Binding("first_name"), Width = 100 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Отчество", Binding = new System.Windows.Data.Binding("patronymic"), Width = 100 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Телефон", Binding = new System.Windows.Data.Binding("phone"), Width = 100 });
-                    MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "email", Binding = new System.Windows.Data.Binding("email"), Width = 120 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "User ID", Binding = new System.Windows.Data.Binding("user_id"), Width = 70 });
                     MainDataGrid.Columns.Add(new DataGridTextColumn { Header = "Создано", Binding = new System.Windows.Data.Binding("created_on") { StringFormat = "yyyy-MM-dd" }, Width = 90 });
                     break;
@@ -753,11 +749,11 @@ namespace lombard
             INSERT INTO clients (
                 last_name, first_name, patronymic, date_of_birth,
                 passport_series, passport_number, passport_issued_by, passport_issue_date,
-                phone, email, city, street, house_number, user_id, created_on
+                city, street, house_number, user_id, created_on
             ) VALUES (
                 @last_name, @first_name, @patronymic, @date_of_birth,
                 @passport_series, @passport_number, @passport_issued_by, @passport_issue_date,
-                @phone, @email, @city, @street, @house_number, @user_id, @created_on
+                @city, @street, @house_number, @user_id, @created_on
             )", conn);
 
                         // Обязательные поля
@@ -775,10 +771,6 @@ namespace lombard
                             string.IsNullOrEmpty(client.passport_issued_by) ? (object)DBNull.Value : client.passport_issued_by);
                         cmd.Parameters.AddWithValue("@passport_issue_date",
                             client.passport_issue_date.HasValue ? (object)client.passport_issue_date.Value : DBNull.Value);
-                        cmd.Parameters.AddWithValue("@phone",
-                            string.IsNullOrEmpty(client.phone) ? (object)DBNull.Value : client.phone);
-                        cmd.Parameters.AddWithValue("@email",
-                            string.IsNullOrEmpty(client.email) ? (object)DBNull.Value : client.email);
                         cmd.Parameters.AddWithValue("@city",
                             string.IsNullOrEmpty(client.city) ? (object)DBNull.Value : client.city);
                         cmd.Parameters.AddWithValue("@street",
@@ -807,15 +799,13 @@ namespace lombard
                     {
                         using var cmd = new MySqlCommand(@"
                             INSERT INTO employees (
-                                last_name, first_name, patronymic, phone, email, user_id, created_on
+                                last_name, first_name, patronymic, user_id, created_on
                             ) VALUES (
-                                @last_name, @first_name, @patronymic, @phone, @email, @user_id, @created_on
+                                @last_name, @first_name, @patronymic, @user_id, @created_on
                             )", conn);
                         cmd.Parameters.AddWithValue("@last_name", employee.last_name ?? "");
                         cmd.Parameters.AddWithValue("@first_name", employee.first_name ?? "");
                         cmd.Parameters.AddWithValue("@patronymic", employee.patronymic ?? "");
-                        cmd.Parameters.AddWithValue("@phone", employee.phone ?? "");
-                        cmd.Parameters.AddWithValue("@email", employee.email ?? "");
                         cmd.Parameters.AddWithValue("@user_id", employee.user_id);
                         cmd.Parameters.AddWithValue("@created_on", employee.created_on);
                         cmd.ExecuteNonQuery();
@@ -827,16 +817,12 @@ namespace lombard
                                 last_name = @last_name,
                                 first_name = @first_name,
                                 patronymic = @patronymic,
-                                phone = @phone,
-                                email = @email,
                                 user_id = @user_id
                             WHERE employee_id = @id", conn);
                         cmd.Parameters.AddWithValue("@id", employee.employee_id);
                         cmd.Parameters.AddWithValue("@last_name", employee.last_name ?? "");
                         cmd.Parameters.AddWithValue("@first_name", employee.first_name ?? "");
                         cmd.Parameters.AddWithValue("@patronymic", employee.patronymic ?? "");
-                        cmd.Parameters.AddWithValue("@phone", employee.phone ?? "");
-                        cmd.Parameters.AddWithValue("@email", employee.email ?? "");
                         cmd.Parameters.AddWithValue("@user_id", employee.user_id);
                         cmd.ExecuteNonQuery();
                     }
